@@ -8,9 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  UPSTREAM_COMMIT: 21f7d109da6ab3506c9e9577f98c6a38771ab335
-
 concurrency:
   group: aloj-build
   cancel-in-progress: true
@@ -18,65 +15,38 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 340
     steps:
       - name: Free disk space
         run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/local/lib/android/sdk/ndk/2[0-6]* || true
           df -h /
 
       - uses: actions/checkout@v4
-
-      - name: Get Telegram source and apply AloJ patch
-        run: |
-          git clone --depth 1 https://github.com/DrKLO/Telegram.git src
-          cd src
-          git fetch --depth 1 origin "$UPSTREAM_COMMIT"
-          git checkout -q "$UPSTREAM_COMMIT"
-          git submodule update --init --recursive --depth 1 --jobs 8 || git submodule update --init --recursive --jobs 8
-          git apply ../aloj.patch
-          echo "Patch applied"
 
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Check secrets
-        env:
-          ALOJ_API_HASH: ${{ secrets.ALOJ_API_HASH }}
-          ALOJ_KEY_PASSWORD: ${{ secrets.ALOJ_KEY_PASSWORD }}
-        run: |
-          if [ -z "$ALOJ_API_HASH" ] || [ -z "$ALOJ_KEY_PASSWORD" ]; then
-            echo "Secrets ALOJ_API_HASH and ALOJ_KEY_PASSWORD must be set in Settings > Secrets > Actions" | tee build.log
-            exit 1
-          fi
-
       - name: Install Android NDK and tools
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" "cmake;3.22.1" "build-tools;36.0.0" "platforms;android-36" > /dev/null
 
-      - name: Build APK
-        working-directory: src
+      - name: Build AloJ
         env:
           ALOJ_API_HASH: ${{ secrets.ALOJ_API_HASH }}
           ALOJ_KEY_PASSWORD: ${{ secrets.ALOJ_KEY_PASSWORD }}
-        run: |
-          chmod +x gradlew
-          set -o pipefail
-          ./gradlew --no-daemon -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g" \
-            :TMessagesProj_App:assembleAfatRelease --stacktrace 2>&1 | tee ../build.log
+        run: bash ci/build.sh
 
-      - name: Collect output
+      - name: Collect log
         if: always()
         run: |
           mkdir -p out
           tail -n 400 build.log > out/build-tail.log 2>/dev/null || echo "no log" > out/build-tail.log
-          APK=$(find src/TMessagesProj_App/build/outputs/apk -name "*.apk" | head -1 || true)
-          if [ -n "$APK" ]; then cp "$APK" out/AloJ.apk; echo "OK" > out/status; else echo "FAILED" > out/status; fi
+          [ -f out/status ] || echo FAILED > out/status
           echo "${{ github.sha }}" > out/commit
-          ls -la out
 
       - name: Publish release
         if: success()
@@ -84,12 +54,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="build-${{ github.run_number }}"
-          gh release create "$TAG" out/AloJ.apk --title "AloJ ${TAG}" --notes "AloJ test build ${TAG}" --repo "${{ github.repository }}"
+          FILES="out/AloJ.apk"
+          [ -f out/AloJ-old-phones.apk ] && FILES="$FILES out/AloJ-old-phones.apk"
+          gh release create "$TAG" $FILES --title "AloJ ${TAG}" --notes "AloJ build ${TAG} (Nagram asosida)" --repo "${{ github.repository }}"
 
       - name: Push result to builds branch
         if: always()
         run: |
           cd out
+          rm -f AloJ-old-phones.apk
           git init -q
           git config user.name "aloj-bot"
           git config user.email "aloj-bot@users.noreply.github.com"
