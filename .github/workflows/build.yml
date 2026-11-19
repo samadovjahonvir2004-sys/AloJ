@@ -33,6 +33,7 @@ jobs:
           cd src
           git fetch --depth 1 origin "$UPSTREAM_COMMIT"
           git checkout -q "$UPSTREAM_COMMIT"
+          git submodule update --init --recursive --depth 1 --jobs 8 || git submodule update --init --recursive --jobs 8
           git apply ../aloj.patch
           echo "Patch applied"
 
