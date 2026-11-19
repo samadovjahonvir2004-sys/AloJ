@@ -11,6 +11,41 @@ index 98bf02a3..d48607a8 100644
  
      sourceSets {
  
+diff --git a/TMessagesProj/google-services.json b/TMessagesProj/google-services.json
+index 014d5c13..be067c6b 100644
+--- a/TMessagesProj/google-services.json
++++ b/TMessagesProj/google-services.json
+@@ -33,6 +33,30 @@
+           ]
+         }
+       }
++    },
++    {
++      "client_info": {
++        "mobilesdk_app_id": "1:454087305870:android:5c8d8e9f3a9a0e37eb37df",
++        "android_client_info": {
++          "package_name": "uz.aloj.messenger"
++        }
++      },
++      "oauth_client": [],
++      "api_key": [
++        {
++          "current_key": "AIzaSyCPNxXY201baapXdQZCpdhLYVJ8LYN1bK8"
++        }
++      ],
++      "services": {
++        "appinvite_service": {
++          "other_platform_oauth_client": [
++            {
++              "client_id": "454087305870-i68bog5e0h2uq2553friqpl7ullqnuuo.apps.googleusercontent.com",
++              "client_type": 3
++            }
++          ]
++        }
++      }
+     }
+   ],
+   "configuration_version": "1"
 diff --git a/TMessagesProj/release.keystore b/TMessagesProj/release.keystore
 index 795a67fe05c4dc68321386011cb992a92f96c4f7..aa90ed6d0eecd2a5d2e7cd84cbac240e38ffd6c8 100644
 GIT binary patch
