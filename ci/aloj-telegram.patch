@@ -9363,7 +9363,7 @@ index ec76835..d6771d8 100644
              return false;
          }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
-index 7fc7292..3601f40 100644
+index 7fc7292..84eb9ec 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
 @@ -4010,13 +4010,13 @@ public class Theme {
@@ -9408,6 +9408,24 @@ index 7fc7292..3601f40 100644
                  new int[]    {                             9,                            10,                            11,                            12,                            13,                             0,                             1,                             2,                             3,                             4,                             5,                             6,                             7,                             8 },
                  new String[] { "YIxYGEALQVADAAAAA3QbEH0AowY", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "O-wmAfBPSFADAAAA4zINVfD_bro", "F5oWoCs7QFACAAAAgf2bD_mg8Bw", "-Xc-np9y2VMCAAAARKr0yNNPYW0", "fqv01SQemVIBAAAApND8LDRUhRU", "F5oWoCs7QFACAAAAgf2bD_mg8Bw", "ptuUd96JSFACAAAATobI23sPpz0", "p-pXcflrmFIBAAAAvXYQk-mCwZU", "Nl8Pg2rBQVACAAAA25Lxtb8SDp0", "dhf9pceaQVACAAAAbzdVo4SCiZA", "9GcNVISdSVADAAAAUcw5BYjELW4", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "dk_wwlghOFACAAAAfz9xrxi6euw" },
                  new int[]    {                            45,                           135,                             0,                           180,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0 },
+@@ -4325,6 +4325,17 @@ public class Theme {
+                     if (info.themeAccentsMap != null && info.themeAccentsMap.get(info.currentAccentId) == null) {
+                         info.currentAccentId = info.firstAccentIsDefault ? DEFALT_THEME_ACCENT_ID : 0;
+                     }
++                    // AloJ: the default dark accent is orange even for users whose old (blue) copy is cached
++                    if (("Dark Blue".equals(info.name) || "Night".equals(info.name)) && info.themeAccentsMap != null) {
++                        ThemeAccent a0 = info.themeAccentsMap.get(0);
++                        if (a0 != null && a0.myMessagesAccentColor != 0xFFE8772F) {
++                            a0.accentColor = 0xFFFF8A3D;
++                            a0.myMessagesAccentColor = 0xFFE8772F;
++                            a0.myMessagesGradientAccentColor1 = 0xFFB8452B;
++                            a0.myMessagesGradientAccentColor2 = 0;
++                            a0.myMessagesGradientAccentColor3 = 0;
++                        }
++                    }
+                     info.loadWallpapers(themeConfig);
+                     ThemeAccent accent = info.getAccent(false);
+                     if (accent != null) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
 index 10520ec..76b9e88 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
@@ -10584,7 +10602,7 @@ index 83cbe6c..2891191 100644
          GRAM(R.raw.gram, R.raw.gram_reverse),
  
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
-index e6478ee..ada1111 100644
+index e6478ee..a69c01f 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 @@ -3436,11 +3436,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
@@ -10613,7 +10631,7 @@ index e6478ee..ada1111 100644
 +        io.add(R.drawable.msg_bots, uz.aloj.L.t("Bot yaratish", "Создать бота"), () -> {
 +            uz.aloj.AloJBots.showWizard(this);
 +        });
-+        io.add(R.drawable.aloj_sparkle, "AloJ", () -> presentFragment(new AloJHubActivity(null)));
++        io.add(R.drawable.aloj_sparkle, uz.aloj.L.t("AloJ menyu", "Меню AloJ"), () -> uz.aloj.AloJDrawer.show(this));
          io.add(R.drawable.outline_saved_24, getString(R.string.SavedMessages), () -> {
              Bundle args = new Bundle();
              args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
@@ -10734,16 +10752,17 @@ index e2b917b..4c1c381 100644
              TLRPC.TL_attachMenuBot attachMenuBot = (TLRPC.TL_attachMenuBot) item.object;
              if (attachMenuBot.inactive || attachMenuBot.side_menu_disclaimer_needed) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
-index 81ccaa5..362c8f5 100644
+index 81ccaa5..130e059 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
-@@ -336,11 +336,10 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
+@@ -336,11 +336,11 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
          telegramLogoView = new ImageView(context);
          telegramLogoView.setContentDescription(getString(R.string.AppName));
          telegramLogoView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 -        telegramLogoView.setImageResource(R.drawable.telegram_logo_2);
 -        telegramLogoView.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
 +        telegramLogoView.setImageResource(R.drawable.aloj_wordmark);
++        telegramLogoView.setOnClickListener(v -> uz.aloj.AloJDrawer.show(fragment));
          telegramLogoView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
          telegramLogoView.setFocusableInTouchMode(true);
 -        addView(telegramLogoView, LayoutHelper.createFrame(90, 22));
@@ -10751,7 +10770,7 @@ index 81ccaa5..362c8f5 100644
  
          statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
          statusDrawable.center = true;
-@@ -1158,7 +1157,6 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
+@@ -1158,7 +1158,6 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
          if (subtitleOverlayContainer != null) {
              subtitleOverlayContainer.updateColors();
          }
@@ -11658,6 +11677,253 @@ index 0000000..89e843f
 +            case "confirmVoice": confirmVoice = value; break;
 +        }
 +        prefs().edit().putBoolean(key, value).apply();
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJDrawer.java b/TMessagesProj/src/main/java/uz/aloj/AloJDrawer.java
+new file mode 100644
+index 0000000..7e463b6
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/AloJDrawer.java
+@@ -0,0 +1,241 @@
++package uz.aloj;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.app.Activity;
++import android.app.Dialog;
++import android.content.Intent;
++import android.graphics.Color;
++import android.graphics.drawable.ColorDrawable;
++import android.graphics.drawable.GradientDrawable;
++import android.os.Bundle;
++import android.text.TextUtils;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.view.ViewGroup;
++import android.view.Window;
++import android.view.WindowManager;
++import android.widget.FrameLayout;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.BuildVars;
++import org.telegram.messenger.R;
++import org.telegram.messenger.UserConfig;
++import org.telegram.messenger.UserObject;
++import org.telegram.tgnet.TLRPC;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.ActionBar.Theme;
++import org.telegram.ui.Components.AvatarDrawable;
++import org.telegram.ui.Components.BackupImageView;
++import org.telegram.ui.Components.CubicBezierInterpolator;
++import org.telegram.ui.Components.LayoutHelper;
++
++/** AloJ: the side menu (like Plus Messenger's drawer, with AloJ's own tools). */
++public final class AloJDrawer {
++
++    private AloJDrawer() {}
++
++    public static void show(BaseFragment f) {
++        final Activity a = f == null ? null : f.getParentActivity();
++        if (a == null) return;
++        final int bg = Theme.getColor(Theme.key_windowBackgroundWhite, f.getResourceProvider());
++        final int text = Theme.getColor(Theme.key_windowBackgroundWhiteBlackText, f.getResourceProvider());
++        final int gray = Theme.getColor(Theme.key_windowBackgroundWhiteGrayText, f.getResourceProvider());
++        final int iconColor = Theme.getColor(Theme.key_windowBackgroundWhiteGrayIcon, f.getResourceProvider());
++        final int width = Math.min(dp(320), (int) (AndroidUtilities.displaySize.x * 0.84f));
++
++        final Dialog d = new Dialog(a, android.R.style.Theme_Translucent_NoTitleBar);
++        FrameLayout root = new FrameLayout(a);
++        root.setBackgroundColor(0x66000000);
++        root.setOnClickListener(v -> close(d, null));
++
++        final LinearLayout panel = new LinearLayout(a);
++        panel.setOrientation(LinearLayout.VERTICAL);
++        panel.setBackgroundColor(bg);
++        panel.setClickable(true);
++        panel.setElevation(dp(12));
++        root.addView(panel, new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.START));
++
++        // ---- header ----
++        TLRPC.User me = UserConfig.getInstance(f.getCurrentAccount()).getCurrentUser();
++        FrameLayout header = new FrameLayout(a);
++        GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF5B3DF5, 0xFFE0457B, 0xFFFF9A2E});
++        header.setBackground(grad);
++        header.setPadding(dp(20), AndroidUtilities.statusBarHeight + dp(18), dp(20), dp(18));
++        LinearLayout hcol = new LinearLayout(a);
++        hcol.setOrientation(LinearLayout.VERTICAL);
++        BackupImageView avatar = new BackupImageView(a);
++        avatar.setRoundRadius(dp(34));
++        if (me != null) avatar.setForUserOrChat(me, new AvatarDrawable(me));
++        FrameLayout ring = new FrameLayout(a);
++        GradientDrawable ringBg = new GradientDrawable();
++        ringBg.setShape(GradientDrawable.OVAL);
++        ringBg.setColor(0x33FFFFFF);
++        ringBg.setStroke(dp(2), 0xCCFFFFFF);
++        ring.setBackground(ringBg);
++        ring.setPadding(dp(3), dp(3), dp(3), dp(3));
++        ring.addView(avatar, LayoutHelper.createFrame(68, 68));
++        hcol.addView(ring, LayoutHelper.createLinear(74, 74));
++        TextView name = new TextView(a);
++        name.setText(me == null ? "AloJ" : UserObject.getUserName(me));
++        name.setTextColor(Color.WHITE);
++        name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
++        name.setTypeface(AndroidUtilities.bold());
++        name.setSingleLine(true);
++        name.setEllipsize(TextUtils.TruncateAt.END);
++        name.setPadding(0, dp(12), 0, 0);
++        hcol.addView(name);
++        TextView sub = new TextView(a);
++        String uname = me == null ? null : UserObject.getPublicUsername(me);
++        sub.setText(uname != null ? "@" + uname : (me != null && me.phone != null ? "+" + me.phone : ""));
++        sub.setTextColor(0xE6FFFFFF);
++        sub.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
++        hcol.addView(sub);
++        header.addView(hcol);
++        ImageView logo = new ImageView(a);
++        logo.setImageResource(R.drawable.aloj_sparkle);
++        logo.setColorFilter(Color.WHITE);
++        header.addView(logo, LayoutHelper.createFrame(28, 28, Gravity.TOP | Gravity.END));
++        header.setOnClickListener(v -> close(d, () -> {
++            if (me == null) return;
++            Bundle args = new Bundle();
++            args.putLong("user_id", me.id);
++            args.putBoolean("my_profile", true);
++            f.presentFragment(new org.telegram.ui.ProfileActivity(args));
++        }));
++        panel.addView(header, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++
++        // ---- items ----
++        ScrollView scroll = new ScrollView(a);
++        LinearLayout list = new LinearLayout(a);
++        list.setOrientation(LinearLayout.VERTICAL);
++        list.setPadding(0, dp(6), 0, dp(12));
++        scroll.addView(list);
++        panel.addView(scroll, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 0, 1f));
++
++        item(a, list, R.drawable.msg_openprofile, L.t("Mening profilim", "Мой профиль"), text, iconColor, () -> close(d, () -> {
++            if (me == null) return;
++            Bundle args = new Bundle();
++            args.putLong("user_id", me.id);
++            args.putBoolean("my_profile", true);
++            f.presentFragment(new org.telegram.ui.ProfileActivity(args));
++        }));
++        divider(a, list, f);
++        item(a, list, R.drawable.msg_groups, L.t("Yangi guruh", "Создать группу"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.GroupCreateActivity(new Bundle()))));
++        item(a, list, R.drawable.msg_channel_create, L.t("Yangi kanal", "Создать канал"), text, iconColor, () -> close(d, () -> {
++            Bundle args = new Bundle();
++            args.putInt("step", 0);
++            f.presentFragment(new org.telegram.ui.ChannelCreateActivity(args));
++        }));
++        item(a, list, R.drawable.msg_bots, L.t("Bot yaratish", "Создать бота"), text, iconColor, () -> close(d, () -> AloJBots.showWizard(f)));
++        divider(a, list, f);
++        item(a, list, R.drawable.msg_contacts, L.t("Kontaktlar", "Контакты"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.ContactsActivity(new Bundle()))));
++        item(a, list, R.drawable.msg_saved, L.t("Saqlangan xabarlar", "Избранное"), text, iconColor, () -> close(d, () -> {
++            if (me == null) return;
++            Bundle args = new Bundle();
++            args.putLong("user_id", me.id);
++            f.presentFragment(new org.telegram.ui.ChatActivity(args));
++        }));
++        item(a, list, R.drawable.msg_calls, L.t("Qo'ng'iroqlar", "Звонки"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.CallLogActivity())));
++        item(a, list, R.drawable.msg_folders, L.t("Chat jildlari", "Папки с чатами"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.FiltersSetupActivity())));
++        divider(a, list, f);
++        item(a, list, R.drawable.aloj_tab_bozor, L.t("Bozor — mening e'lonlarim", "Базар — мои объявления"), text, iconColor, () -> close(d, () -> f.presentFragment(new uz.aloj.bozor.BozorMyActivity(false))));
++        item(a, list, R.drawable.aloj_sparkle, L.t("AloJ imkoniyatlari", "Возможности AloJ"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.AloJHubActivity(null))));
++        final boolean ghost = AloJConfig.hideTyping() && AloJConfig.hideOnline();
++        item(a, list, R.drawable.msg_secret, L.t("Arvoh rejimi: ", "Режим «призрак»: ") + (ghost ? L.t("YONIQ", "ВКЛ") : L.t("o'chiq", "выкл")), text, iconColor, () -> {
++            AloJConfig.set("hideTyping", !ghost);
++            AloJConfig.set("hideOnline", !ghost);
++            close(d, () -> android.widget.Toast.makeText(a, !ghost ? L.t("👻 Arvoh rejimi yoqildi", "👻 Режим «призрак» включён") : L.t("Arvoh rejimi o'chirildi", "Режим «призрак» выключен"), android.widget.Toast.LENGTH_SHORT).show());
++        });
++        item(a, list, R.drawable.msg_theme, L.t("Mavzu va ranglar", "Темы и цвета"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.ThemeActivity(org.telegram.ui.ThemeActivity.THEME_TYPE_BASIC))));
++        item(a, list, R.drawable.msg_settings_old, L.t("Sozlamalar", "Настройки"), text, iconColor, () -> close(d, () -> f.presentFragment(new org.telegram.ui.SettingsActivity(new Bundle()))));
++        divider(a, list, f);
++        item(a, list, R.drawable.msg_share, L.t("Do'stlarni AloJ'ga taklif qilish", "Пригласить друзей в AloJ"), text, iconColor, () -> close(d, () -> {
++            try {
++                Intent i = new Intent(Intent.ACTION_SEND);
++                i.setType("text/plain");
++                i.putExtra(Intent.EXTRA_TEXT, L.t("Men AloJ messenjeridan foydalanyapman — tez, qulay va ichida Bozor bor! Yuklab oling: ",
++                        "Я пользуюсь мессенджером AloJ — быстро, удобно и есть Базар! Скачать: ") + "https://github.com/samadovjahonvir2004-sys/AloJ/releases/latest");
++                a.startActivity(Intent.createChooser(i, "AloJ"));
++            } catch (Throwable ignore) {
++            }
++        }));
++
++        TextView ver = new TextView(a);
++        ver.setText("AloJ " + BuildVars.BUILD_VERSION_STRING + " · Alo, Jahon!");
++        ver.setTextColor(gray);
++        ver.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
++        ver.setGravity(Gravity.CENTER);
++        ver.setPadding(0, dp(10), 0, dp(14) + AndroidUtilities.navigationBarHeight);
++        panel.addView(ver);
++
++        d.setContentView(root);
++        Window w = d.getWindow();
++        if (w != null) {
++            w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
++            w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
++            w.addFlags(WindowManager.LayoutParams.FLAG_DRAW_SYSTEM_BAR_BACKGROUNDS);
++            w.setStatusBarColor(Color.TRANSPARENT);
++        }
++        panel.setTranslationX(-width);
++        root.setAlpha(0f);
++        d.show();
++        root.animate().alpha(1f).setDuration(180).start();
++        panel.animate().translationX(0).setDuration(260).setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT).start();
++        d.setOnKeyListener((dlg, keyCode, event) -> {
++            if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.getAction() == android.view.KeyEvent.ACTION_UP) {
++                close(d, null);
++                return true;
++            }
++            return false;
++        });
++        d.getWindow().getDecorView().setTag(panel);
++    }
++
++    private static void close(Dialog d, Runnable after) {
++        View panel = d.getWindow() == null ? null : (View) d.getWindow().getDecorView().getTag();
++        if (panel == null) {
++            d.dismiss();
++            if (after != null) after.run();
++            return;
++        }
++        panel.animate().translationX(-panel.getWidth()).setDuration(180).withEndAction(() -> {
++            try {
++                d.dismiss();
++            } catch (Throwable ignore) {
++            }
++            if (after != null) after.run();
++        }).start();
++    }
++
++    private static void divider(Activity a, LinearLayout list, BaseFragment f) {
++        View v = new View(a);
++        v.setBackgroundColor(Theme.getColor(Theme.key_divider, f.getResourceProvider()));
++        list.addView(v, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 1, 0, 6, 0, 6));
++    }
++
++    private static void item(Activity a, LinearLayout list, int icon, String label, int textColor, int iconColor, Runnable onClick) {
++        LinearLayout row = new LinearLayout(a);
++        row.setGravity(Gravity.CENTER_VERTICAL);
++        row.setPadding(dp(20), 0, dp(16), 0);
++        row.setBackground(Theme.getSelectorDrawable(false));
++        ImageView iv = new ImageView(a);
++        iv.setImageResource(icon);
++        iv.setColorFilter(iconColor);
++        row.addView(iv, LayoutHelper.createLinear(24, 24));
++        TextView t = new TextView(a);
++        t.setText(label);
++        t.setTextColor(textColor);
++        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15.5f);
++        t.setSingleLine(true);
++        t.setEllipsize(TextUtils.TruncateAt.END);
++        row.addView(t, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 26, 0, 0, 0));
++        row.setOnClickListener(v -> onClick.run());
++        list.addView(row, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 50));
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJRates.java b/TMessagesProj/src/main/java/uz/aloj/AloJRates.java
@@ -76440,7 +76706,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..d3629b7 100644
+index 17bb1dc..77adc58 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -76449,7 +76715,7 @@ index 17bb1dc..d3629b7 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.9.2
++APP_VERSION_NAME=1.9.3
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
