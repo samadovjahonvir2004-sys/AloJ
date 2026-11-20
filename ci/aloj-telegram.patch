@@ -10571,7 +10571,7 @@ index 83cbe6c..2891191 100644
          GRAM(R.raw.gram, R.raw.gram_reverse),
  
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
-index e6478ee..9bc88e4 100644
+index e6478ee..ada1111 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 @@ -3436,11 +3436,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
@@ -10598,7 +10598,7 @@ index e6478ee..9bc88e4 100644
 +            presentFragment(new ChannelCreateActivity(args));
 +        });
 +        io.add(R.drawable.msg_bots, uz.aloj.L.t("Bot yaratish", "Создать бота"), () -> {
-+            getMessagesController().openByUserName("BotFather", this, 1);
++            uz.aloj.AloJBots.showWizard(this);
 +        });
 +        io.add(R.drawable.aloj_sparkle, "AloJ", () -> presentFragment(new AloJHubActivity(null)));
          io.add(R.drawable.outline_saved_24, getString(R.string.SavedMessages), () -> {
@@ -10698,6 +10698,104 @@ index 529eb5c..7472988 100644
          return (dialogListStories != null && dialogListStories.size() > 0) || hasSelfStories();
      }
  
+diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJBots.java b/TMessagesProj/src/main/java/uz/aloj/AloJBots.java
+new file mode 100644
+index 0000000..509fd02
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/AloJBots.java
+@@ -0,0 +1,92 @@
++package uz.aloj;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.content.Context;
++import android.text.InputType;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.MessagesController;
++import org.telegram.messenger.SendMessagesHelper;
++import org.telegram.tgnet.TLRPC;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.ActionBar.Theme;
++
++/** AloJ: create a Telegram bot in one step (AloJ talks to @BotFather for you). */
++public final class AloJBots {
++    private static final long BOTFATHER_ID = 93372553L;
++
++    private AloJBots() {}
++
++    private static EditText field(Context ctx, BaseFragment f, LinearLayout box, String hint) {
++        EditText e = new EditText(ctx);
++        e.setHint(hint);
++        e.setSingleLine(true);
++        e.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, f.getResourceProvider()));
++        e.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint, f.getResourceProvider()));
++        box.addView(e);
++        return e;
++    }
++
++    public static void showWizard(BaseFragment f) {
++        Context ctx = f.getParentActivity();
++        if (ctx == null) return;
++        LinearLayout box = new LinearLayout(ctx);
++        box.setOrientation(LinearLayout.VERTICAL);
++        box.setPadding(dp(24), dp(4), dp(24), 0);
++        TextView info = new TextView(ctx);
++        info.setText(L.t("Bot nomi va manzilini yozing. Qolganini AloJ o'zi @BotFather bilan bajaradi va sizga TOKEN chiqadi.",
++                "Введите имя и адрес бота. Остальное AloJ сделает сам через @BotFather — вы получите TOKEN."));
++        info.setTextColor(Theme.getColor(Theme.key_dialogTextGray3, f.getResourceProvider()));
++        info.setPadding(0, 0, 0, dp(8));
++        box.addView(info);
++        EditText name = field(ctx, f, box, L.t("Bot nomi, masalan: Mening do'konim", "Имя бота, например: Мой магазин"));
++        EditText user = field(ctx, f, box, L.t("Manzil (lotincha), masalan: mening_dokonim_bot", "Адрес (латиницей), например: my_shop_bot"));
++        user.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
++        AlertDialog.Builder b = new AlertDialog.Builder(ctx, f.getResourceProvider());
++        b.setTitle(L.t("🤖 Bot yaratish", "🤖 Создать бота"));
++        b.setView(box);
++        b.setPositiveButton(L.t("Yaratish", "Создать"), (d, w) -> {
++            String n = name.getText().toString().trim();
++            String u = user.getText().toString().trim().replace("@", "").replace(" ", "_");
++            if (n.length() < 2) {
++                toast(f, L.t("Bot nomini yozing", "Введите имя бота"));
++                return;
++            }
++            if (!u.matches("[A-Za-z][A-Za-z0-9_]{3,30}")) {
++                toast(f, L.t("Manzil faqat lotin harf, raqam va _ dan iborat bo'lsin (5–32 belgi)", "Адрес: только латиница, цифры и _ (5–32 символа)"));
++                return;
++            }
++            if (!u.toLowerCase().endsWith("bot")) u = u + "_bot";
++            create(f, n, u);
++        });
++        b.setNegativeButton(L.t("Bekor qilish", "Отмена"), null);
++        f.showDialog(b.create());
++    }
++
++    private static void toast(BaseFragment f, String s) {
++        if (f.getParentActivity() != null) Toast.makeText(f.getParentActivity(), s, Toast.LENGTH_LONG).show();
++    }
++
++    private static void create(BaseFragment f, String name, String username) {
++        final int acc = f.getCurrentAccount();
++        MessagesController mc = MessagesController.getInstance(acc);
++        // opening the chat resolves @BotFather (needed before we can write to it)
++        mc.openByUserName("BotFather", f, 1);
++        toast(f, L.t("🤖 Bot yaratilmoqda... BotFather javobida TOKEN chiqadi", "🤖 Создаём бота... TOKEN придёт в ответе BotFather"));
++        final String[] steps = {"/newbot", name, username};
++        for (int i = 0; i < steps.length; i++) {
++            final String text = steps[i];
++            AndroidUtilities.runOnUIThread(() -> {
++                TLRPC.User bf = MessagesController.getInstance(acc).getUser(BOTFATHER_ID);
++                if (bf == null) return;
++                SendMessagesHelper.getInstance(acc).sendMessage(SendMessagesHelper.SendMessageParams.of(text, BOTFATHER_ID));
++            }, 1800L + i * 2200L);
++        }
++    }
++}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
 new file mode 100644
 index 0000000..047ce8d
@@ -12381,10 +12479,10 @@ index 0000000..2fed513
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
 new file mode 100644
-index 0000000..f0f11d1
+index 0000000..a778c4c
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
-@@ -0,0 +1,426 @@
+@@ -0,0 +1,433 @@
 +package uz.aloj.bozor;
 +
 +import android.content.Context;
@@ -12500,7 +12598,7 @@ index 0000000..f0f11d1
 +        c.setReadTimeout(30000);
 +        c.setRequestMethod(method);
 +        c.setRequestProperty("apikey", KEY);
-+        c.setRequestProperty("Authorization", "Bearer " + (token != null ? token : KEY));
++        if (token != null) c.setRequestProperty("Authorization", "Bearer " + token);
 +        if (prefer != null) c.setRequestProperty("Prefer", prefer);
 +        if (body != null) {
 +            c.setDoOutput(true);
@@ -12806,7 +12904,14 @@ index 0000000..f0f11d1
 +            String m = e.getMessage() == null ? "" : e.getMessage();
 +            if (m.contains("FREE_LIMIT")) return uz.aloj.L.t("Sizda 2 ta bepul e'lon bor. Yangisini joylash uchun eskisini \"Sotildi\" qiling yoki o'chiring.", "У вас 2 бесплатных объявления. Чтобы добавить новое, отметьте старое «Продано» или удалите.");
 +            if (m.contains("anonymous") || m.contains("Anonymous")) return "Bozor hali sozlanmagan (anonim kirish o'chiq).";
-+            return uz.aloj.L.t("Server xatosi (", "Ошибка сервера (") + ((ApiException) e).code + ")";
++            String detail = m;
++            try {
++                JSONObject o = new JSONObject(m);
++                detail = o.optString("message", o.optString("msg", o.optString("error_description", o.optString("error", m))));
++            } catch (Throwable ignore) {
++            }
++            if (detail.length() > 140) detail = detail.substring(0, 140);
++            return uz.aloj.L.t("Server xatosi (", "Ошибка сервера (") + ((ApiException) e).code + "): " + detail;
 +        }
 +        return uz.aloj.L.t("Internet bilan muammo. Qayta urinib ko'ring.", "Проблема с интернетом. Попробуйте ещё раз.");
 +    }
@@ -13343,10 +13448,10 @@ index 0000000..ca1f6ff
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
 new file mode 100644
-index 0000000..2f81637
+index 0000000..c58b88b
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
-@@ -0,0 +1,401 @@
+@@ -0,0 +1,406 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -13725,9 +13830,14 @@ index 0000000..2f81637
 +            String err = null;
 +            try {
 +                for (Bitmap b : toSend) {
-+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-+                    b.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-+                    l.photos.add(BozorApi.uploadPhoto(bos.toByteArray()));
++                    byte[] jpeg = null;
++                    for (int q = 82; q >= 40; q -= 12) {
++                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
++                        b.compress(Bitmap.CompressFormat.JPEG, q, bos);
++                        jpeg = bos.toByteArray();
++                        if (jpeg.length < 900 * 1024) break;
++                    }
++                    l.photos.add(BozorApi.uploadPhoto(jpeg));
 +                }
 +                BozorApi.create(l);
 +            } catch (Throwable e) {
@@ -76176,7 +76286,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..08a7d17 100644
+index 17bb1dc..ff74da3 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -76185,7 +76295,7 @@ index 17bb1dc..08a7d17 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.8.0
++APP_VERSION_NAME=1.9.0
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
