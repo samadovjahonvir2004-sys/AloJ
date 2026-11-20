@@ -10675,6 +10675,40 @@ index d1ac117..0d43539 100644
          } else if (position == POSITION_CALLS_OR_SETTINGS) {
              if (getUserConfig().showCallsTab) {
                  Bundle args = new Bundle();
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/QrShare/QrShareView.java b/TMessagesProj/src/main/java/org/telegram/ui/QrShare/QrShareView.java
+index 50bc0a5..b66bff0 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/QrShare/QrShareView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/QrShare/QrShareView.java
+@@ -2065,6 +2065,7 @@ public class QrShareView extends View {
+     private static final float SHARE_MAX_ASPECT = 1.92f;
+     /** The frame of the plane logo for a shared image, as the stock QR screen takes it. */
+     private static final int LOGO_OPTIMAL_FRAME = 33;
++    private android.graphics.drawable.Drawable alojLogo;
+     private @Nullable Bitmap logoOptimal;
+     private final Paint logoOptimalPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+     private boolean sharing;
+@@ -3828,16 +3829,11 @@ public class QrShareView extends View {
+                 final float off = (1f - Math.min(1f, pe)) * lr * 0.55f, psc = 0.5f + 0.5f * pe;
+                 c.translate(-off, off);
+                 c.scale(psc, psc, lcx, lcy);
+-                if (sharing && logoOptimal != null) {
+-                    // a shared image takes the plane's best frame, not the one the animation is at
+-                    rect3.set(lcx - lr, lcy - lr, lcx + lr, lcy + lr);
+-                    c.drawBitmap(logoOptimal, null, rect3, logoOptimalPaint);
+-                } else {
+-                    logo.setAlpha((int) (255 * Utilities.clamp01(pu * 2f)));
+-                    logo.setBounds((int) (lcx - lr), (int) (lcy - lr), (int) (lcx + lr), (int) (lcy + lr));
+-                    logo.draw(c);
+-                    logo.setAlpha(255);
+-                }
++                if (alojLogo == null) alojLogo = getContext().getResources().getDrawable(R.drawable.aloj_qr_j).mutate();
++                alojLogo.setAlpha((int) (255 * Utilities.clamp01(pu * 2f)));
++                alojLogo.setBounds((int) (lcx - lr), (int) (lcy - lr), (int) (lcx + lr), (int) (lcy + lr));
++                alojLogo.draw(c);
++                alojLogo.setAlpha(255);
+                 c.restore();
+             }
+             if (lp < 1f) c.restore();
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 index e2b917b..4c1c381 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
@@ -10699,6 +10733,32 @@ index e2b917b..4c1c381 100644
          if (item.object instanceof TLRPC.TL_attachMenuBot) {
              TLRPC.TL_attachMenuBot attachMenuBot = (TLRPC.TL_attachMenuBot) item.object;
              if (attachMenuBot.inactive || attachMenuBot.side_menu_disclaimer_needed) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
+index 81ccaa5..362c8f5 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java
+@@ -336,11 +336,10 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
+         telegramLogoView = new ImageView(context);
+         telegramLogoView.setContentDescription(getString(R.string.AppName));
+         telegramLogoView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+-        telegramLogoView.setImageResource(R.drawable.telegram_logo_2);
+-        telegramLogoView.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
++        telegramLogoView.setImageResource(R.drawable.aloj_wordmark);
+         telegramLogoView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+         telegramLogoView.setFocusableInTouchMode(true);
+-        addView(telegramLogoView, LayoutHelper.createFrame(90, 22));
++        addView(telegramLogoView, LayoutHelper.createFrame(104, 24));
+ 
+         statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
+         statusDrawable.center = true;
+@@ -1158,7 +1157,6 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
+         if (subtitleOverlayContainer != null) {
+             subtitleOverlayContainer.updateColors();
+         }
+-        telegramLogoView.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
+         AndroidUtilities.forEachViews(recyclerListView, view -> {
+             StoryCell cell = (StoryCell) view;
+             cell.invalidate();
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
 index 529eb5c..7472988 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
@@ -11789,22 +11849,29 @@ index 0000000..7f170d0
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/L.java b/TMessagesProj/src/main/java/uz/aloj/L.java
 new file mode 100644
-index 0000000..ede164f
+index 0000000..cedac3a
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/L.java
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,28 @@
 +package uz.aloj;
 +
 +import org.telegram.messenger.LocaleController;
 +
-+/** AloJ: picks the AloJ text for the current app language (Russian UI → Russian, otherwise Uzbek). */
++/** AloJ: picks the AloJ text for the language chosen in the app (Russian → Russian, everything else → Uzbek). */
 +public final class L {
 +    private L() {}
 +
 +    public static boolean ru() {
 +        try {
-+            String lang = LocaleController.getInstance().getCurrentLocale().getLanguage();
-+            return "ru".equals(lang) || "uk".equals(lang) || "be".equals(lang) || "kk".equals(lang);
++            LocaleController.LocaleInfo li = LocaleController.getInstance().getCurrentLocaleInfo();
++            String code = null;
++            if (li != null) {
++                code = li.pluralLangCode != null && !li.pluralLangCode.isEmpty() ? li.pluralLangCode : li.shortName;
++            }
++            if (code == null || code.isEmpty()) code = LocaleController.getInstance().getCurrentLocale().getLanguage();
++            code = code.toLowerCase();
++            if (code.startsWith("uz")) return false;
++            return code.startsWith("ru") || code.startsWith("uk") || code.startsWith("be") || code.startsWith("kk");
 +        } catch (Throwable e) {
 +            return false;
 +        }
@@ -17835,6 +17902,16 @@ index 0000000..c75c301
 +            android:strokeColor="#FFFFFFFF" android:strokeWidth="14" android:strokeLineCap="round" />
 +        <path android:pathData="M106,44 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" android:fillColor="#FFFFFFFF" />
 +    </group>
++</vector>
+diff --git a/TMessagesProj/src/main/res/drawable/aloj_qr_j.xml b/TMessagesProj/src/main/res/drawable/aloj_qr_j.xml
+new file mode 100644
+index 0000000..26eea9b
+--- /dev/null
++++ b/TMessagesProj/src/main/res/drawable/aloj_qr_j.xml
+@@ -0,0 +1,4 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp" android:viewportWidth="150" android:viewportHeight="150">
++    <path android:fillColor="#FFFFFF" android:pathData="M69.5 114.0Q61.1 114.0 54.3 111.1Q47.5 108.2 43.0 102.7L54.8 88.8Q57.8 92.7 61.1 94.7Q64.4 96.7 68.0 96.7Q77.6 96.7 77.6 85.6V52.7H51.2V36.0H99.0V84.3Q99.0 99.3 91.5 106.6Q83.9 114.0 69.5 114.0Z" />
++    <path android:fillColor="#FFFFFF" android:pathData="M104,35 a9,9 0 1,0 0.01,0 Z" />
 +</vector>
 diff --git a/TMessagesProj/src/main/res/drawable/aloj_sparkle.xml b/TMessagesProj/src/main/res/drawable/aloj_sparkle.xml
 new file mode 100644
@@ -76363,7 +76440,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..05b2e40 100644
+index 17bb1dc..d3629b7 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -76372,7 +76449,7 @@ index 17bb1dc..05b2e40 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.9.1
++APP_VERSION_NAME=1.9.2
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
