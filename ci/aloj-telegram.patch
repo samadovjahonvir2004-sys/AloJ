@@ -3552,10 +3552,10 @@ index 0000000..18e904e
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 new file mode 100644
-index 0000000..175806a
+index 0000000..6d206db
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
-@@ -0,0 +1,293 @@
+@@ -0,0 +1,317 @@
 +package org.telegram.ui;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -3654,7 +3654,7 @@ index 0000000..175806a
 +
 +        items.add(UItem.asHeader("Muloqot"));
 +        items.add(UItem.asButton(ID_TRANSLIT, R.drawable.msg_text_outlined, "Lotin ↔ Kirill o'girgich"));
-+        items.add(UItem.asButton(ID_VOICE, R.drawable.msg_voicechat, "Ovozni matnga", "tez kunda"));
++        items.add(UItem.asButton(ID_VOICE, R.drawable.msg_voicechat, "Tarjima va ovoz bilan yozish", "chatda"));
 +        items.add(UItem.asShadow(null));
 +
 +        items.add(UItem.asHeader("Maxfiylik"));
@@ -3664,13 +3664,13 @@ index 0000000..175806a
 +        items.add(UItem.asShadow("Arvoh rejimi: boshqalar siz yozayotganingizni va onlayn ekaningizni ko'rmaydi."));
 +
 +        items.add(UItem.asHeader("Himoya"));
-+        items.add(UItem.asButton(ID_FRAUD, R.drawable.msg_report, "Firibgarlikdan himoya", "tez kunda"));
-+        items.add(UItem.asButton(ID_REMOTE, R.drawable.msg_permissions, "Masofaviy yordam", "tez kunda"));
++        items.add(UItem.asButton(ID_FRAUD, R.drawable.msg_report, "Firibgarlikdan himoya", "yoqilgan"));
++        items.add(UItem.asButton(ID_REMOTE, R.drawable.msg_permissions, "Masofaviy yordam", "videoqo'ng'iroqda"));
 +        items.add(UItem.asShadow(null));
 +
 +        items.add(UItem.asHeader("Qulaylik"));
 +        items.add(UItem.asButton(ID_RATES, R.drawable.msg_stats, "Valyuta kursi (Markaziy bank)"));
-+        items.add(UItem.asButton(ID_SIMPLE, R.drawable.msg_customize, "Oddiy rejim", "tez kunda"));
++        items.add(UItem.asCheck(ID_SIMPLE, "Oddiy rejim (katta yozuv, kam narsa)").setChecked(AloJConfig.simpleMode()));
 +        items.add(UItem.asButton(ID_PREMIUM, R.drawable.msg_gift_premium, "AloJ Premium", "tez kunda"));
 +        items.add(UItem.asShadow(null));
 +
@@ -3711,10 +3711,34 @@ index 0000000..175806a
 +                listView.adapter.update(true);
 +                toast("Ilovani qayta ochganda kuchga kiradi");
 +                break;
++            case ID_SIMPLE:
++                AloJConfig.setSimpleMode(!AloJConfig.simpleMode());
++                listView.adapter.update(true);
++                toast(AloJConfig.simpleMode() ? "Oddiy rejim yoqildi. Ilovani qayta oching." : "Oddiy rejim o'chirildi. Ilovani qayta oching.");
++                break;
++            case ID_VOICE:
++                info("Chat ichida", "Istalgan chatni oching → yuqoridagi ⋮ menyu → \"AloJ vositalari\".\n\n• Tarjima qilib yuborish — o'zbekcha yozing, 11 tildan biriga o'girib yuboring\n• Ovoz bilan yozish — gapiring, matn bo'lib chiqadi\n• Lotin ↔ Kirill\n• Valyuta kalkulyatori\n\nKelgan xabarni bosib tursangiz: Tarjima, So'mga hisoblash, Lotin ↔ Kirill.");
++                break;
++            case ID_FRAUD:
++                info("Firibgarlikdan himoya", "AloJ notanish odamdan kelgan xabarlarni avtomatik tekshiradi: karta raqami + oldindan to'lov, SMS kod so'rash, \"yutib oldingiz\", shubhali havola va .apk fayllar. Xavf topilsa — ogohlantirish chiqadi.\n\nQo'lda tekshirish: chat → ⋮ → AloJ vositalari → \"Chatni firibgarlikka tekshirish\".");
++                break;
++            case ID_REMOTE:
++                info("Masofaviy yordam", "Chatda 📹 videoqo'ng'iroq boshlang → qo'ng'iroq ichida \"Ekranni ko'rsatish\" tugmasini bosing. Yaqiningiz ekraningizni ko'rib, yo'l-yo'riq beradi.\n\nEkranni masofadan boshqarish — keyingi versiyalarda.");
++                break;
 +            default:
 +                toast("Bu funksiya tez kunda qo'shiladi");
 +                break;
 +        }
++    }
++
++    private void info(String title, String text) {
++        Context ctx = getParentActivity();
++        if (ctx == null) return;
++        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
++        b.setTitle(title);
++        b.setMessage(text);
++        b.setPositiveButton("Tushunarli", null);
++        showDialog(b.create());
 +    }
 +
 +    private void toast(String s) {
@@ -3850,10 +3874,43 @@ index 0000000..175806a
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-index a54b134..3834030 100644
+index a54b134..1eecd2b 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -34291,6 +34291,12 @@ public class ChatActivity extends BaseFragment implements
+@@ -3988,6 +3988,8 @@ public class ChatActivity extends BaseFragment implements
+                     getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/help", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
+                 } else if (id == bot_settings) {
+                     getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/settings", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
++                } else if (id == uz.aloj.AloJChatSheet.MENU_ID) {
++                    uz.aloj.AloJChatSheet.show(ChatActivity.this);
+                 } else if (id == search) {
+                     openSearchWithText(isSupportedTags() ? "" : null);
+                 } else if (id == translate) {
+@@ -4402,6 +4404,7 @@ public class ChatActivity extends BaseFragment implements
+                 RLottieDrawable drawable = new RLottieDrawable(R.raw.boosts, dp(24), dp(24));
+                 headerItem.lazilyAddSubItem(boost_group, drawable, LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(currentChat) ? R.string.BoostingBoostChannelMenu : R.string.BoostingBoostGroupMenu));
+             }
++            headerItem.lazilyAddSubItem(uz.aloj.AloJChatSheet.MENU_ID, R.drawable.msg_customize, "AloJ vositalari");
+             translateItem = headerItem.lazilyAddSubItem(translate, R.drawable.msg_translate, LocaleController.getString(R.string.TranslateMessage));
+             updateTranslateItemVisibility();
+             if (currentChat != null && !currentChat.creator && !ChatObject.hasAdminRights(currentChat)) {
+@@ -21139,6 +21142,7 @@ public class ChatActivity extends BaseFragment implements
+ 
+     @Override
+     public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
++        if (uz.aloj.AloJChatSheet.onResult(this, requestCode, resultCode, data)) return;
+         if (resultCode == Activity.RESULT_OK) {
+             if (requestCode == 0 || requestCode == 2) {
+                 createChatAttachView();
+@@ -30660,6 +30664,7 @@ public class ChatActivity extends BaseFragment implements
+     public void onResume() {
+         super.onResume();
+         checkShowBlur(false);
++        AndroidUtilities.runOnUIThread(() -> { if (!isFinishing() && getParentActivity() != null) uz.aloj.AloJChatSheet.autoScan(ChatActivity.this); }, 1800);
+         activityResumeTime = System.currentTimeMillis();
+         if (openImport && getSendMessagesHelper().getImportingHistory(dialog_id) != null) {
+             ImportingAlert alert = new ImportingAlert(getParentActivity(), null, this, themeDelegate);
+@@ -34291,6 +34296,12 @@ public class ChatActivity extends BaseFragment implements
          if (selectedObject == null || getParentActivity() == null) {
              return;
          }
@@ -3866,7 +3923,7 @@ index a54b134..3834030 100644
          boolean preserveDim = false;
          switch (option) {
              case OPTION_RETRY: {
-@@ -46602,6 +46608,16 @@ public class ChatActivity extends BaseFragment implements
+@@ -46602,6 +46613,16 @@ public class ChatActivity extends BaseFragment implements
                      options.add(OPTION_TRANSLATE);
                      icons.add(R.drawable.msg_translate);
                  }
@@ -3900,7 +3957,7 @@ index 9f8f097..de7537c 100644
              @Override
              public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
-index d1ac117..d01383c 100644
+index d1ac117..d14163e 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
 @@ -301,7 +301,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
@@ -3917,7 +3974,7 @@ index d1ac117..d01383c 100644
          tabs = new GlassTabView[5];
          tabs[INDEX_CHATS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CHATS, R.string.MainTabsChats);
 -        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CONTACTS, R.string.MainTabsContacts);
-+        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CHECKLIST, R.string.AloJTab);
++        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.GIFT, R.string.AloJBozorTab);
          tabs[INDEX_SETTINGS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.SETTINGS, R.string.Settings);
          tabs[INDEX_CALLS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CALLS, R.string.MainTabsCalls);
          tabs[INDEX_PROFILE] = GlassTabView.createAvatar(context, resourceProvider, currentAccount, R.string.MainTabsProfile);
@@ -3929,10 +3986,34 @@ index d1ac117..d01383c 100644
 -            args.putBoolean("needFinishFragment", false);
              args.putBoolean("hasMainTabs", true);
 -            return new ContactsActivity(args);
-+            return new AloJHubActivity(args);
++            return new uz.aloj.bozor.BozorActivity(args);
          } else if (position == POSITION_CALLS_OR_SETTINGS) {
              if (getUserConfig().showCallsTab) {
                  Bundle args = new Bundle();
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
+index e2b917b..ced72c4 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
+@@ -722,6 +722,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
+         }
+ 
+         items.add(UItem.asCustomShadow(topView, 200 - 12));
++        items.add(UItem.asButton(990001, R.drawable.msg_customize, "AloJ imkoniyatlari", "Maxfiylik, Oddiy rejim, vositalar"));
++        items.add(UItem.asShadow(null));
+ 
+         accountNumbers.clear();
+         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
+@@ -878,6 +880,10 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
+     }
+ 
+     private void onClick(UItem item, View view, int position, float x, float y) {
++        if (item.id == 990001) {
++            presentFragment(new AloJHubActivity(null));
++            return;
++        }
+         if (item.object instanceof TLRPC.TL_attachMenuBot) {
+             TLRPC.TL_attachMenuBot attachMenuBot = (TLRPC.TL_attachMenuBot) item.object;
+             if (attachMenuBot.inactive || attachMenuBot.side_menu_disclaimer_needed) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
 index 529eb5c..7472988 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
@@ -3945,6 +4026,356 @@ index 529eb5c..7472988 100644
          return (dialogListStories != null && dialogListStories.size() > 0) || hasSelfStories();
      }
  
+diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
+new file mode 100644
+index 0000000..eafde4d
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
+@@ -0,0 +1,344 @@
++package uz.aloj;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.app.Activity;
++import android.content.Intent;
++import android.speech.RecognizerIntent;
++import android.text.Editable;
++import android.text.InputType;
++import android.text.TextWatcher;
++import android.util.TypedValue;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.MessageObject;
++import org.telegram.messenger.R;
++import org.telegram.messenger.Utilities;
++import org.telegram.tgnet.ConnectionsManager;
++import org.telegram.tgnet.TLRPC;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BottomSheet;
++import org.telegram.ui.ActionBar.Theme;
++import org.telegram.ui.ChatActivity;
++import org.telegram.ui.Components.ChatActivityEnterView;
++
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.Map;
++import java.util.regex.Pattern;
++
++/** AloJ: tools inside a chat (header menu → "AloJ vositalari"). */
++public final class AloJChatSheet {
++    public static final int MENU_ID = 7777;
++    private static final int REQ_SPEECH = 7401;
++
++    private static final String[] LANG_CODES = {"uz", "ru", "en", "tr", "zh", "ar", "ko", "de", "kk", "tg", "ky"};
++    private static final String[] LANG_NAMES = {"O'zbekcha", "Ruscha", "Inglizcha", "Turkcha", "Xitoycha", "Arabcha", "Koreyscha", "Nemischa", "Qozoqcha", "Tojikcha", "Qirg'izcha"};
++    private static final String[] SPEECH_LANGS = {"uz-UZ", "ru-RU", "en-US", "tr-TR"};
++
++    private static final HashSet<Long> scanned = new HashSet<>();
++
++    private AloJChatSheet() {}
++
++    private static void toast(ChatActivity f, String s) {
++        if (f.getParentActivity() != null) Toast.makeText(f.getParentActivity(), s, Toast.LENGTH_LONG).show();
++    }
++
++    private static CharSequence field(ChatActivity f) {
++        ChatActivityEnterView v = f.getChatActivityEnterView();
++        return v == null ? null : v.getFieldText();
++    }
++
++    private static void setField(ChatActivity f, CharSequence text) {
++        ChatActivityEnterView v = f.getChatActivityEnterView();
++        if (v != null) v.setFieldText(text);
++    }
++
++    public static void show(ChatActivity f) {
++        Activity a = f.getParentActivity();
++        if (a == null) return;
++        final boolean ghost = AloJConfig.hideTyping() && AloJConfig.hideOnline();
++        CharSequence[] items = {
++                "Tarjima qilib yuborish (yozgan matnim)",
++                "Ovoz bilan yozish",
++                "Lotin ↔ Kirill (yozgan matnim)",
++                "Valyuta kalkulyatori",
++                ghost ? "Arvoh rejimi: YONIQ (o'chirish)" : "Arvoh rejimi: o'chiq (yoqish)",
++                "Chatni firibgarlikka tekshirish",
++                "Masofaviy yordam (ekranni ko'rsatish)",
++                "Barcha AloJ sozlamalari"
++        };
++        int[] icons = {R.drawable.msg_translate, R.drawable.input_mic, R.drawable.msg_text_outlined, R.drawable.msg_payment_card,
++                R.drawable.msg_secret, R.drawable.msg_report, R.drawable.msg_videocall, R.drawable.msg_settings_old};
++        BottomSheet.Builder b = new BottomSheet.Builder(a, false, f.getResourceProvider());
++        b.setTitle("AloJ vositalari", true);
++        b.setItems(items, icons, (d, which) -> {
++            switch (which) {
++                case 0: translateOutgoing(f); break;
++                case 1: pickSpeechLang(f); break;
++                case 2: translitOutgoing(f); break;
++                case 3: currency(f); break;
++                case 4:
++                    AloJConfig.set("hideTyping", !ghost);
++                    AloJConfig.set("hideOnline", !ghost);
++                    toast(f, !ghost ? "👻 Arvoh rejimi yoqildi: \"yozmoqda\" va onlayn holatingiz ko'rinmaydi" : "Arvoh rejimi o'chirildi");
++                    break;
++                case 5: scan(f, true); break;
++                case 6: remoteHelp(f); break;
++                case 7: f.presentFragment(new org.telegram.ui.AloJHubActivity(null)); break;
++            }
++        });
++        f.showDialog(b.create());
++    }
++
++    // ---------------- translate before sending ----------------
++
++    private static void translateOutgoing(ChatActivity f) {
++        CharSequence text = field(f);
++        if (text == null || text.toString().trim().isEmpty()) {
++            toast(f, "Avval matn yozing, keyin tarjima qiling. Masalan: \"Salom, qalaysiz?\"");
++            return;
++        }
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("Qaysi tilga tarjima qilay?");
++        b.setItems(LANG_NAMES, (d, w) -> translate(f, text.toString(), LANG_CODES[w], result -> {
++            setField(f, result);
++            toast(f, "✅ Tarjima qilindi — tekshirib, yuboring");
++        }));
++        f.showDialog(b.create());
++    }
++
++    public interface Done {
++        void run(String result);
++    }
++
++    public static void translate(ChatActivity f, String text, String toLang, Done done) {
++        TLRPC.TL_messages_translateText req = new TLRPC.TL_messages_translateText();
++        req.flags |= 2;
++        TLRPC.TL_textWithEntities t = new TLRPC.TL_textWithEntities();
++        t.text = text;
++        req.text.add(t);
++        req.to_lang = toLang;
++        toast(f, "Tarjima qilinmoqda...");
++        ConnectionsManager.getInstance(f.getCurrentAccount()).sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
++            if (res instanceof TLRPC.TL_messages_translateResult && !((TLRPC.TL_messages_translateResult) res).result.isEmpty()) {
++                done.run(((TLRPC.TL_messages_translateResult) res).result.get(0).text);
++            } else {
++                toast(f, "Tarjima qilib bo'lmadi" + (err != null ? " (" + err.text + ")" : ""));
++            }
++        }));
++    }
++
++    // ---------------- voice typing ----------------
++
++    private static void pickSpeechLang(ChatActivity f) {
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("Qaysi tilda gapirasiz?");
++        b.setItems(new CharSequence[]{"O'zbekcha", "Ruscha", "Inglizcha", "Turkcha"}, (d, w) -> {
++            try {
++                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
++                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
++                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SPEECH_LANGS[w]);
++                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Gapiring — AloJ matnga aylantiradi");
++                f.getParentActivity().startActivityForResult(i, REQ_SPEECH);
++            } catch (Throwable e) {
++                toast(f, "Telefoningizda ovozni tanish xizmati yo'q (Google ilovasini o'rnating)");
++            }
++        });
++        f.showDialog(b.create());
++    }
++
++    /** Called from ChatActivity.onActivityResultFragment. */
++    public static boolean onResult(ChatActivity f, int requestCode, int resultCode, Intent data) {
++        if (requestCode != REQ_SPEECH) return false;
++        if (resultCode == Activity.RESULT_OK && data != null) {
++            ArrayList<String> r = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
++            if (r != null && !r.isEmpty()) {
++                CharSequence cur = field(f);
++                String base = cur == null ? "" : cur.toString();
++                setField(f, base.isEmpty() ? r.get(0) : base + " " + r.get(0));
++            }
++        }
++        return true;
++    }
++
++    // ---------------- translit ----------------
++
++    private static void translitOutgoing(ChatActivity f) {
++        CharSequence text = field(f);
++        if (text == null || text.toString().trim().isEmpty()) {
++            toast(f, "Avval matn yozing — AloJ uni lotin ↔ kirillga o'giradi");
++            return;
++        }
++        setField(f, AloJTranslit.toggle(text.toString()));
++    }
++
++    // ---------------- currency ----------------
++
++    private static void currency(ChatActivity f) {
++        toast(f, "Kurs yuklanmoqda...");
++        Utilities.globalQueue.postRunnable(() -> {
++            Map<String, Double> rates = null;
++            try {
++                rates = AloJRates.load();
++            } catch (Throwable ignore) {
++            }
++            final Map<String, Double> r = rates;
++            AndroidUtilities.runOnUIThread(() -> currencyDialog(f, r));
++        });
++    }
++
++    private static void currencyDialog(ChatActivity f, Map<String, Double> rates) {
++        if (f.getParentActivity() == null) return;
++        if (rates == null || rates.isEmpty()) {
++            toast(f, "Kursni yuklab bo'lmadi. Internetni tekshiring.");
++            return;
++        }
++        final String[] codes = {"USD", "EUR", "RUB", "KZT", "CNY", "AED", "TRY"};
++        final int[] sel = {0};
++        LinearLayout box = new LinearLayout(f.getParentActivity());
++        box.setOrientation(LinearLayout.VERTICAL);
++        box.setPadding(dp(24), dp(4), dp(24), 0);
++        LinearLayout row = new LinearLayout(f.getParentActivity());
++        TextView[] chips = new TextView[codes.length];
++        EditText amount = new EditText(f.getParentActivity());
++        TextView out = new TextView(f.getParentActivity());
++        Runnable recalc = () -> {
++            try {
++                double v = Double.parseDouble(amount.getText().toString().replace(",", ".").replace(" ", ""));
++                Double rate = rates.get(codes[sel[0]]);
++                out.setText(rate == null ? "" : AloJRates.formatSom(v * rate) + "\n(1 " + codes[sel[0]] + " = " + AloJRates.formatSom(rate) + ")");
++            } catch (Throwable e) {
++                Double rate = rates.get(codes[sel[0]]);
++                out.setText(rate == null ? "" : "1 " + codes[sel[0]] + " = " + AloJRates.formatSom(rate));
++            }
++        };
++        for (int i = 0; i < codes.length; i++) {
++            final int idx = i;
++            TextView c = new TextView(f.getParentActivity());
++            c.setText(codes[i]);
++            c.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
++            c.setPadding(dp(8), dp(6), dp(8), dp(6));
++            c.setOnClickListener(v -> {
++                sel[0] = idx;
++                for (int k = 0; k < chips.length; k++) {
++                    chips[k].setTextColor(k == idx ? 0xFFE8712A : Theme.getColor(Theme.key_dialogTextBlack, f.getResourceProvider()));
++                    chips[k].setTypeface(k == idx ? AndroidUtilities.bold() : null);
++                }
++                recalc.run();
++            });
++            chips[i] = c;
++            row.addView(c);
++        }
++        android.widget.HorizontalScrollView hs = new android.widget.HorizontalScrollView(f.getParentActivity());
++        hs.addView(row);
++        box.addView(hs);
++        amount.setHint("Summa, masalan 500");
++        amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
++        amount.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, f.getResourceProvider()));
++        amount.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint, f.getResourceProvider()));
++        box.addView(amount);
++        out.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
++        out.setTypeface(AndroidUtilities.bold());
++        out.setTextColor(0xFFE8712A);
++        out.setPadding(0, dp(8), 0, dp(4));
++        box.addView(out);
++        amount.addTextChangedListener(new TextWatcher() {
++            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
++            @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
++            @Override public void afterTextChanged(Editable s) { recalc.run(); }
++        });
++        chips[0].performClick();
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("Valyuta → so'm");
++        b.setView(box);
++        b.setPositiveButton("Chatga yozish", (d, w) -> {
++            CharSequence o = out.getText();
++            if (o != null && o.length() > 0 && amount.getText().length() > 0) {
++                String line = amount.getText() + " " + codes[sel[0]] + " ≈ " + o.toString().split("\n")[0];
++                CharSequence cur = field(f);
++                setField(f, cur == null || cur.length() == 0 ? line : cur + " " + line);
++            }
++        });
++        b.setNegativeButton("Yopish", null);
++        f.showDialog(b.create());
++    }
++
++    // ---------------- anti-fraud ----------------
++
++    private static final Pattern CARD = Pattern.compile("(?<!\\d)(8600|9860|5614|6262|4\\d{3}|5\\d{3})[ -]?\\d{4}[ -]?\\d{4}[ -]?\\d{4}(?!\\d)");
++    private static final Pattern MONEY_ASK = Pattern.compile("(oldindan|avans|predoplat|предоплат|zaklad|залог|kartaga\\s+tashla|kartaga\\s+o'tkaz|переведите|скиньте\\s+на\\s+карт|pul\\s+o'tkaz|yetkazib\\s+berish\\s+uchun\\s+to'lov)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
++    private static final Pattern CODE_ASK = Pattern.compile("(sms\\s*kod|kodni\\s+ayt|kodni\\s+yubor|kod\\s+keldi|код\\s+из\\s+смс|назовите\\s+код|parolni|пароль)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
++    private static final Pattern PRIZE = Pattern.compile("(yutib\\s+oldingiz|sovrin|yutuq|bepul\\s+iphone|вы\\s+выиграли|приз|подарок\\s+от)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
++    private static final Pattern BAD_LINK = Pattern.compile("(\\.apk\\b|bit\\.ly|cutt\\.ly|tinyurl|olx-[a-z]|olx\\.(?!uz)|click-uz|payme-[a-z]|uzcard-[a-z]|humo-[a-z])", Pattern.CASE_INSENSITIVE);
++
++    /** Called when a chat opens; warns once per chat about typical scam messages from non-contacts. */
++    public static void autoScan(ChatActivity f) {
++        scan(f, false);
++    }
++
++    private static void scan(ChatActivity f, boolean manual) {
++        if (f.getParentActivity() == null) return;
++        long did = f.getDialogId();
++        TLRPC.User u = f.getCurrentUser();
++        if (!manual) {
++            if (u == null || u.contact || u.self || u.bot || u.id == 777000 || scanned.contains(did)) return;
++        }
++        ArrayList<String> reasons = new ArrayList<>();
++        ArrayList<MessageObject> list = f.messages;
++        int n = 0;
++        for (int i = 0; list != null && i < list.size() && n < 60; i++) {
++            MessageObject m = list.get(i);
++            if (m == null || m.isOut() || m.messageText == null) continue;
++            n++;
++            String t = m.messageText.toString();
++            if (CARD.matcher(t).find() && MONEY_ASK.matcher(t).find() && !reasons.contains("card")) reasons.add("card");
++            else if (MONEY_ASK.matcher(t).find() && !reasons.contains("money")) reasons.add("money");
++            if (CODE_ASK.matcher(t).find() && !reasons.contains("code")) reasons.add("code");
++            if (PRIZE.matcher(t).find() && !reasons.contains("prize")) reasons.add("prize");
++            if (BAD_LINK.matcher(t).find() && !reasons.contains("link")) reasons.add("link");
++            if (m.getDocument() != null && m.getDocumentName() != null && m.getDocumentName().toLowerCase().endsWith(".apk") && !reasons.contains("apk")) reasons.add("apk");
++        }
++        if (!manual) scanned.add(did);
++        if (reasons.isEmpty()) {
++            if (manual) toast(f, "✅ Shubhali narsa topilmadi. Baribir oldindan pul o'tkazmang!");
++            return;
++        }
++        StringBuilder sb = new StringBuilder();
++        if (u != null && !u.contact && !u.self) sb.append("Bu odam kontaktlaringizda yo'q.\n\n");
++        for (String r : reasons) {
++            switch (r) {
++                case "card": sb.append("💳 Karta raqami va oldindan to'lov so'ralmoqda — bu eng ko'p uchraydigan aldov.\n"); break;
++                case "money": sb.append("💸 Oldindan pul / avans so'ralmoqda.\n"); break;
++                case "code": sb.append("🔑 SMS kod yoki parol so'ralmoqda — HECH KIMGA aytmang, akkauntingiz o'g'irlanadi.\n"); break;
++                case "prize": sb.append("🎁 \"Yutib oldingiz\" / sovrin haqidagi xabar — odatda firibgarlik.\n"); break;
++                case "link": sb.append("🔗 Shubhali havola (soxta sayt yoki qisqartirilgan link).\n"); break;
++                case "apk": sb.append("📦 .apk fayl yuborilgan — o'rnatmang, telefoningiz buziladi.\n"); break;
++            }
++        }
++        sb.append("\nAloJ maslahati: mahsulotni ko'rmasdan pul o'tkazmang, kodlarni hech kimga bermang.");
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("⚠️ Ehtiyot bo'ling!");
++        b.setMessage(sb.toString());
++        b.setPositiveButton("Tushundim", null);
++        f.showDialog(b.create());
++    }
++
++    // ---------------- remote help ----------------
++
++    private static void remoteHelp(ChatActivity f) {
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("Masofaviy yordam");
++        b.setMessage("Yaqiningizga telefonni sozlashda yordam berish uchun:\n\n"
++                + "1. Shu chatda 📹 videoqo'ng'iroq boshlang.\n"
++                + "2. Qo'ng'iroq ichida \"Ekranni ko'rsatish\" (Screen sharing) tugmasini bosing.\n"
++                + "3. Suhbatdoshingiz ekraningizni ko'radi va ovoz bilan yo'l-yo'riq beradi.\n\n"
++                + "Ekranni masofadan BOSHQARISH (AnyDesk kabi) — AloJ'ning keyingi versiyalarida.");
++        b.setPositiveButton("Tushunarli", null);
++        f.showDialog(b.create());
++    }
++}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java
 new file mode 100644
 index 0000000..47805ad
@@ -4105,10 +4536,10 @@ index 0000000..47805ad
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java b/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java
 new file mode 100644
-index 0000000..da4c9f5
+index 0000000..89e843f
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,68 @@
 +package uz.aloj;
 +
 +import android.content.Context;
@@ -4145,6 +4576,25 @@ index 0000000..da4c9f5
 +    public static boolean hideTyping() { load(); return hideTyping; }
 +    public static boolean hideOnline() { load(); return hideOnline; }
 +    public static boolean hideStories() { load(); return hideStories; }
++
++    public static boolean simpleMode() {
++        return prefs().getBoolean("simpleMode", false);
++    }
++
++    public static void setSimpleMode(boolean on) {
++        prefs().edit().putBoolean("simpleMode", on).apply();
++        set("hideStories", on);
++        SharedPreferences main = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE);
++        int size = on ? 20 : 16;
++        org.telegram.messenger.SharedConfig.fontSize = size;
++        org.telegram.messenger.SharedConfig.fontSizeIsDefault = !on;
++        if (on) main.edit().putInt("fons_size", size).commit();
++        else main.edit().remove("fons_size").commit();
++        try {
++            org.telegram.ui.ActionBar.Theme.createCommonMessageResources();
++        } catch (Throwable ignore) {
++        }
++    }
 +
 +    public static void set(String key, boolean value) {
 +        load();
@@ -4347,10 +4797,10 @@ index 0000000..7f170d0
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
 new file mode 100644
-index 0000000..7da1192
+index 0000000..4de5d82
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
-@@ -0,0 +1,361 @@
+@@ -0,0 +1,371 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -4406,14 +4856,24 @@ index 0000000..7da1192
 +    private int requestId;
 +
 +    private RecyclerView listView;
++    private boolean hasMainTabs;
++
++    public BozorActivity() {
++        super();
++    }
++
++    public BozorActivity(Bundle args) {
++        super(args);
++    }
 +    private Adapter adapter;
 +    private int cardWidth;
 +
 +    @Override
 +    public View createView(Context context) {
-+        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        hasMainTabs = arguments != null && arguments.getBoolean("hasMainTabs", false);
++        if (!hasMainTabs) actionBar.setBackButtonImage(R.drawable.ic_ab_back);
 +        actionBar.setAllowOverlayTitle(true);
-+        actionBar.setTitle("Bozor");
++        actionBar.setTitle("AloJ Bozor");
 +        ActionBarMenu menu = actionBar.createMenu();
 +        menu.addItem(MENU_FAVS, R.drawable.msg_fave);
 +        menu.addItem(MENU_MINE, R.drawable.msg_contacts);
@@ -4443,7 +4903,7 @@ index 0000000..7da1192
 +            }
 +        });
 +        listView.setLayoutManager(lm);
-+        listView.setPadding(dp(6), 0, dp(6), dp(90));
++        listView.setPadding(dp(6), 0, dp(6), dp(90) + (hasMainTabs ? dp(org.telegram.ui.DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS) : 0));
 +        listView.setClipToPadding(false);
 +        adapter = new Adapter();
 +        listView.setAdapter(adapter);
@@ -4464,7 +4924,7 @@ index 0000000..7da1192
 +        fab.setBackground(org.telegram.ui.ActionBar.Theme.createSimpleSelectorRoundRectDrawable(dp(26), BozorUi.ORANGE, BozorUi.ORANGE_DARK));
 +        fab.setElevation(dp(6));
 +        fab.setOnClickListener(v -> presentFragment(new BozorNewActivity()));
-+        root.addView(fab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 52, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, 22));
++        root.addView(fab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 52, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, 22 + (hasMainTabs ? org.telegram.ui.DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS : 0)));
 +
 +        fragmentView = root;
 +        load(true);
@@ -66070,7 +66530,7 @@ index acec6de..758df0e 100644
          <item name="android:windowSplashScreenBackground">?android:windowBackground</item>
      </style>
 diff --git a/TMessagesProj/src/main/res/values/strings.xml b/TMessagesProj/src/main/res/values/strings.xml
-index e4f8cf6..cd13a38 100644
+index e4f8cf6..90f0e4a 100644
 --- a/TMessagesProj/src/main/res/values/strings.xml
 +++ b/TMessagesProj/src/main/res/values/strings.xml
 @@ -1,7 +1,7 @@
@@ -67916,7 +68376,7 @@ index e4f8cf6..cd13a38 100644
      <string name="StoryPrivacyGroupNoContacts">All group members are not in your contact list.</string>
      <string name="StoryPrivacyGroupNonContacts_one">%1$d member is not in your contact list</string>
      <string name="StoryPrivacyGroupNonContacts_other">%1$d members are not in your contact list</string>
-@@ -11673,10 +11673,11 @@
+@@ -11673,10 +11673,12 @@
      <string name="LocationPoweredBy">Powered by</string>
      <string name="SettingsExperimental">Experimental</string>
      <string name="FpnvConsentTitle">Log In with SIM Card</string>
@@ -67928,6 +68388,7 @@ index e4f8cf6..cd13a38 100644
      <string name="FpnvConsentSimSlotValue">SIM %1$d</string>
      <string name="FpnvConsentPhoneNumber">Phone Number</string>
 +    <string name="AloJTab" translatable="false">AloJ</string>
++    <string name="AloJBozorTab" translatable="false">Bozor</string>
  </resources>
 diff --git a/TMessagesProj_App/build.gradle b/TMessagesProj_App/build.gradle
 index daff205..cdc620e 100644
