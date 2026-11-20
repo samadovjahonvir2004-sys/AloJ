@@ -2579,7 +2579,7 @@ index 0000000..2e6ce37
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java b/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java
 new file mode 100644
-index 0000000..ef983f3
+index 0000000..4dc84fe
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java
 @@ -0,0 +1,78 @@
@@ -2632,7 +2632,7 @@ index 0000000..ef983f3
 +            try {
 +                StringWriter sw = new StringWriter();
 +                PrintWriter pw = new PrintWriter(sw);
-+                pw.println("AloJ " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
++                pw.println("AloJ " + BuildVars.BUILD_VERSION_STRING);
 +                pw.println("Android " + Build.VERSION.RELEASE + " / SDK " + Build.VERSION.SDK_INT + " / " + Build.MANUFACTURER + " " + Build.MODEL);
 +                pw.println("Thread: " + thread.getName());
 +                pw.println();
@@ -3357,7 +3357,7 @@ index 0000000..18e904e
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 new file mode 100644
-index 0000000..489aae7
+index 0000000..619faef
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 @@ -0,0 +1,290 @@
@@ -3384,7 +3384,7 @@ index 0000000..489aae7
 +import android.widget.Toast;
 +
 +import org.telegram.messenger.AndroidUtilities;
-+import org.telegram.messenger.BuildConfig;
++
 +import org.telegram.messenger.R;
 +import org.telegram.messenger.Utilities;
 +import org.telegram.ui.ActionBar.AlertDialog;
@@ -3480,7 +3480,7 @@ index 0000000..489aae7
 +        items.add(UItem.asShadow(null));
 +
 +        items.add(UItem.asButton(ID_ABOUT, R.drawable.msg_info, "AloJ haqida"));
-+        items.add(UItem.asShadow("AloJ " + BuildConfig.VERSION_NAME + " · Alo, Jahon!"));
++        items.add(UItem.asShadow("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + " · Alo, Jahon!"));
 +    }
 +
 +    private void onClick(UItem item, View view, int position, float x, float y) {
@@ -3638,7 +3638,7 @@ index 0000000..489aae7
 +        if (ctx == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
 +        b.setTitle("AloJ haqida");
-+        b.setMessage("AloJ " + BuildConfig.VERSION_NAME + "\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n"
++        b.setMessage("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + "\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n"
 +                + "AloJ Telegram API asosida ishlaydigan norasmiy ilova. Telegram akkauntingiz, chatlaringiz va kanallaringiz shu yerda.\n\n"
 +                + "Ochiq kodli Telegram for Android va Nagram (GPLv3) asosida qurilgan.");
 +        b.setPositiveButton("Manba kodi", (d, w) -> {
