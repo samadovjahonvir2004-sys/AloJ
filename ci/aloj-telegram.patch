@@ -103,10 +103,23 @@ literal 0
 HcmV?d00001
 
 diff --git a/TMessagesProj/src/main/AndroidManifest.xml b/TMessagesProj/src/main/AndroidManifest.xml
-index 99f64ad..cc5eb1d 100644
+index 99f64ad..d429a39 100644
 --- a/TMessagesProj/src/main/AndroidManifest.xml
 +++ b/TMessagesProj/src/main/AndroidManifest.xml
-@@ -109,6 +109,8 @@
+@@ -90,6 +90,12 @@
+             <action android:name="android.intent.action.VIEW"/>
+             <data android:scheme="ton"/>
+         </intent>
++        <intent>
++            <action android:name="android.speech.action.RECOGNIZE_SPEECH"/>
++        </intent>
++        <intent>
++            <action android:name="android.speech.RecognitionService"/>
++        </intent>
+     </queries>
+ 
+     <application
+@@ -109,6 +115,8 @@
          android:usesCleartextTraffic="true"
          android:enableOnBackInvokedCallback="true"
      >
@@ -10798,10 +10811,10 @@ index 0000000..509fd02
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
 new file mode 100644
-index 0000000..047ce8d
+index 0000000..f2c0716
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
-@@ -0,0 +1,488 @@
+@@ -0,0 +1,552 @@
 +package uz.aloj;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -11085,19 +11098,83 @@ index 0000000..047ce8d
 +
 +    private static void pickSpeechLang(ChatActivity f) {
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle(uz.aloj.L.t("Qaysi tilda gapirasiz?", "На каком языке будете говорить?"));
-+        b.setItems(new CharSequence[]{uz.aloj.L.t("O'zbekcha", "Узбекский"), uz.aloj.L.t("Ruscha", "Русский"), uz.aloj.L.t("Inglizcha", "Английский"), uz.aloj.L.t("Turkcha", "Турецкий")}, (d, w) -> {
++        b.setTitle(L.t("Qaysi tilda gapirasiz?", "На каком языке будете говорить?"));
++        b.setItems(new CharSequence[]{L.t("O'zbekcha", "Узбекский"), L.t("Ruscha", "Русский"), L.t("Inglizcha", "Английский"), L.t("Turkcha", "Турецкий")}, (d, w) -> startSpeech(f, SPEECH_LANGS[w]));
++        f.showDialog(b.create());
++    }
++
++    private static void startSpeech(ChatActivity f, String lang) {
++        Activity a = f.getParentActivity();
++        if (a == null) return;
++        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
++        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
++        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, lang);
++        i.putExtra(RecognizerIntent.EXTRA_PROMPT, L.t("Gapiring — AloJ matnga aylantiradi", "Говорите — AloJ превратит речь в текст"));
++        if (i.resolveActivity(a.getPackageManager()) != null) {
 +            try {
-+                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-+                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-+                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SPEECH_LANGS[w]);
-+                i.putExtra(RecognizerIntent.EXTRA_PROMPT, uz.aloj.L.t("Gapiring — AloJ matnga aylantiradi", "Говорите — AloJ превратит речь в текст"));
-+                f.getParentActivity().startActivityForResult(i, REQ_SPEECH);
-+            } catch (Throwable e) {
-+                toast(f, uz.aloj.L.t("Telefoningizda ovozni tanish xizmati yo'q (Google ilovasini o'rnating)", "На телефоне нет распознавания речи (установите приложение Google)"));
++                a.startActivityForResult(i, REQ_SPEECH);
++                return;
++            } catch (Throwable ignore) {
++            }
++        }
++        inAppSpeech(f, lang);
++    }
++
++    /** Fallback: listen inside AloJ with Android's SpeechRecognizer (no extra app screen). */
++    private static void inAppSpeech(ChatActivity f, String lang) {
++        Activity a = f.getParentActivity();
++        if (a == null) return;
++        if (android.os.Build.VERSION.SDK_INT >= 23 && a.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
++            a.requestPermissions(new String[]{android.Manifest.permission.RECORD_AUDIO}, 3);
++            toast(f, L.t("Mikrofonga ruxsat bering va qayta bosing", "Разрешите доступ к микрофону и нажмите ещё раз"));
++            return;
++        }
++        if (!android.speech.SpeechRecognizer.isRecognitionAvailable(a)) {
++            toast(f, L.t("Telefoningizda ovozni tanish xizmati yo'q. Play Market'dan \"Google\" ilovasini o'rnating.", "На телефоне нет распознавания речи. Установите приложение «Google» из Play Market."));
++            return;
++        }
++        final android.speech.SpeechRecognizer sr = android.speech.SpeechRecognizer.createSpeechRecognizer(a);
++        AlertDialog.Builder b = new AlertDialog.Builder(a, f.getResourceProvider());
++        b.setTitle("🎤 " + L.t("Gapiring...", "Говорите..."));
++        b.setMessage(L.t("Gapirib bo'lgach biroz kuting — matn yozish maydoniga tushadi.", "Договорите и подождите — текст появится в поле ввода."));
++        b.setNegativeButton(L.t("To'xtatish", "Стоп"), (d, w) -> {
++            try { sr.stopListening(); } catch (Throwable ignore) {}
++        });
++        final AlertDialog dialog = b.create();
++        sr.setRecognitionListener(new android.speech.RecognitionListener() {
++            @Override public void onReadyForSpeech(android.os.Bundle params) {}
++            @Override public void onBeginningOfSpeech() {}
++            @Override public void onRmsChanged(float rmsdB) {}
++            @Override public void onBufferReceived(byte[] buffer) {}
++            @Override public void onEndOfSpeech() {}
++            @Override public void onPartialResults(android.os.Bundle partialResults) {}
++            @Override public void onEvent(int eventType, android.os.Bundle params) {}
++            @Override public void onError(int error) {
++                try { dialog.dismiss(); } catch (Throwable ignore) {}
++                try { sr.destroy(); } catch (Throwable ignore) {}
++                toast(f, L.t("Ovoz tanilmadi (kod ", "Речь не распознана (код ") + error + L.t("). Qayta urinib ko'ring.", "). Попробуйте ещё раз."));
++            }
++            @Override public void onResults(android.os.Bundle results) {
++                try { dialog.dismiss(); } catch (Throwable ignore) {}
++                ArrayList<String> r = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
++                if (r != null && !r.isEmpty()) {
++                    CharSequence cur = field(f);
++                    String base = cur == null ? "" : cur.toString();
++                    setField(f, base.isEmpty() ? r.get(0) : base + " " + r.get(0));
++                }
++                try { sr.destroy(); } catch (Throwable ignore) {}
 +            }
 +        });
-+        f.showDialog(b.create());
++        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
++        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
++        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, lang);
++        f.showDialog(dialog);
++        try {
++            sr.startListening(i);
++        } catch (Throwable e) {
++            try { dialog.dismiss(); } catch (Throwable ignore) {}
++            toast(f, L.t("Mikrofonni ishga tushirib bo'lmadi", "Не удалось включить микрофон"));
++        }
 +    }
 +
 +    /** Called from ChatActivity.onActivityResultFragment. */
@@ -76286,7 +76363,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..ff74da3 100644
+index 17bb1dc..05b2e40 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -76295,7 +76372,7 @@ index 17bb1dc..ff74da3 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.9.0
++APP_VERSION_NAME=1.9.1
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
