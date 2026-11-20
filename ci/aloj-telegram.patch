@@ -9135,10 +9135,10 @@ index 6518ff0..4c4810c 100644
 +wallet_out_commentBorder=-10202555
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/AloJBrand.java b/TMessagesProj/src/main/java/org/telegram/messenger/AloJBrand.java
 new file mode 100644
-index 0000000..2e6ce37
+index 0000000..969ef3b
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/AloJBrand.java
-@@ -0,0 +1,26 @@
+@@ -0,0 +1,29 @@
 +package org.telegram.messenger;
 +
 +import java.util.regex.Pattern;
@@ -9150,6 +9150,9 @@ index 0000000..2e6ce37
 +    private static final Pattern P2 = Pattern.compile("(?<![@/\\.\\w-])Telegram(?!\\s?(?:Premium|Stars|Business|Gateway|Passport|Wallet|Gift|Gifts|Fragment|API))(?!\\.[A-Za-z])(?![\\w/-])");
 +    private static final Pattern P3 = Pattern.compile("(?<![\\p{L}])Телеграм(?:ме|ма|му|мом|е|а|у|ом)?(?![\\p{L}])");
 +
++    /** Telegram's own paid services keep the Telegram name (in any language). */
++    private static final Pattern PAID = Pattern.compile("Premium|Stars|Gift|Business|Премиум|Звёзд|Звезд|бизнес|Бизнес|подар|Подар|Fragment|Wallet|Кошел", Pattern.UNICODE_CASE);
++
 +    private AloJBrand() {}
 +
 +    public static String apply(String s) {
@@ -9159,7 +9162,7 @@ index 0000000..2e6ce37
 +            return s;
 +        }
 +        s = P1.matcher(s).replaceAll("AloJ");
-+        if (s.contains("Premium") || s.contains("Stars") || s.contains("Gift")) return s;
++        if (PAID.matcher(s).find()) return s;
 +        s = P2.matcher(s).replaceAll("AloJ");
 +        s = P3.matcher(s).replaceAll("AloJ");
 +        return s;
@@ -10140,7 +10143,7 @@ index 0000000..18e904e
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 new file mode 100644
-index 0000000..6d206db
+index 0000000..6cd9084
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 @@ -0,0 +1,317 @@
@@ -10235,34 +10238,34 @@ index 0000000..6d206db
 +    }
 +
 +    private void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
-+        items.add(UItem.asHeader("Asosiy"));
-+        items.add(UItem.asButton(ID_CONTACTS, R.drawable.msg_contacts, "Kontaktlar"));
-+        items.add(UItem.asButton(ID_BOZOR, R.drawable.msg_payment_card, "Bozor — sotish va sotib olish", "YANGI"));
++        items.add(UItem.asHeader(uz.aloj.L.t("Asosiy", "Основное")));
++        items.add(UItem.asButton(ID_CONTACTS, R.drawable.msg_contacts, uz.aloj.L.t("Kontaktlar", "Контакты")));
++        items.add(UItem.asButton(ID_BOZOR, R.drawable.msg_payment_card, uz.aloj.L.t("Bozor — sotish va sotib olish", "Базар — купить и продать"), uz.aloj.L.t("YANGI", "НОВОЕ")));
 +        items.add(UItem.asShadow(null));
 +
-+        items.add(UItem.asHeader("Muloqot"));
-+        items.add(UItem.asButton(ID_TRANSLIT, R.drawable.msg_text_outlined, "Lotin ↔ Kirill o'girgich"));
-+        items.add(UItem.asButton(ID_VOICE, R.drawable.msg_voicechat, "Tarjima va ovoz bilan yozish", "chatda"));
++        items.add(UItem.asHeader(uz.aloj.L.t("Muloqot", "Общение")));
++        items.add(UItem.asButton(ID_TRANSLIT, R.drawable.msg_text_outlined, uz.aloj.L.t("Lotin ↔ Kirill o'girgich", "Латиница ↔ кириллица")));
++        items.add(UItem.asButton(ID_VOICE, R.drawable.msg_voicechat, uz.aloj.L.t("Tarjima va ovoz bilan yozish", "Перевод и голосовой ввод"), uz.aloj.L.t("chatda", "в чате")));
 +        items.add(UItem.asShadow(null));
 +
-+        items.add(UItem.asHeader("Maxfiylik"));
-+        items.add(UItem.asCheck(ID_HIDE_TYPING, "\"Yozmoqda...\" holatini yubormaslik").setChecked(AloJConfig.hideTyping()));
-+        items.add(UItem.asCheck(ID_HIDE_ONLINE, "Onlayn ekanimni ko'rsatmaslik").setChecked(AloJConfig.hideOnline()));
-+        items.add(UItem.asCheck(ID_HIDE_STORIES, "Hikoyalar qatorini yashirish").setChecked(AloJConfig.hideStories()));
-+        items.add(UItem.asShadow("Arvoh rejimi: boshqalar siz yozayotganingizni va onlayn ekaningizni ko'rmaydi."));
++        items.add(UItem.asHeader(uz.aloj.L.t("Maxfiylik", "Приватность")));
++        items.add(UItem.asCheck(ID_HIDE_TYPING, uz.aloj.L.t("\"Yozmoqda...\" holatini yubormaslik", "Не отправлять «печатает...»")).setChecked(AloJConfig.hideTyping()));
++        items.add(UItem.asCheck(ID_HIDE_ONLINE, uz.aloj.L.t("Onlayn ekanimni ko'rsatmaslik", "Не показывать, что я в сети")).setChecked(AloJConfig.hideOnline()));
++        items.add(UItem.asCheck(ID_HIDE_STORIES, uz.aloj.L.t("Hikoyalar qatorini yashirish", "Скрыть ленту историй")).setChecked(AloJConfig.hideStories()));
++        items.add(UItem.asShadow(uz.aloj.L.t("Arvoh rejimi: boshqalar siz yozayotganingizni va onlayn ekaningizni ko'rmaydi.", "Режим «призрак»: другие не видят, что вы печатаете и что вы в сети.")));
 +
-+        items.add(UItem.asHeader("Himoya"));
-+        items.add(UItem.asButton(ID_FRAUD, R.drawable.msg_report, "Firibgarlikdan himoya", "yoqilgan"));
-+        items.add(UItem.asButton(ID_REMOTE, R.drawable.msg_permissions, "Masofaviy yordam", "videoqo'ng'iroqda"));
++        items.add(UItem.asHeader(uz.aloj.L.t("Himoya", "Защита")));
++        items.add(UItem.asButton(ID_FRAUD, R.drawable.msg_report, uz.aloj.L.t("Firibgarlikdan himoya", "Защита от мошенников"), uz.aloj.L.t("yoqilgan", "включена")));
++        items.add(UItem.asButton(ID_REMOTE, R.drawable.msg_permissions, uz.aloj.L.t("Masofaviy yordam", "Удалённая помощь"), uz.aloj.L.t("videoqo'ng'iroqda", "в видеозвонке")));
 +        items.add(UItem.asShadow(null));
 +
-+        items.add(UItem.asHeader("Qulaylik"));
-+        items.add(UItem.asButton(ID_RATES, R.drawable.msg_stats, "Valyuta kursi (Markaziy bank)"));
-+        items.add(UItem.asCheck(ID_SIMPLE, "Oddiy rejim (katta yozuv, kam narsa)").setChecked(AloJConfig.simpleMode()));
-+        items.add(UItem.asButton(ID_PREMIUM, R.drawable.msg_gift_premium, "AloJ Premium", "tez kunda"));
++        items.add(UItem.asHeader(uz.aloj.L.t("Qulaylik", "Удобство")));
++        items.add(UItem.asButton(ID_RATES, R.drawable.msg_stats, uz.aloj.L.t("Valyuta kursi (Markaziy bank)", "Курс валют (ЦБ)")));
++        items.add(UItem.asCheck(ID_SIMPLE, uz.aloj.L.t("Oddiy rejim (katta yozuv, kam narsa)", "Простой режим (крупный шрифт)")).setChecked(AloJConfig.simpleMode()));
++        items.add(UItem.asButton(ID_PREMIUM, R.drawable.msg_gift_premium, "AloJ Premium", uz.aloj.L.t("tez kunda", "скоро")));
 +        items.add(UItem.asShadow(null));
 +
-+        items.add(UItem.asButton(ID_ABOUT, R.drawable.msg_info, "AloJ haqida"));
++        items.add(UItem.asButton(ID_ABOUT, R.drawable.msg_info, uz.aloj.L.t("AloJ haqida", "Об AloJ")));
 +        items.add(UItem.asShadow("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + " · Alo, Jahon!"));
 +    }
 +
@@ -10297,24 +10300,24 @@ index 0000000..6d206db
 +            case ID_HIDE_STORIES:
 +                AloJConfig.set("hideStories", !AloJConfig.hideStories());
 +                listView.adapter.update(true);
-+                toast("Ilovani qayta ochganda kuchga kiradi");
++                toast(uz.aloj.L.t("Ilovani qayta ochganda kuchga kiradi", "Вступит в силу после перезапуска"));
 +                break;
 +            case ID_SIMPLE:
 +                AloJConfig.setSimpleMode(!AloJConfig.simpleMode());
 +                listView.adapter.update(true);
-+                toast(AloJConfig.simpleMode() ? "Oddiy rejim yoqildi. Ilovani qayta oching." : "Oddiy rejim o'chirildi. Ilovani qayta oching.");
++                toast(AloJConfig.simpleMode() ? uz.aloj.L.t("Oddiy rejim yoqildi. Ilovani qayta oching.", "Простой режим включён. Перезапустите приложение.") : uz.aloj.L.t("Oddiy rejim o'chirildi. Ilovani qayta oching.", "Простой режим выключен. Перезапустите приложение."));
 +                break;
 +            case ID_VOICE:
-+                info("Chat ichida", "Istalgan chatni oching → yuqoridagi ⋮ menyu → \"AloJ vositalari\".\n\n• Tarjima qilib yuborish — o'zbekcha yozing, 11 tildan biriga o'girib yuboring\n• Ovoz bilan yozish — gapiring, matn bo'lib chiqadi\n• Lotin ↔ Kirill\n• Valyuta kalkulyatori\n\nKelgan xabarni bosib tursangiz: Tarjima, So'mga hisoblash, Lotin ↔ Kirill.");
++                info(uz.aloj.L.t("Chat ichida", "В чате"), uz.aloj.L.t("Istalgan chatni oching → yuqoridagi ⋮ menyu → \"AloJ vositalari\".\n\n• Tarjima qilib yuborish — o'zbekcha yozing, 11 tildan biriga o'girib yuboring\n• Ovoz bilan yozish — gapiring, matn bo'lib chiqadi\n• Lotin ↔ Kirill\n• Valyuta kalkulyatori\n\nKelgan xabarni bosib tursangiz: Tarjima, So'mga hisoblash, Lotin ↔ Kirill.", "Откройте любой чат → кнопка AloJ вверху.\n\n• Режим перевода — пишите на своём языке, AloJ переводит на 1 из 11 языков\n• Голосовой ввод — говорите, получится текст\n• Латиница ↔ кириллица\n• Калькулятор валют\n\nУдержите входящее сообщение: Перевод, В сумах, Латиница ↔ кириллица."));
 +                break;
 +            case ID_FRAUD:
-+                info("Firibgarlikdan himoya", "AloJ notanish odamdan kelgan xabarlarni avtomatik tekshiradi: karta raqami + oldindan to'lov, SMS kod so'rash, \"yutib oldingiz\", shubhali havola va .apk fayllar. Xavf topilsa — ogohlantirish chiqadi.\n\nQo'lda tekshirish: chat → ⋮ → AloJ vositalari → \"Chatni firibgarlikka tekshirish\".");
++                info(uz.aloj.L.t("Firibgarlikdan himoya", "Защита от мошенников"), uz.aloj.L.t("AloJ notanish odamdan kelgan xabarlarni avtomatik tekshiradi: karta raqami + oldindan to'lov, SMS kod so'rash, \"yutib oldingiz\", shubhali havola va .apk fayllar. Xavf topilsa — ogohlantirish chiqadi.\n\nQo'lda tekshirish: chat → ⋮ → AloJ vositalari → \"Chatni firibgarlikka tekshirish\".", "AloJ автоматически проверяет сообщения от незнакомцев: номер карты + предоплата, просьба SMS-кода, «вы выиграли», подозрительные ссылки и .apk. При угрозе появится предупреждение.\n\nВручную: чат → кнопка AloJ → «Проверить чат на мошенничество»."));
 +                break;
 +            case ID_REMOTE:
-+                info("Masofaviy yordam", "Chatda 📹 videoqo'ng'iroq boshlang → qo'ng'iroq ichida \"Ekranni ko'rsatish\" tugmasini bosing. Yaqiningiz ekraningizni ko'rib, yo'l-yo'riq beradi.\n\nEkranni masofadan boshqarish — keyingi versiyalarda.");
++                info(uz.aloj.L.t("Masofaviy yordam", "Удалённая помощь"), uz.aloj.L.t("Chatda 📹 videoqo'ng'iroq boshlang → qo'ng'iroq ichida \"Ekranni ko'rsatish\" tugmasini bosing. Yaqiningiz ekraningizni ko'rib, yo'l-yo'riq beradi.\n\nEkranni masofadan boshqarish — keyingi versiyalarda.", "Начните 📹 видеозвонок → нажмите «Показать экран». Близкий увидит ваш экран и подскажет.\n\nУдалённое управление экраном — в следующих версиях."));
 +                break;
 +            default:
-+                toast("Bu funksiya tez kunda qo'shiladi");
++                toast(uz.aloj.L.t("Bu funksiya tez kunda qo'shiladi", "Эта функция скоро появится"));
 +                break;
 +        }
 +    }
@@ -10325,7 +10328,7 @@ index 0000000..6d206db
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
 +        b.setTitle(title);
 +        b.setMessage(text);
-+        b.setPositiveButton("Tushunarli", null);
++        b.setPositiveButton(uz.aloj.L.t("Tushunarli", "Понятно"), null);
 +        showDialog(b.create());
 +    }
 +
@@ -10349,7 +10352,7 @@ index 0000000..6d206db
 +        LinearLayout box = new LinearLayout(ctx);
 +        box.setOrientation(LinearLayout.VERTICAL);
 +        box.setPadding(dp(24), dp(8), dp(24), 0);
-+        EditText input = makeInput(ctx, "Matnni yozing yoki joylang");
++        EditText input = makeInput(ctx, uz.aloj.L.t("Matnni yozing yoki joylang", "Напишите или вставьте текст"));
 +        input.setMinLines(2);
 +        box.addView(input);
 +        TextView result = new TextView(ctx);
@@ -10366,21 +10369,21 @@ index 0000000..6d206db
 +            }
 +        });
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
-+        b.setTitle("Lotin ↔ Kirill");
++        b.setTitle(uz.aloj.L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица"));
 +        b.setView(box);
-+        b.setPositiveButton("Nusxa olish", (d, w) -> {
++        b.setPositiveButton(uz.aloj.L.t("Nusxa olish", "Копировать"), (d, w) -> {
 +            ClipboardManager cm = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
 +            cm.setPrimaryClip(ClipData.newPlainText("AloJ", result.getText()));
-+            toast("Nusxa olindi");
++            toast(uz.aloj.L.t("Nusxa olindi", "Скопировано"));
 +        });
-+        b.setNegativeButton("Yopish", null);
++        b.setNegativeButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        showDialog(b.create());
 +    }
 +
 +    private void showRates() {
 +        Context ctx = getParentActivity();
 +        if (ctx == null) return;
-+        toast("Kurs yuklanmoqda...");
++        toast(uz.aloj.L.t("Kurs yuklanmoqda...", "Загрузка курса..."));
 +        Utilities.globalQueue.postRunnable(() -> {
 +            Map<String, Double> rates = null;
 +            try {
@@ -10396,7 +10399,7 @@ index 0000000..6d206db
 +        Context ctx = getParentActivity();
 +        if (ctx == null) return;
 +        if (rates == null || rates.isEmpty()) {
-+            toast("Kursni yuklab bo'lmadi. Internetni tekshiring.");
++            toast(uz.aloj.L.t("Kursni yuklab bo'lmadi. Internetni tekshiring.", "Не удалось загрузить курс. Проверьте интернет."));
 +            return;
 +        }
 +        StringBuilder sb = new StringBuilder();
@@ -10405,7 +10408,7 @@ index 0000000..6d206db
 +            Double v = rates.get(c);
 +            if (v != null) sb.append("1 ").append(c).append(" = ").append(AloJRates.formatSom(v)).append('\n');
 +        }
-+        if (AloJRates.cacheDate != null) sb.append("\nMarkaziy bank kursi, ").append(AloJRates.cacheDate);
++        if (AloJRates.cacheDate != null) sb.append(uz.aloj.L.t("\nMarkaziy bank kursi, ", "\nКурс ЦБ, ")).append(AloJRates.cacheDate);
 +
 +        LinearLayout box = new LinearLayout(ctx);
 +        box.setOrientation(LinearLayout.VERTICAL);
@@ -10415,7 +10418,7 @@ index 0000000..6d206db
 +        list.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 +        list.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, resourceProvider));
 +        box.addView(list);
-+        EditText usd = makeInput(ctx, "Dollar summasi, masalan 780");
++        EditText usd = makeInput(ctx, uz.aloj.L.t("Dollar summasi, masalan 780", "Сумма в долларах, например 780"));
 +        usd.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 +        box.addView(usd);
 +        TextView conv = new TextView(ctx);
@@ -10437,9 +10440,9 @@ index 0000000..6d206db
 +            }
 +        });
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
-+        b.setTitle("Valyuta kursi");
++        b.setTitle(uz.aloj.L.t("Valyuta kursi", "Курс валют"));
 +        b.setView(box);
-+        b.setPositiveButton("Yopish", null);
++        b.setPositiveButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        showDialog(b.create());
 +    }
 +
@@ -10447,42 +10450,53 @@ index 0000000..6d206db
 +        Context ctx = getParentActivity();
 +        if (ctx == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
-+        b.setTitle("AloJ haqida");
-+        b.setMessage("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + "\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n"
-+                + "AloJ Telegram API asosida ishlaydigan norasmiy ilova. Telegram akkauntingiz, chatlaringiz va kanallaringiz shu yerda.\n\n"
-+                + "Ochiq kodli Telegram for Android va Nagram (GPLv3) asosida qurilgan.");
-+        b.setPositiveButton("Manba kodi", (d, w) -> {
++        b.setTitle(uz.aloj.L.t("AloJ haqida", "Об AloJ"));
++        b.setMessage("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + uz.aloj.L.t("\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n", "\n\nAlo, Jahon! Мессенджер, созданный в Узбекистане.\n\n")
++                + uz.aloj.L.t("AloJ Telegram API asosida ishlaydigan norasmiy ilova. Telegram akkauntingiz, chatlaringiz va kanallaringiz shu yerda.\n\n", "AloJ — неофициальное приложение на Telegram API. Ваш аккаунт Telegram, чаты и каналы — здесь.\n\n")
++                + uz.aloj.L.t("Ochiq kodli Telegram for Android va Nagram (GPLv3) asosida qurilgan.", "Создано на основе открытого кода Telegram for Android и Nagram (GPLv3)."));
++        b.setPositiveButton(uz.aloj.L.t("Manba kodi", "Исходный код"), (d, w) -> {
 +            try {
 +                ctx.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/samadovjahonvir2004-sys/AloJ")));
 +            } catch (Throwable ignore) {
 +            }
 +        });
-+        b.setNegativeButton("Yopish", null);
++        b.setNegativeButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        showDialog(b.create());
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-index a54b134..1eecd2b 100644
+index a54b134..d295146 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 @@ -3988,6 +3988,8 @@ public class ChatActivity extends BaseFragment implements
                      getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/help", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
                  } else if (id == bot_settings) {
                      getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/settings", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
-+                } else if (id == uz.aloj.AloJChatSheet.MENU_ID) {
++                } else if (id == uz.aloj.AloJChatSheet.MENU_ID || id == uz.aloj.AloJChatSheet.MENU_ID + 1) {
 +                    uz.aloj.AloJChatSheet.show(ChatActivity.this);
                  } else if (id == search) {
                      openSearchWithText(isSupportedTags() ? "" : null);
                  } else if (id == translate) {
-@@ -4402,6 +4404,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -4236,6 +4238,10 @@ public class ChatActivity extends BaseFragment implements
+             searchItemVisible = false;
+         }
+ 
++        if (chatMode == 0 && !isReport() && currentEncryptedChat == null) {
++            ActionBarMenuItem alojItem = menu.addItem(uz.aloj.AloJChatSheet.MENU_ID + 1, R.drawable.msg_customize);
++            alojItem.setContentDescription("AloJ");
++        }
+         if (chatMode == 0 && (threadMessageId == 0 || isTopic) && !UserObject.isReplyUser(currentUser) && !isReport()) {
+             TLRPC.UserFull userFull = null;
+             if (currentUser != null) {
+@@ -4402,6 +4408,7 @@ public class ChatActivity extends BaseFragment implements
                  RLottieDrawable drawable = new RLottieDrawable(R.raw.boosts, dp(24), dp(24));
                  headerItem.lazilyAddSubItem(boost_group, drawable, LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(currentChat) ? R.string.BoostingBoostChannelMenu : R.string.BoostingBoostGroupMenu));
              }
-+            headerItem.lazilyAddSubItem(uz.aloj.AloJChatSheet.MENU_ID, R.drawable.msg_customize, "AloJ vositalari");
++            headerItem.lazilyAddSubItem(uz.aloj.AloJChatSheet.MENU_ID, R.drawable.msg_customize, uz.aloj.L.t("AloJ vositalari", "Инструменты AloJ"));
              translateItem = headerItem.lazilyAddSubItem(translate, R.drawable.msg_translate, LocaleController.getString(R.string.TranslateMessage));
              updateTranslateItemVisibility();
              if (currentChat != null && !currentChat.creator && !ChatObject.hasAdminRights(currentChat)) {
-@@ -21139,6 +21142,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -21139,6 +21146,7 @@ public class ChatActivity extends BaseFragment implements
  
      @Override
      public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
@@ -10490,7 +10504,7 @@ index a54b134..1eecd2b 100644
          if (resultCode == Activity.RESULT_OK) {
              if (requestCode == 0 || requestCode == 2) {
                  createChatAttachView();
-@@ -30660,6 +30664,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -30660,6 +30668,7 @@ public class ChatActivity extends BaseFragment implements
      public void onResume() {
          super.onResume();
          checkShowBlur(false);
@@ -10498,7 +10512,7 @@ index a54b134..1eecd2b 100644
          activityResumeTime = System.currentTimeMillis();
          if (openImport && getSendMessagesHelper().getImportingHistory(dialog_id) != null) {
              ImportingAlert alert = new ImportingAlert(getParentActivity(), null, this, themeDelegate);
-@@ -34291,6 +34296,12 @@ public class ChatActivity extends BaseFragment implements
+@@ -34291,6 +34300,12 @@ public class ChatActivity extends BaseFragment implements
          if (selectedObject == null || getParentActivity() == null) {
              return;
          }
@@ -10511,23 +10525,35 @@ index a54b134..1eecd2b 100644
          boolean preserveDim = false;
          switch (option) {
              case OPTION_RETRY: {
-@@ -46602,6 +46613,16 @@ public class ChatActivity extends BaseFragment implements
+@@ -46602,6 +46617,16 @@ public class ChatActivity extends BaseFragment implements
                      options.add(OPTION_TRANSLATE);
                      icons.add(R.drawable.msg_translate);
                  }
 +                if (selectedObject != null && selectedObject.messageText != null && selectedObject.messageText.length() > 0 && !selectedObject.isSponsored()) {
 +                    if (uz.aloj.AloJChatTools.hasMoney(selectedObject.messageText)) {
-+                        items.add("So'mga hisoblash");
++                        items.add(uz.aloj.L.t("So'mga hisoblash", "Пересчитать в сумы"));
 +                        options.add(uz.aloj.AloJChatTools.OPTION_MONEY);
 +                        icons.add(R.drawable.msg_payment_card);
 +                    }
-+                    items.add("Lotin ↔ Kirill");
++                    items.add(uz.aloj.L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица"));
 +                    options.add(uz.aloj.AloJChatTools.OPTION_TRANSLIT);
 +                    icons.add(R.drawable.msg_text_outlined);
 +                }
                  if (message.canEditMessage(currentChat) && message.type != MessageObject.TYPE_POLL || chatMode == MODE_WELCOME_MESSAGES) {
                      items.add(LocaleController.getString(R.string.Edit));
                      options.add(OPTION_EDIT);
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
+index 266e570..7db6d72 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
+@@ -7384,6 +7384,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+     }
+ 
+     protected boolean sendMessageInternal(boolean notify, int scheduleDate, int scheduleRepeatPeriod, long payStars, boolean allowConfirm) {
++        if (uz.aloj.AloJChatSheet.interceptSend(parentFragment, () -> sendMessageInternal(notify, scheduleDate, scheduleRepeatPeriod, payStars, allowConfirm))) return false;
+         final boolean allowConfirmFinal = allowConfirm && !animatorEphemeralMessageVisibility.getValue();
+ 
+         final Runnable send = () -> {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java
 index 9f8f097..de7537c 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java
@@ -10579,14 +10605,14 @@ index d1ac117..d14163e 100644
              if (getUserConfig().showCallsTab) {
                  Bundle args = new Bundle();
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
-index e2b917b..ced72c4 100644
+index e2b917b..b7681ed 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 @@ -722,6 +722,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
          }
  
          items.add(UItem.asCustomShadow(topView, 200 - 12));
-+        items.add(UItem.asButton(990001, R.drawable.msg_customize, "AloJ imkoniyatlari", "Maxfiylik, Oddiy rejim, vositalar"));
++        items.add(UItem.asButton(990001, R.drawable.msg_customize, "AloJ"));
 +        items.add(UItem.asShadow(null));
  
          accountNumbers.clear();
@@ -10616,10 +10642,10 @@ index 529eb5c..7472988 100644
  
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
 new file mode 100644
-index 0000000..eafde4d
+index 0000000..d5a6738
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
-@@ -0,0 +1,344 @@
+@@ -0,0 +1,405 @@
 +package uz.aloj;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -10653,13 +10679,13 @@ index 0000000..eafde4d
 +import java.util.Map;
 +import java.util.regex.Pattern;
 +
-+/** AloJ: tools inside a chat (header menu → "AloJ vositalari"). */
++/** AloJ: tools inside a chat (header menu → uz.aloj.L.t("AloJ vositalari", "Инструменты AloJ")). */
 +public final class AloJChatSheet {
 +    public static final int MENU_ID = 7777;
 +    private static final int REQ_SPEECH = 7401;
 +
 +    private static final String[] LANG_CODES = {"uz", "ru", "en", "tr", "zh", "ar", "ko", "de", "kk", "tg", "ky"};
-+    private static final String[] LANG_NAMES = {"O'zbekcha", "Ruscha", "Inglizcha", "Turkcha", "Xitoycha", "Arabcha", "Koreyscha", "Nemischa", "Qozoqcha", "Tojikcha", "Qirg'izcha"};
++    private static final String[] LANG_NAMES = {uz.aloj.L.t("O'zbekcha", "Узбекский"), uz.aloj.L.t("Ruscha", "Русский"), uz.aloj.L.t("Inglizcha", "Английский"), uz.aloj.L.t("Turkcha", "Турецкий"), uz.aloj.L.t("Xitoycha", "Китайский"), uz.aloj.L.t("Arabcha", "Арабский"), uz.aloj.L.t("Koreyscha", "Корейский"), uz.aloj.L.t("Nemischa", "Немецкий"), uz.aloj.L.t("Qozoqcha", "Казахский"), uz.aloj.L.t("Tojikcha", "Таджикский"), uz.aloj.L.t("Qirg'izcha", "Киргизский")};
 +    private static final String[] SPEECH_LANGS = {"uz-UZ", "ru-RU", "en-US", "tr-TR"};
 +
 +    private static final HashSet<Long> scanned = new HashSet<>();
@@ -10684,37 +10710,98 @@ index 0000000..eafde4d
 +        Activity a = f.getParentActivity();
 +        if (a == null) return;
 +        final boolean ghost = AloJConfig.hideTyping() && AloJConfig.hideOnline();
++        final String mode = translateMode(f.getDialogId());
 +        CharSequence[] items = {
-+                "Tarjima qilib yuborish (yozgan matnim)",
-+                "Ovoz bilan yozish",
-+                "Lotin ↔ Kirill (yozgan matnim)",
-+                "Valyuta kalkulyatori",
-+                ghost ? "Arvoh rejimi: YONIQ (o'chirish)" : "Arvoh rejimi: o'chiq (yoqish)",
-+                "Chatni firibgarlikka tekshirish",
-+                "Masofaviy yordam (ekranni ko'rsatish)",
-+                "Barcha AloJ sozlamalari"
++                mode == null ? uz.aloj.L.t("Tarjima rejimi: o'chiq (yoqish)", "Режим перевода: выкл (включить)") : uz.aloj.L.t("Tarjima rejimi: ", "Режим перевода: ") + langName(mode) + uz.aloj.L.t(" (o'chirish)", " (выключить)"),
++                uz.aloj.L.t("Tarjima qilib yuborish (yozgan matnim)", "Перевести мой текст перед отправкой"),
++                uz.aloj.L.t("Ovoz bilan yozish", "Голосовой ввод"),
++                uz.aloj.L.t("Lotin ↔ Kirill (yozgan matnim)", "Латиница ↔ кириллица (мой текст)"),
++                uz.aloj.L.t("Valyuta kalkulyatori", "Калькулятор валют"),
++                ghost ? uz.aloj.L.t("Arvoh rejimi: YONIQ (o'chirish)", "Режим «призрак»: ВКЛ (выключить)") : uz.aloj.L.t("Arvoh rejimi: o'chiq (yoqish)", "Режим «призрак»: выкл (включить)"),
++                uz.aloj.L.t("Chatni firibgarlikka tekshirish", "Проверить чат на мошенничество"),
++                uz.aloj.L.t("Masofaviy yordam (ekranni ko'rsatish)", "Удалённая помощь (показ экрана)"),
++                uz.aloj.L.t("Barcha AloJ sozlamalari", "Все настройки AloJ")
 +        };
-+        int[] icons = {R.drawable.msg_translate, R.drawable.input_mic, R.drawable.msg_text_outlined, R.drawable.msg_payment_card,
++        int[] icons = {R.drawable.msg_translate, R.drawable.msg_translate, R.drawable.input_mic, R.drawable.msg_text_outlined, R.drawable.msg_payment_card,
 +                R.drawable.msg_secret, R.drawable.msg_report, R.drawable.msg_videocall, R.drawable.msg_settings_old};
 +        BottomSheet.Builder b = new BottomSheet.Builder(a, false, f.getResourceProvider());
-+        b.setTitle("AloJ vositalari", true);
++        b.setTitle(uz.aloj.L.t("AloJ vositalari", "Инструменты AloJ"), true);
 +        b.setItems(items, icons, (d, which) -> {
 +            switch (which) {
-+                case 0: translateOutgoing(f); break;
-+                case 1: pickSpeechLang(f); break;
-+                case 2: translitOutgoing(f); break;
-+                case 3: currency(f); break;
-+                case 4:
++                case 0:
++                    if (mode != null) {
++                        setTranslateMode(f.getDialogId(), null);
++                        toast(f, uz.aloj.L.t("Tarjima rejimi o'chirildi", "Режим перевода выключен"));
++                    } else {
++                        pickTranslateMode(f);
++                    }
++                    break;
++                case 1: translateOutgoing(f); break;
++                case 2: pickSpeechLang(f); break;
++                case 3: translitOutgoing(f); break;
++                case 4: currency(f); break;
++                case 5:
 +                    AloJConfig.set("hideTyping", !ghost);
 +                    AloJConfig.set("hideOnline", !ghost);
-+                    toast(f, !ghost ? "👻 Arvoh rejimi yoqildi: \"yozmoqda\" va onlayn holatingiz ko'rinmaydi" : "Arvoh rejimi o'chirildi");
++                    toast(f, !ghost ? uz.aloj.L.t("👻 Arvoh rejimi yoqildi: \"yozmoqda\" va onlayn holatingiz ko'rinmaydi", "👻 Режим «призрак» включён: «печатает» и «в сети» скрыты") : uz.aloj.L.t("Arvoh rejimi o'chirildi", "Режим «призрак» выключен"));
 +                    break;
-+                case 5: scan(f, true); break;
-+                case 6: remoteHelp(f); break;
-+                case 7: f.presentFragment(new org.telegram.ui.AloJHubActivity(null)); break;
++                case 6: scan(f, true); break;
++                case 7: remoteHelp(f); break;
++                case 8: f.presentFragment(new org.telegram.ui.AloJHubActivity(null)); break;
 +            }
 +        });
 +        f.showDialog(b.create());
++    }
++
++    // ---------------- translate mode: every sent message is translated ----------------
++
++    private static android.content.SharedPreferences prefs() {
++        return org.telegram.messenger.ApplicationLoader.applicationContext.getSharedPreferences("aloj", android.content.Context.MODE_PRIVATE);
++    }
++
++    public static String translateMode(long dialogId) {
++        return prefs().getString("tr_" + dialogId, null);
++    }
++
++    private static void setTranslateMode(long dialogId, String lang) {
++        if (lang == null) prefs().edit().remove("tr_" + dialogId).apply();
++        else prefs().edit().putString("tr_" + dialogId, lang).apply();
++    }
++
++    private static String langName(String code) {
++        for (int i = 0; i < LANG_CODES.length; i++) if (LANG_CODES[i].equals(code)) return LANG_NAMES[i];
++        return code;
++    }
++
++    private static void pickTranslateMode(ChatActivity f) {
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle(uz.aloj.L.t("Xabarlarim qaysi tilga o'girilsin?", "На какой язык переводить мои сообщения?"));
++        b.setItems(LANG_NAMES, (d, w) -> {
++            setTranslateMode(f.getDialogId(), LANG_CODES[w]);
++            toast(f, uz.aloj.L.t("✅ Tarjima rejimi yoqildi: endi yozgan har bir xabaringiz ", "✅ Режим перевода включён: язык — ") + LANG_NAMES[w] + uz.aloj.L.t("ga o'girilib yuboriladi", " — сообщения будут переводиться автоматически"));
++        });
++        f.showDialog(b.create());
++    }
++
++    private static boolean skipNextSend;
++
++    /** Called at the start of ChatActivityEnterView.sendMessageInternal. Returns true when sending is postponed until translation finishes. */
++    public static boolean interceptSend(ChatActivity f, Runnable resend) {
++        if (f == null) return false;
++        if (skipNextSend) {
++            skipNextSend = false;
++            return false;
++        }
++        String lang = translateMode(f.getDialogId());
++        if (lang == null) return false;
++        CharSequence text = field(f);
++        if (text == null || text.toString().trim().isEmpty()) return false;
++        translate(f, text.toString(), lang, result -> {
++            setField(f, result);
++            skipNextSend = true;
++            resend.run();
++        });
++        return true;
 +    }
 +
 +    // ---------------- translate before sending ----------------
@@ -10722,14 +10809,14 @@ index 0000000..eafde4d
 +    private static void translateOutgoing(ChatActivity f) {
 +        CharSequence text = field(f);
 +        if (text == null || text.toString().trim().isEmpty()) {
-+            toast(f, "Avval matn yozing, keyin tarjima qiling. Masalan: \"Salom, qalaysiz?\"");
++            toast(f, uz.aloj.L.t("Avval matn yozing, keyin tarjima qiling. Masalan: \"Salom, qalaysiz?\"", "Сначала напишите текст, затем переведите. Например: «Привет, как дела?»"));
 +            return;
 +        }
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle("Qaysi tilga tarjima qilay?");
++        b.setTitle(uz.aloj.L.t("Qaysi tilga tarjima qilay?", "На какой язык перевести?"));
 +        b.setItems(LANG_NAMES, (d, w) -> translate(f, text.toString(), LANG_CODES[w], result -> {
 +            setField(f, result);
-+            toast(f, "✅ Tarjima qilindi — tekshirib, yuboring");
++            toast(f, uz.aloj.L.t("✅ Tarjima qilindi — tekshirib, yuboring", "✅ Переведено — проверьте и отправьте"));
 +        }));
 +        f.showDialog(b.create());
 +    }
@@ -10745,12 +10832,12 @@ index 0000000..eafde4d
 +        t.text = text;
 +        req.text.add(t);
 +        req.to_lang = toLang;
-+        toast(f, "Tarjima qilinmoqda...");
++        toast(f, uz.aloj.L.t("Tarjima qilinmoqda...", "Перевод..."));
 +        ConnectionsManager.getInstance(f.getCurrentAccount()).sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
 +            if (res instanceof TLRPC.TL_messages_translateResult && !((TLRPC.TL_messages_translateResult) res).result.isEmpty()) {
 +                done.run(((TLRPC.TL_messages_translateResult) res).result.get(0).text);
 +            } else {
-+                toast(f, "Tarjima qilib bo'lmadi" + (err != null ? " (" + err.text + ")" : ""));
++                toast(f, uz.aloj.L.t("Tarjima qilib bo'lmadi", "Не удалось перевести") + (err != null ? " (" + err.text + ")" : ""));
 +            }
 +        }));
 +    }
@@ -10759,16 +10846,16 @@ index 0000000..eafde4d
 +
 +    private static void pickSpeechLang(ChatActivity f) {
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle("Qaysi tilda gapirasiz?");
-+        b.setItems(new CharSequence[]{"O'zbekcha", "Ruscha", "Inglizcha", "Turkcha"}, (d, w) -> {
++        b.setTitle(uz.aloj.L.t("Qaysi tilda gapirasiz?", "На каком языке будете говорить?"));
++        b.setItems(new CharSequence[]{uz.aloj.L.t("O'zbekcha", "Узбекский"), uz.aloj.L.t("Ruscha", "Русский"), uz.aloj.L.t("Inglizcha", "Английский"), uz.aloj.L.t("Turkcha", "Турецкий")}, (d, w) -> {
 +            try {
 +                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 +                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 +                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SPEECH_LANGS[w]);
-+                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Gapiring — AloJ matnga aylantiradi");
++                i.putExtra(RecognizerIntent.EXTRA_PROMPT, uz.aloj.L.t("Gapiring — AloJ matnga aylantiradi", "Говорите — AloJ превратит речь в текст"));
 +                f.getParentActivity().startActivityForResult(i, REQ_SPEECH);
 +            } catch (Throwable e) {
-+                toast(f, "Telefoningizda ovozni tanish xizmati yo'q (Google ilovasini o'rnating)");
++                toast(f, uz.aloj.L.t("Telefoningizda ovozni tanish xizmati yo'q (Google ilovasini o'rnating)", "На телефоне нет распознавания речи (установите приложение Google)"));
 +            }
 +        });
 +        f.showDialog(b.create());
@@ -10793,7 +10880,7 @@ index 0000000..eafde4d
 +    private static void translitOutgoing(ChatActivity f) {
 +        CharSequence text = field(f);
 +        if (text == null || text.toString().trim().isEmpty()) {
-+            toast(f, "Avval matn yozing — AloJ uni lotin ↔ kirillga o'giradi");
++            toast(f, uz.aloj.L.t("Avval matn yozing — AloJ uni lotin ↔ kirillga o'giradi", "Сначала напишите текст — AloJ переведёт латиницу ↔ кириллицу"));
 +            return;
 +        }
 +        setField(f, AloJTranslit.toggle(text.toString()));
@@ -10802,7 +10889,7 @@ index 0000000..eafde4d
 +    // ---------------- currency ----------------
 +
 +    private static void currency(ChatActivity f) {
-+        toast(f, "Kurs yuklanmoqda...");
++        toast(f, uz.aloj.L.t("Kurs yuklanmoqda...", "Загрузка курса..."));
 +        Utilities.globalQueue.postRunnable(() -> {
 +            Map<String, Double> rates = null;
 +            try {
@@ -10817,7 +10904,7 @@ index 0000000..eafde4d
 +    private static void currencyDialog(ChatActivity f, Map<String, Double> rates) {
 +        if (f.getParentActivity() == null) return;
 +        if (rates == null || rates.isEmpty()) {
-+            toast(f, "Kursni yuklab bo'lmadi. Internetni tekshiring.");
++            toast(f, uz.aloj.L.t("Kursni yuklab bo'lmadi. Internetni tekshiring.", "Не удалось загрузить курс. Проверьте интернет."));
 +            return;
 +        }
 +        final String[] codes = {"USD", "EUR", "RUB", "KZT", "CNY", "AED", "TRY"};
@@ -10859,7 +10946,7 @@ index 0000000..eafde4d
 +        android.widget.HorizontalScrollView hs = new android.widget.HorizontalScrollView(f.getParentActivity());
 +        hs.addView(row);
 +        box.addView(hs);
-+        amount.setHint("Summa, masalan 500");
++        amount.setHint(uz.aloj.L.t("Summa, masalan 500", "Сумма, например 500"));
 +        amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 +        amount.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, f.getResourceProvider()));
 +        amount.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint, f.getResourceProvider()));
@@ -10876,9 +10963,9 @@ index 0000000..eafde4d
 +        });
 +        chips[0].performClick();
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle("Valyuta → so'm");
++        b.setTitle(uz.aloj.L.t("Valyuta → so'm", "Валюта → сум"));
 +        b.setView(box);
-+        b.setPositiveButton("Chatga yozish", (d, w) -> {
++        b.setPositiveButton(uz.aloj.L.t("Chatga yozish", "Вставить в чат"), (d, w) -> {
 +            CharSequence o = out.getText();
 +            if (o != null && o.length() > 0 && amount.getText().length() > 0) {
 +                String line = amount.getText() + " " + codes[sel[0]] + " ≈ " + o.toString().split("\n")[0];
@@ -10886,7 +10973,7 @@ index 0000000..eafde4d
 +                setField(f, cur == null || cur.length() == 0 ? line : cur + " " + line);
 +            }
 +        });
-+        b.setNegativeButton("Yopish", null);
++        b.setNegativeButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        f.showDialog(b.create());
 +    }
 +
@@ -10927,26 +11014,26 @@ index 0000000..eafde4d
 +        }
 +        if (!manual) scanned.add(did);
 +        if (reasons.isEmpty()) {
-+            if (manual) toast(f, "✅ Shubhali narsa topilmadi. Baribir oldindan pul o'tkazmang!");
++            if (manual) toast(f, uz.aloj.L.t("✅ Shubhali narsa topilmadi. Baribir oldindan pul o'tkazmang!", "✅ Ничего подозрительного. Всё равно не переводите предоплату!"));
 +            return;
 +        }
 +        StringBuilder sb = new StringBuilder();
-+        if (u != null && !u.contact && !u.self) sb.append("Bu odam kontaktlaringizda yo'q.\n\n");
++        if (u != null && !u.contact && !u.self) sb.append(uz.aloj.L.t("Bu odam kontaktlaringizda yo'q.\n\n", "Этого человека нет в ваших контактах.\n\n"));
 +        for (String r : reasons) {
 +            switch (r) {
-+                case "card": sb.append("💳 Karta raqami va oldindan to'lov so'ralmoqda — bu eng ko'p uchraydigan aldov.\n"); break;
-+                case "money": sb.append("💸 Oldindan pul / avans so'ralmoqda.\n"); break;
-+                case "code": sb.append("🔑 SMS kod yoki parol so'ralmoqda — HECH KIMGA aytmang, akkauntingiz o'g'irlanadi.\n"); break;
-+                case "prize": sb.append("🎁 \"Yutib oldingiz\" / sovrin haqidagi xabar — odatda firibgarlik.\n"); break;
-+                case "link": sb.append("🔗 Shubhali havola (soxta sayt yoki qisqartirilgan link).\n"); break;
-+                case "apk": sb.append("📦 .apk fayl yuborilgan — o'rnatmang, telefoningiz buziladi.\n"); break;
++                case "card": sb.append(uz.aloj.L.t("💳 Karta raqami va oldindan to'lov so'ralmoqda — bu eng ko'p uchraydigan aldov.\n", "💳 Просят номер карты и предоплату — самый частый обман.\n")); break;
++                case "money": sb.append(uz.aloj.L.t("💸 Oldindan pul / avans so'ralmoqda.\n", "💸 Просят предоплату / аванс.\n")); break;
++                case "code": sb.append(uz.aloj.L.t("🔑 SMS kod yoki parol so'ralmoqda — HECH KIMGA aytmang, akkauntingiz o'g'irlanadi.\n", "🔑 Просят SMS-код или пароль — НИКОМУ не говорите, украдут аккаунт.\n")); break;
++                case "prize": sb.append(uz.aloj.L.t("🎁 \"Yutib oldingiz\" / sovrin haqidagi xabar — odatda firibgarlik.\n", "🎁 «Вы выиграли» / приз — обычно мошенничество.\n")); break;
++                case "link": sb.append(uz.aloj.L.t("🔗 Shubhali havola (soxta sayt yoki qisqartirilgan link).\n", "🔗 Подозрительная ссылка (фейковый сайт или сокращённая ссылка).\n")); break;
++                case "apk": sb.append(uz.aloj.L.t("📦 .apk fayl yuborilgan — o'rnatmang, telefoningiz buziladi.\n", "📦 Прислан .apk файл — не устанавливайте, это опасно.\n")); break;
 +            }
 +        }
-+        sb.append("\nAloJ maslahati: mahsulotni ko'rmasdan pul o'tkazmang, kodlarni hech kimga bermang.");
++        sb.append(uz.aloj.L.t("\nAloJ maslahati: mahsulotni ko'rmasdan pul o'tkazmang, kodlarni hech kimga bermang.", "\nСовет AloJ: не переводите деньги, не увидев товар, и никому не сообщайте коды."));
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle("⚠️ Ehtiyot bo'ling!");
++        b.setTitle(uz.aloj.L.t("⚠️ Ehtiyot bo'ling!", "⚠️ Осторожно!"));
 +        b.setMessage(sb.toString());
-+        b.setPositiveButton("Tushundim", null);
++        b.setPositiveButton(uz.aloj.L.t("Tushundim", "Понятно"), null);
 +        f.showDialog(b.create());
 +    }
 +
@@ -10954,19 +11041,19 @@ index 0000000..eafde4d
 +
 +    private static void remoteHelp(ChatActivity f) {
 +        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
-+        b.setTitle("Masofaviy yordam");
-+        b.setMessage("Yaqiningizga telefonni sozlashda yordam berish uchun:\n\n"
-+                + "1. Shu chatda 📹 videoqo'ng'iroq boshlang.\n"
-+                + "2. Qo'ng'iroq ichida \"Ekranni ko'rsatish\" (Screen sharing) tugmasini bosing.\n"
-+                + "3. Suhbatdoshingiz ekraningizni ko'radi va ovoz bilan yo'l-yo'riq beradi.\n\n"
-+                + "Ekranni masofadan BOSHQARISH (AnyDesk kabi) — AloJ'ning keyingi versiyalarida.");
-+        b.setPositiveButton("Tushunarli", null);
++        b.setTitle(uz.aloj.L.t("Masofaviy yordam", "Удалённая помощь"));
++        b.setMessage(uz.aloj.L.t("Yaqiningizga telefonni sozlashda yordam berish uchun:\n\n", "Чтобы помочь близкому настроить телефон:\n\n")
++                + uz.aloj.L.t("1. Shu chatda 📹 videoqo'ng'iroq boshlang.\n", "1. Начните 📹 видеозвонок в этом чате.\n")
++                + uz.aloj.L.t("2. Qo'ng'iroq ichida \"Ekranni ko'rsatish\" (Screen sharing) tugmasini bosing.\n", "2. Во время звонка нажмите «Показать экран».\n")
++                + uz.aloj.L.t("3. Suhbatdoshingiz ekraningizni ko'radi va ovoz bilan yo'l-yo'riq beradi.\n\n", "3. Собеседник увидит ваш экран и подскажет голосом.\n\n")
++                + uz.aloj.L.t("Ekranni masofadan BOSHQARISH (AnyDesk kabi) — AloJ'ning keyingi versiyalarida.", "УДАЛЁННОЕ управление экраном (как AnyDesk) — в следующих версиях AloJ."));
++        b.setPositiveButton(uz.aloj.L.t("Tushunarli", "Понятно"), null);
 +        f.showDialog(b.create());
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java
 new file mode 100644
-index 0000000..47805ad
+index 0000000..32bdf21
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java
 @@ -0,0 +1,152 @@
@@ -11055,7 +11142,7 @@ index 0000000..47805ad
 +            showTranslit(fragment, text.toString());
 +        } else if (option == OPTION_MONEY) {
 +            final ArrayList<Amount> amounts = find(text);
-+            Toast.makeText(fragment.getParentActivity(), "Kurs yuklanmoqda...", Toast.LENGTH_SHORT).show();
++            Toast.makeText(fragment.getParentActivity(), uz.aloj.L.t("Kurs yuklanmoqda...", "Загрузка курса..."), Toast.LENGTH_SHORT).show();
 +            Utilities.globalQueue.postRunnable(() -> {
 +                Map<String, Double> rates = null;
 +                try {
@@ -11082,7 +11169,7 @@ index 0000000..47805ad
 +        Context ctx = f.getParentActivity();
 +        if (ctx == null) return;
 +        if (rates == null || rates.isEmpty()) {
-+            Toast.makeText(ctx, "Kursni yuklab bo'lmadi. Internetni tekshiring.", Toast.LENGTH_SHORT).show();
++            Toast.makeText(ctx, uz.aloj.L.t("Kursni yuklab bo'lmadi. Internetni tekshiring.", "Не удалось загрузить курс. Проверьте интернет."), Toast.LENGTH_SHORT).show();
 +            return;
 +        }
 +        StringBuilder sb = new StringBuilder();
@@ -11091,15 +11178,15 @@ index 0000000..47805ad
 +            if (rate == null) continue;
 +            sb.append(a.raw).append("  ≈  ").append(AloJRates.formatSom(a.value * rate)).append('\n');
 +        }
-+        if (sb.length() == 0) sb.append("Bu valyuta kursi topilmadi.");
-+        if (AloJRates.cacheDate != null) sb.append("\nMarkaziy bank kursi, ").append(AloJRates.cacheDate);
++        if (sb.length() == 0) sb.append(uz.aloj.L.t("Bu valyuta kursi topilmadi.", "Курс этой валюты не найден."));
++        if (AloJRates.cacheDate != null) sb.append(uz.aloj.L.t("\nMarkaziy bank kursi, ", "\nКурс ЦБ, ")).append(AloJRates.cacheDate);
 +        LinearLayout box = new LinearLayout(ctx);
 +        box.setPadding(dp(24), dp(4), dp(24), 0);
 +        box.addView(body(ctx, f, sb.toString().trim()));
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, f.getResourceProvider());
-+        b.setTitle("So'mda qancha?");
++        b.setTitle(uz.aloj.L.t("So'mda qancha?", "Сколько в сумах?"));
 +        b.setView(box);
-+        b.setPositiveButton("Yopish", null);
++        b.setPositiveButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        f.showDialog(b.create());
 +    }
 +
@@ -11111,14 +11198,14 @@ index 0000000..47805ad
 +        box.setPadding(dp(24), dp(4), dp(24), 0);
 +        box.addView(body(ctx, f, result));
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, f.getResourceProvider());
-+        b.setTitle("Lotin ↔ Kirill");
++        b.setTitle(uz.aloj.L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица"));
 +        b.setView(box);
-+        b.setPositiveButton("Nusxa olish", (d, w) -> {
++        b.setPositiveButton(uz.aloj.L.t("Nusxa olish", "Копировать"), (d, w) -> {
 +            ClipboardManager cm = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
 +            cm.setPrimaryClip(ClipData.newPlainText("AloJ", result));
-+            Toast.makeText(ctx, "Nusxa olindi", Toast.LENGTH_SHORT).show();
++            Toast.makeText(ctx, uz.aloj.L.t("Nusxa olindi", "Скопировано"), Toast.LENGTH_SHORT).show();
 +        });
-+        b.setNegativeButton("Yopish", null);
++        b.setNegativeButton(uz.aloj.L.t("Yopish", "Закрыть"), null);
 +        f.showDialog(b.create());
 +    }
 +}
@@ -11383,12 +11470,39 @@ index 0000000..7f170d0
 +        return out.toString();
 +    }
 +}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/L.java b/TMessagesProj/src/main/java/uz/aloj/L.java
+new file mode 100644
+index 0000000..ede164f
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/L.java
+@@ -0,0 +1,21 @@
++package uz.aloj;
++
++import org.telegram.messenger.LocaleController;
++
++/** AloJ: picks the AloJ text for the current app language (Russian UI → Russian, otherwise Uzbek). */
++public final class L {
++    private L() {}
++
++    public static boolean ru() {
++        try {
++            String lang = LocaleController.getInstance().getCurrentLocale().getLanguage();
++            return "ru".equals(lang) || "uk".equals(lang) || "be".equals(lang) || "kk".equals(lang);
++        } catch (Throwable e) {
++            return false;
++        }
++    }
++
++    public static String t(String uz, String ru) {
++        return ru() ? ru : uz;
++    }
++}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
 new file mode 100644
-index 0000000..861f6f4
+index 0000000..f02fb5f
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
-@@ -0,0 +1,461 @@
+@@ -0,0 +1,462 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -11513,7 +11627,7 @@ index 0000000..861f6f4
 +        root.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
 +
 +        TextView fab = BozorUi.text(context, Color.WHITE, 15, true);
-+        fab.setText("＋  E'lon berish");
++        fab.setText(uz.aloj.L.t("＋  E'lon berish", "＋  Подать объявление"));
 +        fab.setGravity(Gravity.CENTER);
 +        fab.setPadding(dp(22), 0, dp(22), 0);
 +        fab.setBackground(org.telegram.ui.ActionBar.Theme.createSimpleSelectorRoundRectDrawable(dp(26), BozorUi.ORANGE, BozorUi.ORANGE_DARK));
@@ -11521,6 +11635,7 @@ index 0000000..861f6f4
 +        fab.setOnClickListener(v -> presentFragment(new BozorNewActivity()));
 +        root.addView(fab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 52, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, 22 + (hasMainTabs ? org.telegram.ui.DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS : 0)));
 +
++        BozorUi.fitUnderActionBar(this, listView);
 +        fragmentView = root;
 +        load(true);
 +        Utilities.globalQueue.postRunnable(() -> {
@@ -11586,7 +11701,7 @@ index 0000000..861f6f4
 +        h.setPadding(dp(6), dp(10), dp(6), dp(4));
 +
 +        EditText search = new EditText(ctx);
-+        search.setHint("🔍  Nima qidiryapsiz?");
++        search.setHint(uz.aloj.L.t("🔍  Nima qidiryapsiz?", "🔍  Что ищете?"));
 +        search.setText(query == null ? "" : query);
 +        search.setSingleLine(true);
 +        search.setTextSize(15);
@@ -11626,7 +11741,7 @@ index 0000000..861f6f4
 +            icon.setBackground(sel ? BozorUi.stroke(BozorUi.soft(this), BozorUi.ORANGE, 16) : BozorUi.round(BozorUi.soft(this), 16));
 +            cat.addView(icon, LayoutHelper.createLinear(56, 56));
 +            TextView name = BozorUi.text(ctx, sel ? BozorUi.ORANGE_DARK : BozorUi.text(this), 11, sel);
-+            name.setText(i < 0 ? "Hammasi" : BozorApi.CATEGORY_NAMES[i]);
++            name.setText(i < 0 ? uz.aloj.L.t("Hammasi", "Все") : BozorApi.CATEGORY_NAMES[i]);
 +            name.setGravity(Gravity.CENTER);
 +            cat.addView(name, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 4, 0, 0));
 +            cat.setOnClickListener(v -> {
@@ -11642,22 +11757,22 @@ index 0000000..861f6f4
 +        LinearLayout filters = new LinearLayout(ctx);
 +        HorizontalScrollView fs = new HorizontalScrollView(ctx);
 +        fs.setHorizontalScrollBarEnabled(false);
-+        TextView cityChip = BozorUi.chip(ctx, this, "📍 " + (city == null ? "Butun O'zbekiston" : city) + " ▾", city != null);
++        TextView cityChip = BozorUi.chip(ctx, this, "📍 " + (city == null ? uz.aloj.L.t("Butun O'zbekiston", "Весь Узбекистан") : city) + " ▾", city != null);
 +        cityChip.setOnClickListener(v -> pickCity());
 +        filters.addView(cityChip, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 8, 0));
-+        String sortName = "cheap".equals(sort) ? "Arzonroq" : "expensive".equals(sort) ? "Qimmatroq" : "Yangilari";
++        String sortName = "cheap".equals(sort) ? uz.aloj.L.t("Arzonroq", "Дешевле") : "expensive".equals(sort) ? uz.aloj.L.t("Qimmatroq", "Дороже") : uz.aloj.L.t("Yangilari", "Новые");
 +        TextView sortChip = BozorUi.chip(ctx, this, "↕ " + sortName, !"new".equals(sort));
 +        sortChip.setOnClickListener(v -> pickSort());
 +        filters.addView(sortChip, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 8, 0));
 +        boolean hasFilter = minPrice > 0 || maxPrice > 0 || condition != null;
-+        TextView filterChip = BozorUi.chip(ctx, this, hasFilter ? "⚙ Filtr ✓" : "⚙ Filtr", hasFilter);
++        TextView filterChip = BozorUi.chip(ctx, this, hasFilter ? uz.aloj.L.t("⚙ Filtr ✓", "⚙ Фильтр ✓") : uz.aloj.L.t("⚙ Filtr", "⚙ Фильтр"), hasFilter);
 +        filterChip.setOnClickListener(v -> showFilter());
 +        filters.addView(filterChip);
 +        fs.addView(filters);
 +        h.addView(fs, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 10));
 +
 +        TextView title = BozorUi.text(ctx, BozorUi.text(this), 17, true);
-+        title.setText(query != null && query.length() > 0 ? "Qidiruv: " + query : category != null ? BozorApi.categoryName(category) : "Siz uchun");
++        title.setText(query != null && query.length() > 0 ? uz.aloj.L.t("Qidiruv: ", "Поиск: ") + query : category != null ? BozorApi.categoryName(category) : uz.aloj.L.t("Siz uchun", "Для вас"));
 +        h.addView(title, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 4, 0, 0, 2));
 +        return h;
 +    }
@@ -11678,7 +11793,7 @@ index 0000000..861f6f4
 +        t.setText(b != null ? b.title : "AloJ Bozor");
 +        texts.addView(t);
 +        TextView s = BozorUi.text(ctx, 0xE6FFFFFF, 13, false);
-+        s.setText(b != null ? b.subtitle : "Sotish va sotib olish — AloJ ichida");
++        s.setText(b != null ? b.subtitle : uz.aloj.L.t("Sotish va sotib olish — AloJ ichida", "Купить и продать — прямо в AloJ"));
 +        texts.addView(s);
 +        f.addView(texts, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL | Gravity.LEFT, 18, 0, 70, 0));
 +        TextView big = BozorUi.text(ctx, Color.WHITE, 40, false);
@@ -11698,10 +11813,10 @@ index 0000000..861f6f4
 +    private void pickCity() {
 +        if (getParentActivity() == null) return;
 +        String[] names = new String[BozorApi.CITIES.length + 1];
-+        names[0] = "Butun O'zbekiston";
++        names[0] = uz.aloj.L.t("Butun O'zbekiston", "Весь Узбекистан");
 +        System.arraycopy(BozorApi.CITIES, 0, names, 1, BozorApi.CITIES.length);
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("Hudud");
++        b.setTitle(uz.aloj.L.t("Hudud", "Регион"));
 +        b.setItems(names, (d, w) -> {
 +            city = w == 0 ? null : BozorApi.CITIES[w - 1];
 +            load(true);
@@ -11716,17 +11831,17 @@ index 0000000..861f6f4
 +        box.setOrientation(LinearLayout.VERTICAL);
 +        box.setPadding(dp(24), dp(4), dp(24), 0);
 +        TextView l1 = BozorUi.text(ctx, BozorUi.gray(this), 13, false);
-+        l1.setText("Narx oralig'i (e'londagi valyutada)");
++        l1.setText(uz.aloj.L.t("Narx oralig'i (e'londagi valyutada)", "Диапазон цены (в валюте объявления)"));
 +        box.addView(l1);
 +        LinearLayout prices = new LinearLayout(ctx);
 +        EditText min = new EditText(ctx);
-+        min.setHint("dan");
++        min.setHint(uz.aloj.L.t("dan", "от"));
 +        min.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
 +        min.setTextColor(BozorUi.text(this));
 +        min.setHintTextColor(BozorUi.gray(this));
 +        if (minPrice > 0) min.setText(String.valueOf(minPrice));
 +        EditText max = new EditText(ctx);
-+        max.setHint("gacha");
++        max.setHint(uz.aloj.L.t("gacha", "до"));
 +        max.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
 +        max.setTextColor(BozorUi.text(this));
 +        max.setHintTextColor(BozorUi.gray(this));
@@ -11735,13 +11850,13 @@ index 0000000..861f6f4
 +        prices.addView(max, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f));
 +        box.addView(prices);
 +        TextView l2 = BozorUi.text(ctx, BozorUi.gray(this), 13, false);
-+        l2.setText("Holati");
++        l2.setText(uz.aloj.L.t("Holati", "Состояние"));
 +        l2.setPadding(0, dp(12), 0, dp(6));
 +        box.addView(l2);
 +        final String[] cond = {condition};
 +        LinearLayout chips = new LinearLayout(ctx);
 +        final String[] ids = {null, "new", "used"};
-+        final String[] names = {"Hammasi", "Yangi", "Ishlatilgan"};
++        final String[] names = {uz.aloj.L.t("Hammasi", "Все"), uz.aloj.L.t("Yangi", "Новое"), uz.aloj.L.t("Ishlatilgan", "Б/у")};
 +        final TextView[] views = new TextView[3];
 +        for (int i = 0; i < 3; i++) {
 +            final int k = i;
@@ -11758,15 +11873,15 @@ index 0000000..861f6f4
 +        }
 +        box.addView(chips);
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, getResourceProvider());
-+        b.setTitle("Filtr");
++        b.setTitle(uz.aloj.L.t("Filtr", "Фильтр"));
 +        b.setView(box);
-+        b.setPositiveButton("Qo'llash", (d, w) -> {
++        b.setPositiveButton(uz.aloj.L.t("Qo'llash", "Применить"), (d, w) -> {
 +            minPrice = parseLong(min.getText().toString());
 +            maxPrice = parseLong(max.getText().toString());
 +            condition = cond[0];
 +            load(true);
 +        });
-+        b.setNegativeButton("Tozalash", (d, w) -> {
++        b.setNegativeButton(uz.aloj.L.t("Tozalash", "Сбросить"), (d, w) -> {
 +            minPrice = 0;
 +            maxPrice = 0;
 +            condition = null;
@@ -11787,8 +11902,8 @@ index 0000000..861f6f4
 +    private void pickSort() {
 +        if (getParentActivity() == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("Saralash");
-+        b.setItems(new CharSequence[]{"Yangilari", "Arzonroq", "Qimmatroq"}, (d, w) -> {
++        b.setTitle(uz.aloj.L.t("Saralash", "Сортировка"));
++        b.setItems(new CharSequence[]{uz.aloj.L.t("Yangilari", "Новые"), uz.aloj.L.t("Arzonroq", "Дешевле"), uz.aloj.L.t("Qimmatroq", "Дороже")}, (d, w) -> {
 +            sort = w == 1 ? "cheap" : w == 2 ? "expensive" : "new";
 +            load(true);
 +        });
@@ -11836,14 +11951,14 @@ index 0000000..861f6f4
 +                t.setGravity(Gravity.CENTER);
 +                t.setPadding(dp(24), dp(28), dp(24), dp(28));
 +                if (error != null) {
-+                    t.setText(error + "\n\nQayta urinish uchun bosing");
++                    t.setText(error + uz.aloj.L.t("\n\nQayta urinish uchun bosing", "\n\nНажмите, чтобы повторить"));
 +                    t.setOnClickListener(v -> load(items.isEmpty()));
 +                } else if (loading) {
-+                    t.setText("Yuklanmoqda...");
++                    t.setText(uz.aloj.L.t("Yuklanmoqda...", "Загрузка..."));
 +                } else if (items.isEmpty()) {
-+                    t.setText("Hozircha e'lon yo'q.\nBirinchi bo'lib e'lon bering! 🙂");
++                    t.setText(uz.aloj.L.t("Hozircha e'lon yo'q.\nBirinchi bo'lib e'lon bering! 🙂", "Объявлений пока нет.\nРазместите первым! 🙂"));
 +                } else {
-+                    t.setText(endReached ? "Boshqa e'lon yo'q" : "");
++                    t.setText(endReached ? uz.aloj.L.t("Boshqa e'lon yo'q", "Больше объявлений нет") : "");
 +                }
 +                holder.addView(t, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
 +            }
@@ -11852,7 +11967,7 @@ index 0000000..861f6f4
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
 new file mode 100644
-index 0000000..da422ff
+index 0000000..f85a0c3
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
 @@ -0,0 +1,381 @@
@@ -11880,7 +11995,7 @@ index 0000000..da422ff
 +    public static final String KEY = "sb_publishable_mse7y-aLpjVQG8rITFYmfQ_cpcHgDOc";
 +
 +    public static final String[] CATEGORY_IDS = {"phones", "electronics", "auto", "realty", "clothes", "home", "jobs", "services", "kids", "other"};
-+    public static final String[] CATEGORY_NAMES = {"Telefonlar", "Elektronika", "Avto", "Uy-joy", "Kiyim", "Uy uchun", "Ish", "Xizmatlar", "Bolalar", "Boshqa"};
++    public static final String[] CATEGORY_NAMES = {uz.aloj.L.t("Telefonlar", "Телефоны"), uz.aloj.L.t("Elektronika", "Электроника"), uz.aloj.L.t("Avto", "Авто"), uz.aloj.L.t("Uy-joy", "Недвижимость"), uz.aloj.L.t("Kiyim", "Одежда"), uz.aloj.L.t("Uy uchun", "Для дома"), uz.aloj.L.t("Ish", "Работа"), uz.aloj.L.t("Xizmatlar", "Услуги"), uz.aloj.L.t("Bolalar", "Детское"), uz.aloj.L.t("Boshqa", "Другое")};
 +    public static final String[] CATEGORY_EMOJI = {"📱", "💻", "🚗", "🏠", "👕", "🛋️", "💼", "🛠️", "🧸", "📦"};
 +    public static final String[] CITIES = {"Toshkent", "Toshkent viloyati", "Samarqand", "Buxoro", "Andijon", "Farg'ona", "Namangan",
 +            "Qashqadaryo", "Surxondaryo", "Jizzax", "Sirdaryo", "Navoiy", "Xorazm", "Qoraqalpog'iston"};
@@ -12192,7 +12307,7 @@ index 0000000..da422ff
 +    // ---------------- formatting ----------------
 +
 +    public static String price(Listing l) {
-+        if (l.price <= 0) return "Kelishilgan";
++        if (l.price <= 0) return uz.aloj.L.t("Kelishilgan", "Договорная");
 +        if ("USD".equals(l.currency)) return "$" + group((long) Math.round(l.price));
 +        return group((long) Math.round(l.price)) + " so'm";
 +    }
@@ -12218,10 +12333,10 @@ index 0000000..da422ff
 +            f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
 +            long t = f.parse(iso.substring(0, 19)).getTime();
 +            long d = (System.currentTimeMillis() - t) / 1000;
-+            if (d < 3600) return Math.max(1, d / 60) + " daqiqa oldin";
-+            if (d < 86400) return (d / 3600) + " soat oldin";
-+            if (d < 172800) return "kecha";
-+            return (d / 86400) + " kun oldin";
++            if (d < 3600) return Math.max(1, d / 60) + uz.aloj.L.t(" daqiqa oldin", " мин. назад");
++            if (d < 86400) return (d / 3600) + uz.aloj.L.t(" soat oldin", " ч. назад");
++            if (d < 172800) return uz.aloj.L.t("kecha", "вчера");
++            return (d / 86400) + uz.aloj.L.t(" kun oldin", " дн. назад");
 +        } catch (Throwable e) {
 +            return "";
 +        }
@@ -12230,19 +12345,19 @@ index 0000000..da422ff
 +    public static String errorText(Throwable e) {
 +        if (e instanceof ApiException) {
 +            String m = e.getMessage() == null ? "" : e.getMessage();
-+            if (m.contains("FREE_LIMIT")) return "Sizda 2 ta bepul e'lon bor. Yangisini joylash uchun eskisini \"Sotildi\" qiling yoki o'chiring.";
++            if (m.contains("FREE_LIMIT")) return uz.aloj.L.t("Sizda 2 ta bepul e'lon bor. Yangisini joylash uchun eskisini \"Sotildi\" qiling yoki o'chiring.", "У вас 2 бесплатных объявления. Чтобы добавить новое, отметьте старое «Продано» или удалите.");
 +            if (m.contains("anonymous") || m.contains("Anonymous")) return "Bozor hali sozlanmagan (anonim kirish o'chiq).";
-+            return "Server xatosi (" + ((ApiException) e).code + ")";
++            return uz.aloj.L.t("Server xatosi (", "Ошибка сервера (") + ((ApiException) e).code + ")";
 +        }
-+        return "Internet bilan muammo. Qayta urinib ko'ring.";
++        return uz.aloj.L.t("Internet bilan muammo. Qayta urinib ko'ring.", "Проблема с интернетом. Попробуйте ещё раз.");
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
 new file mode 100644
-index 0000000..ecda8cf
+index 0000000..cade24e
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
-@@ -0,0 +1,354 @@
+@@ -0,0 +1,355 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -12312,7 +12427,7 @@ index 0000000..ecda8cf
 +                    boolean now = !BozorApi.isFav(l.id);
 +                    BozorApi.setFav(l.id, now);
 +                    fav.setAlpha(now ? 1f : 0.55f);
-+                    BozorUi.toast(BozorItemActivity.this, now ? "Sevimlilarga qo'shildi ❤️" : "Sevimlilardan olindi");
++                    BozorUi.toast(BozorItemActivity.this, now ? uz.aloj.L.t("Sevimlilarga qo'shildi ❤️", "Добавлено в избранное ❤️") : uz.aloj.L.t("Sevimlilardan olindi", "Удалено из избранного"));
 +                } else if (id == MENU_SHARE) {
 +                    share();
 +                } else if (id == MENU_REPORT) {
@@ -12397,14 +12512,14 @@ index 0000000..ecda8cf
 +        body.addView(title);
 +
 +        LinearLayout tags = new LinearLayout(context);
-+        tags.addView(tag(context, "new".equals(l.condition) ? "Yangi" : "Ishlatilgan"), LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
++        tags.addView(tag(context, "new".equals(l.condition) ? uz.aloj.L.t("Yangi", "Новое") : uz.aloj.L.t("Ishlatilgan", "Б/у")), LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
 +        tags.addView(tag(context, "📍 " + l.city), LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
 +        tags.addView(tag(context, "👁 " + (l.views + 1)));
 +        body.addView(tags);
 +
 +        if (l.description != null && l.description.length() > 0) {
 +            TextView h = BozorUi.text(context, BozorUi.text(this), 15, true);
-+            h.setText("Tavsif");
++            h.setText(uz.aloj.L.t("Tavsif", "Описание"));
 +            h.setPadding(0, dp(16), 0, dp(4));
 +            body.addView(h);
 +            TextView d = BozorUi.text(context, BozorUi.text(this), 14, false);
@@ -12420,7 +12535,7 @@ index 0000000..ecda8cf
 +        seller.setPadding(dp(12), dp(12), dp(12), dp(12));
 +        seller.setBackground(BozorUi.round(BozorUi.soft(this), 14));
 +        TextView av = BozorUi.text(context, Color.WHITE, 18, true);
-+        String name = l.tgName == null || l.tgName.isEmpty() ? "Sotuvchi" : l.tgName;
++        String name = l.tgName == null || l.tgName.isEmpty() ? uz.aloj.L.t("Sotuvchi", "Продавец") : l.tgName;
 +        av.setText(name.replace("@", "").substring(0, 1).toUpperCase());
 +        av.setGravity(Gravity.CENTER);
 +        av.setBackground(BozorUi.brandGradient(22));
@@ -12431,20 +12546,20 @@ index 0000000..ecda8cf
 +        sn.setText(name);
 +        st.addView(sn);
 +        TextView sd = BozorUi.text(context, BozorUi.gray(this), 12, false);
-+        sd.setText("E'lon " + BozorApi.ago(l.createdAt) + " joylangan");
++        sd.setText("E'lon " + BozorApi.ago(l.createdAt) + uz.aloj.L.t(" joylangan", " размещено"));
 +        st.addView(sd);
 +        seller.addView(st, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 12, 0, 0, 0));
 +        body.addView(seller, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 18, 0, 0));
 +
 +        TextView warn = BozorUi.text(context, 0xFF9A5B00, 13, false);
-+        warn.setText("⚠️ Oldindan pul o'tkazmang! Mahsulotni ko'rib, tekshirib, keyin to'lang. Shubhali e'lon bo'lsa — tepadagi ⚠ tugmasi bilan xabar bering.");
++        warn.setText(uz.aloj.L.t("⚠️ Oldindan pul o'tkazmang! Mahsulotni ko'rib, tekshirib, keyin to'lang. Shubhali e'lon bo'lsa — tepadagi ⚠ tugmasi bilan xabar bering.", "⚠️ Не переводите предоплату! Сначала посмотрите и проверьте товар. Подозрительное объявление — пожалуйтесь кнопкой ⚠ вверху."));
 +        warn.setPadding(dp(12), dp(10), dp(12), dp(10));
 +        warn.setBackground(BozorUi.round(BozorUi.dark(this) ? 0x33FFB020 : 0xFFFFF4E5, 12));
 +        body.addView(warn, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 12, 0, 0));
 +
 +        // seller's other listings
 +        TextView moreTitle = BozorUi.text(context, BozorUi.text(this), 15, true);
-+        moreTitle.setText("Sotuvchining boshqa e'lonlari");
++        moreTitle.setText(uz.aloj.L.t("Sotuvchining boshqa e'lonlari", "Другие объявления продавца"));
 +        moreTitle.setPadding(0, dp(18), 0, dp(6));
 +        moreTitle.setVisibility(View.GONE);
 +        body.addView(moreTitle);
@@ -12481,19 +12596,20 @@ index 0000000..ecda8cf
 +        bar.setElevation(dp(8));
 +        String my = BozorApi.myIdCached();
 +        if (my != null && my.equals(l.owner)) {
-+            TextView sold = BozorUi.button(context, "sold".equals(l.status) ? "Qayta sotuvga" : "Sotildi ✓", false);
++            TextView sold = BozorUi.button(context, "sold".equals(l.status) ? uz.aloj.L.t("Qayta sotuvga", "Снова в продажу") : uz.aloj.L.t("Sotildi ✓", "Продано ✓"), false);
 +            sold.setOnClickListener(v -> setStatus("sold".equals(l.status) ? "active" : "sold"));
 +            bar.addView(sold, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 10, 0));
-+            TextView del = BozorUi.button(context, "O'chirish", true);
++            TextView del = BozorUi.button(context, uz.aloj.L.t("O'chirish", "Удалить"), true);
 +            del.setOnClickListener(v -> deleteListing());
 +            bar.addView(del, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f));
 +        } else {
-+            TextView write = BozorUi.button(context, "💬  AloJ'da yozish", true);
++            TextView write = BozorUi.button(context, uz.aloj.L.t("💬  AloJ'da yozish", "💬  Написать в AloJ"), true);
 +            write.setOnClickListener(v -> BozorUi.openSeller(this, l));
 +            bar.addView(write, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
 +        }
 +        root.addView(bar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM));
 +
++        BozorUi.fitUnderActionBar(this, col);
 +        fragmentView = root;
 +        final long id = l.id;
 +        Utilities.globalQueue.postRunnable(() -> {
@@ -12506,8 +12622,8 @@ index 0000000..ecda8cf
 +            final Double usd = rates == null ? null : rates.get("USD");
 +            AndroidUtilities.runOnUIThread(() -> {
 +                if (usd == null || converted == null || l.price <= 0) return;
-+                if ("USD".equals(l.currency)) converted.setText("≈ " + AloJRates.formatSom(l.price * usd) + " · Markaziy bank kursi");
-+                else converted.setText("≈ $" + BozorApi.group(Math.round(l.price / usd)) + " · Markaziy bank kursi");
++                if ("USD".equals(l.currency)) converted.setText("≈ " + AloJRates.formatSom(l.price * usd) + uz.aloj.L.t(" · Markaziy bank kursi", " · курс ЦБ"));
++                else converted.setText("≈ $" + BozorApi.group(Math.round(l.price / usd)) + uz.aloj.L.t(" · Markaziy bank kursi", " · курс ЦБ"));
 +            });
 +        });
 +        return fragmentView;
@@ -12526,16 +12642,16 @@ index 0000000..ecda8cf
 +            Intent i = new Intent(Intent.ACTION_SEND);
 +            i.setType("text/plain");
 +            i.putExtra(Intent.EXTRA_TEXT, l.title + "\n" + BozorApi.price(l) + " · " + l.city + "\n\nAloJ Bozor'da ko'ring 🛍️");
-+            getParentActivity().startActivity(Intent.createChooser(i, "Ulashish"));
++            getParentActivity().startActivity(Intent.createChooser(i, uz.aloj.L.t("Ulashish", "Поделиться")));
 +        } catch (Throwable ignore) {
 +        }
 +    }
 +
 +    private void report() {
 +        if (getParentActivity() == null) return;
-+        final String[] reasons = {"Firibgarlik / aldov", "Noto'g'ri narx yoki ma'lumot", "Taqiqlangan mahsulot", "Spam / takroriy e'lon", "Boshqa"};
++        final String[] reasons = {uz.aloj.L.t("Firibgarlik / aldov", "Мошенничество / обман"), uz.aloj.L.t("Noto'g'ri narx yoki ma'lumot", "Неверная цена или данные"), uz.aloj.L.t("Taqiqlangan mahsulot", "Запрещённый товар"), uz.aloj.L.t("Spam / takroriy e'lon", "Спам / дубликат"), uz.aloj.L.t("Boshqa", "Другое")};
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("Shikoyat sababi");
++        b.setTitle(uz.aloj.L.t("Shikoyat sababi", "Причина жалобы"));
 +        b.setItems(reasons, (d, w) -> Utilities.globalQueue.postRunnable(() -> {
 +            String err = null;
 +            try {
@@ -12544,7 +12660,7 @@ index 0000000..ecda8cf
 +                err = BozorApi.errorText(e);
 +            }
 +            final String er = err;
-+            AndroidUtilities.runOnUIThread(() -> BozorUi.toast(this, er == null ? "Rahmat! Shikoyatingiz qabul qilindi." : er));
++            AndroidUtilities.runOnUIThread(() -> BozorUi.toast(this, er == null ? uz.aloj.L.t("Rahmat! Shikoyatingiz qabul qilindi.", "Спасибо! Жалоба принята.") : er));
 +        }));
 +        showDialog(b.create());
 +    }
@@ -12564,7 +12680,7 @@ index 0000000..ecda8cf
 +                    return;
 +                }
 +                BozorNewActivity.changed = true;
-+                BozorUi.toast(this, "sold".equals(status) ? "E'lon \"Sotildi\" deb belgilandi" : "E'lon qayta faol");
++                BozorUi.toast(this, "sold".equals(status) ? uz.aloj.L.t("E'lon \"Sotildi\" deb belgilandi", "Объявление отмечено как «Продано»") : uz.aloj.L.t("E'lon qayta faol", "Объявление снова активно"));
 +                finishFragment();
 +            });
 +        });
@@ -12573,9 +12689,9 @@ index 0000000..ecda8cf
 +    private void deleteListing() {
 +        if (getParentActivity() == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("E'lonni o'chirish");
-+        b.setMessage("Bu e'lon butunlay o'chiriladi. Davom etasizmi?");
-+        b.setPositiveButton("O'chirish", (d, w) -> Utilities.globalQueue.postRunnable(() -> {
++        b.setTitle(uz.aloj.L.t("E'lonni o'chirish", "Удалить объявление"));
++        b.setMessage(uz.aloj.L.t("Bu e'lon butunlay o'chiriladi. Davom etasizmi?", "Объявление будет удалено навсегда. Продолжить?"));
++        b.setPositiveButton(uz.aloj.L.t("O'chirish", "Удалить"), (d, w) -> Utilities.globalQueue.postRunnable(() -> {
 +            String err = null;
 +            try {
 +                BozorApi.delete(l.id);
@@ -12589,20 +12705,20 @@ index 0000000..ecda8cf
 +                    return;
 +                }
 +                BozorNewActivity.changed = true;
-+                BozorUi.toast(this, "E'lon o'chirildi");
++                BozorUi.toast(this, uz.aloj.L.t("E'lon o'chirildi", "Объявление удалено"));
 +                finishFragment();
 +            });
 +        }));
-+        b.setNegativeButton("Bekor qilish", null);
++        b.setNegativeButton(uz.aloj.L.t("Bekor qilish", "Отмена"), null);
 +        showDialog(b.create());
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
 new file mode 100644
-index 0000000..7f6556c
+index 0000000..60dd009
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,116 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -12640,7 +12756,7 @@ index 0000000..7f6556c
 +    public View createView(Context context) {
 +        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
 +        actionBar.setAllowOverlayTitle(true);
-+        actionBar.setTitle(favorites ? "Sevimlilar" : "Mening e'lonlarim");
++        actionBar.setTitle(favorites ? uz.aloj.L.t("Sevimlilar", "Избранное") : uz.aloj.L.t("Mening e'lonlarim", "Мои объявления"));
 +        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
 +            @Override
 +            public void onItemClick(int id) {
@@ -12655,6 +12771,7 @@ index 0000000..7f6556c
 +        col.setPadding(dp(6), dp(6), dp(6), dp(24));
 +        scroll.addView(col);
 +        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        BozorUi.fitUnderActionBar(this, col);
 +        fragmentView = root;
 +        load();
 +        return fragmentView;
@@ -12673,7 +12790,7 @@ index 0000000..7f6556c
 +        status = BozorUi.text(col.getContext(), BozorUi.gray(this), 14, false);
 +        status.setGravity(Gravity.CENTER);
 +        status.setPadding(dp(24), dp(40), dp(24), dp(24));
-+        status.setText("Yuklanmoqda...");
++        status.setText(uz.aloj.L.t("Yuklanmoqda...", "Загрузка..."));
 +        col.addView(status);
 +        Utilities.globalQueue.postRunnable(() -> {
 +            ArrayList<BozorApi.Listing> res = null;
@@ -12697,7 +12814,7 @@ index 0000000..7f6556c
 +            return;
 +        }
 +        if (list == null || list.isEmpty()) {
-+            status.setText(favorites ? "Sevimli e'lonlar yo'q.\nE'londagi ⭐ tugmasini bosing." : "Sizda hali e'lon yo'q.\nBozorda \"E'lon berish\" tugmasini bosing.");
++            status.setText(favorites ? uz.aloj.L.t("Sevimli e'lonlar yo'q.\nE'londagi ⭐ tugmasini bosing.", "Нет избранных.\nНажмите ⭐ в объявлении.") : uz.aloj.L.t("Sizda hali e'lon yo'q.\nBozorda \"E'lon berish\" tugmasini bosing.", "У вас пока нет объявлений.\nНажмите «Подать объявление» в Базаре."));
 +            return;
 +        }
 +        col.removeAllViews();
@@ -12720,10 +12837,10 @@ index 0000000..7f6556c
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
 new file mode 100644
-index 0000000..64dfb93
+index 0000000..a1fa6c7
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
-@@ -0,0 +1,400 @@
+@@ -0,0 +1,401 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -12785,7 +12902,7 @@ index 0000000..64dfb93
 +    public View createView(Context context) {
 +        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
 +        actionBar.setAllowOverlayTitle(true);
-+        actionBar.setTitle("Yangi e'lon");
++        actionBar.setTitle(uz.aloj.L.t("Yangi e'lon", "Новое объявление"));
 +        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
 +            @Override
 +            public void onItemClick(int id) {
@@ -12802,7 +12919,7 @@ index 0000000..64dfb93
 +        scroll.addView(col);
 +        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
 +
-+        col.addView(label(context, "Rasmlar (" + MAX_PHOTOS + " tagacha) — birinchisi asosiy bo'ladi"));
++        col.addView(label(context, uz.aloj.L.t("Rasmlar (", "Фото (до ") + MAX_PHOTOS + uz.aloj.L.t(" tagacha) — birinchisi asosiy bo'ladi", " шт.) — первое будет главным")));
 +        HorizontalScrollView hs = new HorizontalScrollView(context);
 +        hs.setHorizontalScrollBarEnabled(false);
 +        photoRow = new LinearLayout(context);
@@ -12810,16 +12927,16 @@ index 0000000..64dfb93
 +        col.addView(hs, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 84, 0, 0, 0, 14));
 +        refreshPhotos();
 +
-+        col.addView(label(context, "Nomi"));
-+        title = input(context, "Masalan: iPhone 15 Pro 256GB", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
++        col.addView(label(context, uz.aloj.L.t("Nomi", "Название")));
++        title = input(context, uz.aloj.L.t("Masalan: iPhone 15 Pro 256GB", "Например: iPhone 15 Pro 256GB"), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 +        col.addView(title, field());
 +
-+        col.addView(label(context, "Kategoriya"));
-+        categoryBtn = picker(context, "Tanlang ▾");
++        col.addView(label(context, uz.aloj.L.t("Kategoriya", "Категория")));
++        categoryBtn = picker(context, uz.aloj.L.t("Tanlang ▾", "Выбрать ▾"));
 +        categoryBtn.setOnClickListener(v -> pickCategory());
 +        col.addView(categoryBtn, field());
 +
-+        col.addView(label(context, "Narxi (0 = kelishilgan)"));
++        col.addView(label(context, uz.aloj.L.t("Narxi (0 = kelishilgan)", "Цена (0 = договорная)")));
 +        LinearLayout priceRow = new LinearLayout(context);
 +        priceRow.setGravity(Gravity.CENTER_VERTICAL);
 +        price = input(context, "9 800 000", InputType.TYPE_CLASS_NUMBER);
@@ -12829,32 +12946,33 @@ index 0000000..64dfb93
 +        col.addView(priceRow, field());
 +        refreshCurrency();
 +
-+        col.addView(label(context, "Holati"));
++        col.addView(label(context, uz.aloj.L.t("Holati", "Состояние")));
 +        conditionRow = new LinearLayout(context);
 +        col.addView(conditionRow, field());
 +        refreshCondition();
 +
-+        col.addView(label(context, "Shahar / viloyat"));
++        col.addView(label(context, uz.aloj.L.t("Shahar / viloyat", "Город / область")));
 +        cityBtn = picker(context, "📍 " + city + " ▾");
 +        cityBtn.setOnClickListener(v -> pickCity());
 +        col.addView(cityBtn, field());
 +
-+        col.addView(label(context, "Tavsif"));
-+        description = input(context, "Holati, xususiyatlari, telefon raqamingiz...", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
++        col.addView(label(context, uz.aloj.L.t("Tavsif", "Описание")));
++        description = input(context, uz.aloj.L.t("Holati, xususiyatlari, telefon raqamingiz...", "Состояние, характеристики, ваш телефон..."), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 +        description.setMinLines(4);
 +        description.setGravity(Gravity.TOP);
 +        col.addView(description, field());
 +
 +        TextView free = BozorUi.text(context, 0xFF2E8B57, 13, false);
-+        free.setText("✅ Har bir foydalanuvchiga 2 ta faol e'lon bepul. TOP'ga chiqarish tez kunda.");
++        free.setText(uz.aloj.L.t("✅ Har bir foydalanuvchiga 2 ta faol e'lon bepul. TOP'ga chiqarish tez kunda.", "✅ 2 активных объявления бесплатно. Поднятие в ТОП — скоро."));
 +        free.setPadding(dp(12), dp(10), dp(12), dp(10));
 +        free.setBackground(BozorUi.round(BozorUi.dark(this) ? 0x332E8B57 : 0xFFEAF7EF, 12));
 +        col.addView(free);
 +
-+        submit = BozorUi.button(context, "E'lonni joylash", true);
++        submit = BozorUi.button(context, uz.aloj.L.t("E'lonni joylash", "Опубликовать"), true);
 +        submit.setOnClickListener(v -> send());
 +        root.addView(submit, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 16, 0, 16, 16));
 +
++        BozorUi.fitUnderActionBar(this, col);
 +        fragmentView = root;
 +        return fragmentView;
 +    }
@@ -12910,13 +13028,13 @@ index 0000000..64dfb93
 +    private void refreshCondition() {
 +        conditionRow.removeAllViews();
 +        Context ctx = conditionRow.getContext();
-+        TextView n = BozorUi.chip(ctx, this, "Yangi", "new".equals(condition));
++        TextView n = BozorUi.chip(ctx, this, uz.aloj.L.t("Yangi", "Новое"), "new".equals(condition));
 +        n.setOnClickListener(v -> {
 +            condition = "new";
 +            refreshCondition();
 +        });
 +        conditionRow.addView(n, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 8, 0));
-+        TextView u = BozorUi.chip(ctx, this, "Ishlatilgan", "used".equals(condition));
++        TextView u = BozorUi.chip(ctx, this, uz.aloj.L.t("Ishlatilgan", "Б/у"), "used".equals(condition));
 +        u.setOnClickListener(v -> {
 +            condition = "used";
 +            refreshCondition();
@@ -12929,7 +13047,7 @@ index 0000000..64dfb93
 +        Context ctx = photoRow.getContext();
 +        if (photos.size() < MAX_PHOTOS) {
 +            TextView add = BozorUi.text(ctx, BozorUi.ORANGE, 12, true);
-+            add.setText("📷\nRasm\nqo'shish");
++            add.setText(uz.aloj.L.t("📷\nRasm\nqo'shish", "📷\nДобавить\nфото"));
 +            add.setGravity(Gravity.CENTER);
 +            add.setBackground(BozorUi.stroke(BozorUi.soft(this), BozorUi.ORANGE, 12));
 +            add.setOnClickListener(v -> pickPhotos());
@@ -12964,9 +13082,9 @@ index 0000000..64dfb93
 +            i.setType("image/*");
 +            i.addCategory(Intent.CATEGORY_OPENABLE);
 +            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-+            getParentActivity().startActivityForResult(Intent.createChooser(i, "Rasm tanlang"), REQ_PHOTOS);
++            getParentActivity().startActivityForResult(Intent.createChooser(i, uz.aloj.L.t("Rasm tanlang", "Выберите фото")), REQ_PHOTOS);
 +        } catch (Throwable e) {
-+            BozorUi.toast(this, "Galereyani ochib bo'lmadi");
++            BozorUi.toast(this, uz.aloj.L.t("Galereyani ochib bo'lmadi", "Не удалось открыть галерею"));
 +        }
 +    }
 +
@@ -13041,7 +13159,7 @@ index 0000000..64dfb93
 +        String[] names = new String[BozorApi.CATEGORY_IDS.length];
 +        for (int i = 0; i < names.length; i++) names[i] = BozorApi.CATEGORY_EMOJI[i] + "  " + BozorApi.CATEGORY_NAMES[i];
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("Kategoriya");
++        b.setTitle(uz.aloj.L.t("Kategoriya", "Категория"));
 +        b.setItems(names, (d, w) -> {
 +            category = BozorApi.CATEGORY_IDS[w];
 +            categoryBtn.setText(names[w]);
@@ -13052,7 +13170,7 @@ index 0000000..64dfb93
 +    private void pickCity() {
 +        if (getParentActivity() == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
-+        b.setTitle("Shahar / viloyat");
++        b.setTitle(uz.aloj.L.t("Shahar / viloyat", "Город / область"));
 +        b.setItems(BozorApi.CITIES, (d, w) -> {
 +            city = BozorApi.CITIES[w];
 +            cityBtn.setText("📍 " + city + " ▾");
@@ -13065,15 +13183,15 @@ index 0000000..64dfb93
 +        String t = title.getText().toString().trim();
 +        String p = price.getText().toString().replaceAll("[^0-9]", "");
 +        if (t.length() < 3) {
-+            BozorUi.toast(this, "E'lon nomini yozing (kamida 3 harf)");
++            BozorUi.toast(this, uz.aloj.L.t("E'lon nomini yozing (kamida 3 harf)", "Введите название (минимум 3 буквы)"));
 +            return;
 +        }
 +        if (category == null) {
-+            BozorUi.toast(this, "Kategoriyani tanlang");
++            BozorUi.toast(this, uz.aloj.L.t("Kategoriyani tanlang", "Выберите категорию"));
 +            return;
 +        }
 +        if (photos.isEmpty()) {
-+            BozorUi.toast(this, "Kamida bitta rasm qo'shing — rasmli e'lonlar 5 barobar tez sotiladi");
++            BozorUi.toast(this, uz.aloj.L.t("Kamida bitta rasm qo'shing — rasmli e'lonlar 5 barobar tez sotiladi", "Добавьте хотя бы одно фото — с фото продаётся в 5 раз быстрее"));
 +            return;
 +        }
 +        final BozorApi.Listing l = new BozorApi.Listing();
@@ -13095,7 +13213,7 @@ index 0000000..64dfb93
 +        l.city = city;
 +        l.condition = condition;
 +        sending = true;
-+        submit.setText("Yuklanmoqda...");
++        submit.setText(uz.aloj.L.t("Yuklanmoqda...", "Загрузка..."));
 +        final ArrayList<Bitmap> toSend = new ArrayList<>(photos);
 +        Utilities.globalQueue.postRunnable(() -> {
 +            String err = null;
@@ -13112,13 +13230,13 @@ index 0000000..64dfb93
 +            final String er = err;
 +            AndroidUtilities.runOnUIThread(() -> {
 +                sending = false;
-+                if (submit != null) submit.setText("E'lonni joylash");
++                if (submit != null) submit.setText(uz.aloj.L.t("E'lonni joylash", "Опубликовать"));
 +                if (er != null) {
 +                    BozorUi.toast(this, er);
 +                    return;
 +                }
 +                changed = true;
-+                BozorUi.toast(this, "E'loningiz joylandi! 🎉");
++                BozorUi.toast(this, uz.aloj.L.t("E'loningiz joylandi! 🎉", "Объявление опубликовано! 🎉"));
 +                finishFragment();
 +            });
 +        });
@@ -13126,10 +13244,10 @@ index 0000000..64dfb93
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
 new file mode 100644
-index 0000000..d89fef3
+index 0000000..fba38c0
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
-@@ -0,0 +1,186 @@
+@@ -0,0 +1,201 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -13262,7 +13380,7 @@ index 0000000..d89fef3
 +        }
 +        if ("sold".equals(l.status)) {
 +            TextView sold = text(ctx, Color.WHITE, 11, true);
-+            sold.setText("SOTILDI");
++            sold.setText(uz.aloj.L.t("SOTILDI", "ПРОДАНО"));
 +            sold.setPadding(dp(6), dp(2), dp(6), dp(2));
 +            sold.setBackground(round(0xCC000000, 6));
 +            photo.addView(sold, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP | Gravity.RIGHT, 0, 6, 6, 0));
@@ -13286,6 +13404,21 @@ index 0000000..d89fef3
 +        place.setPadding(dp(9), dp(2), dp(9), dp(9));
 +        box.addView(place);
 +        return box;
++    }
++
++    /** Telegram's new action bar is drawn over the content: push the content below it. */
++    public static void fitUnderActionBar(BaseFragment f, View content) {
++        content.post(() -> {
++            if (f.getActionBar() == null) return;
++            int[] a = new int[2];
++            int[] b = new int[2];
++            f.getActionBar().getLocationInWindow(a);
++            content.getLocationInWindow(b);
++            int top = a[1] + f.getActionBar().getHeight() - b[1];
++            if (top > 0 && content.getPaddingTop() < top) {
++                content.setPadding(content.getPaddingLeft(), top + content.getPaddingTop(), content.getPaddingRight(), content.getPaddingBottom());
++            }
++        });
 +    }
 +
 +    public static String emoji(String category) {
@@ -13312,7 +13445,7 @@ index 0000000..d89fef3
 +            args.putLong("user_id", u.id);
 +            f.presentFragment(new ChatActivity(args));
 +        } else {
-+            toast(f, "Sotuvchining username'i yo'q. E'lon tavsifidagi telefon raqami orqali bog'laning.");
++            toast(f, uz.aloj.L.t("Sotuvchining username'i yo'q. E'lon tavsifidagi telefon raqami orqali bog'laning.", "У продавца нет username. Свяжитесь по телефону из описания."));
 +        }
 +    }
 +}
@@ -75234,7 +75367,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..7f002cc 100644
+index 17bb1dc..590515b 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -75243,7 +75376,7 @@ index 17bb1dc..7f002cc 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.0.0
++APP_VERSION_NAME=1.7.0
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
