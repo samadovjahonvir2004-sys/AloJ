@@ -2579,7 +2579,7 @@ index 0000000..2e6ce37
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java b/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java
 new file mode 100644
-index 0000000..4dc84fe
+index 0000000..ef983f3
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/AloJCrash.java
 @@ -0,0 +1,78 @@
@@ -2632,7 +2632,7 @@ index 0000000..4dc84fe
 +            try {
 +                StringWriter sw = new StringWriter();
 +                PrintWriter pw = new PrintWriter(sw);
-+                pw.println("AloJ " + BuildVars.BUILD_VERSION_STRING);
++                pw.println("AloJ " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
 +                pw.println("Android " + Build.VERSION.RELEASE + " / SDK " + Build.VERSION.SDK_INT + " / " + Build.MANUFACTURER + " " + Build.MODEL);
 +                pw.println("Thread: " + thread.getName());
 +                pw.println();
@@ -2737,6 +2737,27 @@ index 3a5413c..fb7ca1e 100644
      }
  
      public static String getServerString(String key) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
+index ec76835..d6771d8 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
+@@ -10563,7 +10563,7 @@ public class MessagesController extends BaseController implements NotificationCe
+                         }
+ 
+                         TL_account.updateStatus req = new TL_account.updateStatus();
+-                        req.offline = false;
++                        req.offline = uz.aloj.AloJConfig.hideOnline();
+                         statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
+                             if (error == null) {
+                                 lastStatusUpdateTime = System.currentTimeMillis();
+@@ -11412,6 +11412,7 @@ public class MessagesController extends BaseController implements NotificationCe
+     }
+ 
+     public boolean sendTyping(long dialogId, long threadMsgId, int action, String emojicon, int classGuid) {
++        if (uz.aloj.AloJConfig.hideTyping()) return false;
+         if (action < 0 || action >= sendingTypings.length || dialogId == 0) {
+             return false;
+         }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
 index 10520ec..ebfb484 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
@@ -3336,10 +3357,10 @@ index 0000000..18e904e
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 new file mode 100644
-index 0000000..5ece966
+index 0000000..489aae7
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
-@@ -0,0 +1,267 @@
+@@ -0,0 +1,290 @@
 +package org.telegram.ui;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -3363,7 +3384,7 @@ index 0000000..5ece966
 +import android.widget.Toast;
 +
 +import org.telegram.messenger.AndroidUtilities;
-+
++import org.telegram.messenger.BuildConfig;
 +import org.telegram.messenger.R;
 +import org.telegram.messenger.Utilities;
 +import org.telegram.ui.ActionBar.AlertDialog;
@@ -3377,6 +3398,7 @@ index 0000000..5ece966
 +import java.util.ArrayList;
 +import java.util.Map;
 +
++import uz.aloj.AloJConfig;
 +import uz.aloj.AloJRates;
 +import uz.aloj.AloJTranslit;
 +
@@ -3393,6 +3415,9 @@ index 0000000..5ece966
 +    private static final int ID_REMOTE = 8;
 +    private static final int ID_PREMIUM = 9;
 +    private static final int ID_ABOUT = 10;
++    private static final int ID_HIDE_TYPING = 11;
++    private static final int ID_HIDE_ONLINE = 12;
++    private static final int ID_HIDE_STORIES = 13;
 +
 +    private boolean hasMainTabs;
 +    private UniversalRecyclerView listView;
@@ -3437,6 +3462,12 @@ index 0000000..5ece966
 +        items.add(UItem.asButton(ID_VOICE, R.drawable.msg_voicechat, "Ovozni matnga", "tez kunda"));
 +        items.add(UItem.asShadow(null));
 +
++        items.add(UItem.asHeader("Maxfiylik"));
++        items.add(UItem.asCheck(ID_HIDE_TYPING, "\"Yozmoqda...\" holatini yubormaslik").setChecked(AloJConfig.hideTyping()));
++        items.add(UItem.asCheck(ID_HIDE_ONLINE, "Onlayn ekanimni ko'rsatmaslik").setChecked(AloJConfig.hideOnline()));
++        items.add(UItem.asCheck(ID_HIDE_STORIES, "Hikoyalar qatorini yashirish").setChecked(AloJConfig.hideStories()));
++        items.add(UItem.asShadow("Arvoh rejimi: boshqalar siz yozayotganingizni va onlayn ekaningizni ko'rmaydi."));
++
 +        items.add(UItem.asHeader("Himoya"));
 +        items.add(UItem.asButton(ID_FRAUD, R.drawable.msg_report, "Firibgarlikdan himoya", "tez kunda"));
 +        items.add(UItem.asButton(ID_REMOTE, R.drawable.msg_permissions, "Masofaviy yordam", "tez kunda"));
@@ -3449,7 +3480,7 @@ index 0000000..5ece966
 +        items.add(UItem.asShadow(null));
 +
 +        items.add(UItem.asButton(ID_ABOUT, R.drawable.msg_info, "AloJ haqida"));
-+        items.add(UItem.asShadow("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + " · Alo, Jahon!"));
++        items.add(UItem.asShadow("AloJ " + BuildConfig.VERSION_NAME + " · Alo, Jahon!"));
 +    }
 +
 +    private void onClick(UItem item, View view, int position, float x, float y) {
@@ -3468,6 +3499,19 @@ index 0000000..5ece966
 +                break;
 +            case ID_ABOUT:
 +                showAbout();
++                break;
++            case ID_HIDE_TYPING:
++                AloJConfig.set("hideTyping", !AloJConfig.hideTyping());
++                listView.adapter.update(true);
++                break;
++            case ID_HIDE_ONLINE:
++                AloJConfig.set("hideOnline", !AloJConfig.hideOnline());
++                listView.adapter.update(true);
++                break;
++            case ID_HIDE_STORIES:
++                AloJConfig.set("hideStories", !AloJConfig.hideStories());
++                listView.adapter.update(true);
++                toast("Ilovani qayta ochganda kuchga kiradi");
 +                break;
 +            default:
 +                toast("Bu funksiya tez kunda qo'shiladi");
@@ -3594,7 +3638,7 @@ index 0000000..5ece966
 +        if (ctx == null) return;
 +        AlertDialog.Builder b = new AlertDialog.Builder(ctx, resourceProvider);
 +        b.setTitle("AloJ haqida");
-+        b.setMessage("AloJ " + org.telegram.messenger.BuildVars.BUILD_VERSION_STRING + "\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n"
++        b.setMessage("AloJ " + BuildConfig.VERSION_NAME + "\n\nAlo, Jahon! O'zbekistonda yaratilgan messenjer.\n\n"
 +                + "AloJ Telegram API asosida ishlaydigan norasmiy ilova. Telegram akkauntingiz, chatlaringiz va kanallaringiz shu yerda.\n\n"
 +                + "Ochiq kodli Telegram for Android va Nagram (GPLv3) asosida qurilgan.");
 +        b.setPositiveButton("Manba kodi", (d, w) -> {
@@ -3657,6 +3701,73 @@ index d1ac117..d01383c 100644
          } else if (position == POSITION_CALLS_OR_SETTINGS) {
              if (getUserConfig().showCallsTab) {
                  Bundle args = new Bundle();
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
+index 529eb5c..7472988 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
+@@ -281,6 +281,7 @@ public class StoriesController {
+     }
+ 
+     public boolean hasStories() {
++        if (uz.aloj.AloJConfig.hideStories()) return false;
+         return (dialogListStories != null && dialogListStories.size() > 0) || hasSelfStories();
+     }
+ 
+diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java b/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java
+new file mode 100644
+index 0000000..da4c9f5
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/AloJConfig.java
+@@ -0,0 +1,49 @@
++package uz.aloj;
++
++import android.content.Context;
++import android.content.SharedPreferences;
++
++import org.telegram.messenger.ApplicationLoader;
++
++/** AloJ: user switches for the extra (Plus-style) features. */
++public final class AloJConfig {
++    public static boolean hideTyping;
++    public static boolean hideOnline;
++    public static boolean hideStories;
++    public static boolean confirmSticker;
++    public static boolean confirmVoice;
++    private static boolean loaded;
++
++    private AloJConfig() {}
++
++    private static SharedPreferences prefs() {
++        return ApplicationLoader.applicationContext.getSharedPreferences("aloj", Context.MODE_PRIVATE);
++    }
++
++    public static synchronized void load() {
++        if (loaded || ApplicationLoader.applicationContext == null) return;
++        SharedPreferences p = prefs();
++        hideTyping = p.getBoolean("hideTyping", false);
++        hideOnline = p.getBoolean("hideOnline", false);
++        hideStories = p.getBoolean("hideStories", false);
++        confirmSticker = p.getBoolean("confirmSticker", false);
++        confirmVoice = p.getBoolean("confirmVoice", false);
++        loaded = true;
++    }
++
++    public static boolean hideTyping() { load(); return hideTyping; }
++    public static boolean hideOnline() { load(); return hideOnline; }
++    public static boolean hideStories() { load(); return hideStories; }
++
++    public static void set(String key, boolean value) {
++        load();
++        switch (key) {
++            case "hideTyping": hideTyping = value; break;
++            case "hideOnline": hideOnline = value; break;
++            case "hideStories": hideStories = value; break;
++            case "confirmSticker": confirmSticker = value; break;
++            case "confirmVoice": confirmVoice = value; break;
++        }
++        prefs().edit().putBoolean(key, value).apply();
++    }
++}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJRates.java b/TMessagesProj/src/main/java/uz/aloj/AloJRates.java
 new file mode 100644
 index 0000000..d3d5863
@@ -7315,6 +7426,28 @@ index d3a1ae4..91f382d 100644
 +    <gradient android:type="linear" android:angle="45"
 +        android:startColor="#5B3DF5" android:centerColor="#E0457B" android:endColor="#FF9A2E" />
 +</shape>
+diff --git a/TMessagesProj/src/main/res/drawable/telegram_logo.xml b/TMessagesProj/src/main/res/drawable/telegram_logo.xml
+index a0d11db..db9890f 100644
+--- a/TMessagesProj/src/main/res/drawable/telegram_logo.xml
++++ b/TMessagesProj/src/main/res/drawable/telegram_logo.xml
+@@ -1,5 +1,3 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="19dp" android:viewportHeight="57" android:viewportWidth="249" android:width="83dp">
+-      
+-    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M45.28,13.15C47.6,13.15 49.66,13.53 51.47,14.3C53.28,15.06 54.79,16.13 56.01,17.48C57.23,18.84 58.16,20.44 58.79,22.29C59.42,24.14 59.73,26.15 59.73,28.31L59.73,29.02C59.69,29.25 59.67,29.47 59.67,29.67C59.63,29.86 59.61,30.08 59.61,30.31L37.84,30.31C38,31.49 38.32,32.51 38.82,33.35C39.31,34.2 39.92,34.91 40.64,35.48C41.37,36.05 42.17,36.46 43.03,36.72C43.9,36.97 44.78,37.1 45.69,37.1C47.46,37.1 48.92,36.7 50.08,35.89C51.24,35.08 52.16,34.07 52.83,32.85L59.26,36.04C57.92,38.4 56.12,40.31 53.86,41.76C51.6,43.22 48.84,43.94 45.57,43.94C43.37,43.94 41.33,43.56 39.46,42.79C37.6,42.03 35.97,40.95 34.6,39.58C33.22,38.2 32.15,36.58 31.38,34.71C30.61,32.84 30.23,30.79 30.23,28.54C30.23,26.46 30.6,24.48 31.35,22.62C32.1,20.75 33.14,19.11 34.48,17.72C35.82,16.32 37.4,15.21 39.23,14.39C41.06,13.56 43.07,13.15 45.28,13.15ZM31.98,0.76L31.98,8.31L20.18,8.31L20.18,43L12.22,43L12.22,8.31L0.42,8.31L0.42,0.76L31.98,0.76ZM45.28,19.46C43.62,19.46 42.17,19.93 40.91,20.88C39.65,21.82 38.77,23.14 38.25,24.83L52.24,24.83C52.2,24.32 52.03,23.75 51.74,23.12C51.44,22.49 51.01,21.9 50.44,21.35C49.87,20.8 49.16,20.34 48.31,19.99C47.47,19.64 46.46,19.46 45.28,19.46ZM64.59,43L64.59,0.76L72.32,0.76L72.32,43L64.59,43ZM106.3,36.04C104.96,38.4 103.16,40.31 100.9,41.76C98.64,43.22 95.88,43.94 92.61,43.94C90.41,43.94 88.38,43.56 86.51,42.79C84.64,42.03 83.02,40.95 81.64,39.58C80.26,38.2 79.19,36.58 78.42,34.71C77.66,32.84 77.27,30.79 77.27,28.54C77.27,26.46 77.65,24.48 78.39,22.62C79.14,20.75 80.18,19.11 81.52,17.72C82.86,16.32 84.44,15.21 86.27,14.39C88.1,13.56 90.12,13.15 92.32,13.15C94.64,13.15 96.7,13.53 98.51,14.3C100.32,15.06 101.84,16.13 103.06,17.48C104.28,18.84 105.2,20.44 105.83,22.29C106.46,24.14 106.77,26.15 106.77,28.31L106.77,29.02C106.73,29.25 106.71,29.47 106.71,29.67C106.68,29.86 106.66,30.08 106.66,30.31L84.88,30.31C85.04,31.49 85.37,32.51 85.86,33.35C86.35,34.2 86.96,34.91 87.69,35.48C88.41,36.05 89.21,36.46 90.08,36.72C90.94,36.97 91.83,37.1 92.73,37.1C94.5,37.1 95.97,36.7 97.13,35.89C98.29,35.08 99.2,34.07 99.87,32.85L106.3,36.04ZM99.28,24.83C99.24,24.32 99.07,23.75 98.78,23.12C98.48,22.49 98.05,21.9 97.48,21.35C96.91,20.8 96.2,20.34 95.36,19.99C94.51,19.64 93.5,19.46 92.32,19.46C90.67,19.46 89.21,19.93 87.95,20.88C86.69,21.82 85.81,23.14 85.3,24.83L99.28,24.83ZM125.06,56.69C123.02,56.69 121.2,56.42 119.61,55.89C118.01,55.36 116.63,54.67 115.45,53.83C114.27,52.98 113.28,52.05 112.5,51.02C111.71,50 111.14,48.98 110.79,47.96L118.16,45.01C118.71,46.54 119.62,47.73 120.87,48.58C122.13,49.42 123.53,49.84 125.06,49.84C127.5,49.84 129.43,49.09 130.85,47.57C132.26,46.06 132.97,43.94 132.97,41.23L132.97,39.22L132.5,39.22C131.59,40.48 130.4,41.48 128.93,42.2C127.45,42.93 125.71,43.29 123.71,43.29C121.98,43.29 120.29,42.94 118.66,42.23C117.03,41.53 115.58,40.51 114.33,39.19C113.07,37.88 112.04,36.29 111.26,34.44C110.47,32.6 110.08,30.53 110.08,28.25C110.08,25.97 110.47,23.89 111.26,22.03C112.04,20.16 113.07,18.56 114.33,17.25C115.58,15.93 117.03,14.92 118.66,14.21C120.29,13.5 121.98,13.15 123.71,13.15C125.71,13.15 127.45,13.51 128.93,14.24C130.4,14.97 131.59,15.96 132.5,17.22L132.97,17.22L132.97,14.09L140.34,14.09L140.34,40.94C140.34,43.37 139.97,45.57 139.22,47.51C138.48,49.46 137.43,51.11 136.1,52.47C134.76,53.83 133.16,54.87 131.29,55.6C129.42,56.32 127.34,56.69 125.06,56.69ZM125.36,36.33C126.3,36.33 127.24,36.16 128.16,35.8C129.09,35.45 129.9,34.93 130.61,34.24C131.32,33.55 131.89,32.7 132.32,31.7C132.75,30.7 132.97,29.55 132.97,28.25C132.97,26.95 132.75,25.79 132.32,24.77C131.89,23.75 131.32,22.89 130.61,22.2C129.9,21.51 129.09,20.99 128.16,20.64C127.24,20.28 126.3,20.11 125.36,20.11C124.41,20.11 123.49,20.28 122.59,20.64C121.68,20.99 120.87,21.52 120.17,22.23C119.46,22.94 118.89,23.8 118.46,24.8C118.02,25.8 117.81,26.95 117.81,28.25C117.81,29.55 118.02,30.7 118.46,31.7C118.89,32.7 119.46,33.55 120.17,34.24C120.87,34.93 121.68,35.45 122.59,35.8C123.49,36.16 124.41,36.33 125.36,36.33ZM146.95,14.09L154.21,14.09L154.21,18.1L154.68,18.1C155.04,17.39 155.51,16.75 156.1,16.16C156.69,15.57 157.35,15.05 158.07,14.62C158.8,14.19 159.59,13.85 160.43,13.62C161.28,13.38 162.12,13.26 162.94,13.26C163.96,13.26 164.84,13.36 165.57,13.56C166.29,13.76 166.91,14.01 167.43,14.33L165.36,21.35C164.89,21.11 164.37,20.92 163.8,20.79C163.23,20.65 162.53,20.58 161.7,20.58C160.64,20.58 159.68,20.79 158.81,21.2C157.95,21.61 157.21,22.19 156.6,22.94C155.99,23.69 155.52,24.56 155.18,25.57C154.85,26.57 154.68,27.66 154.68,28.84L154.68,43L146.95,43L146.95,14.09ZM188.78,39.93L188.31,39.93C187.41,41.03 186.32,41.98 185.04,42.76C183.76,43.55 182.12,43.94 180.11,43.94C178.62,43.94 177.21,43.7 175.89,43.21C174.57,42.71 173.42,42.04 172.44,41.17C171.46,40.31 170.69,39.26 170.14,38.04C169.59,36.82 169.31,35.49 169.31,34.03C169.31,32.54 169.61,31.19 170.2,29.99C170.79,28.79 171.61,27.76 172.68,26.89C173.74,26.03 174.99,25.37 176.42,24.92C177.86,24.46 179.42,24.24 181.11,24.24C183,24.24 184.55,24.39 185.77,24.68C186.99,24.98 188,25.28 188.78,25.6L188.78,24.71C188.78,23.18 188.17,21.91 186.95,20.9C185.74,19.9 184.22,19.4 182.41,19.4C179.74,19.4 177.48,20.52 175.63,22.76L170.02,18.93C173.09,15.07 177.28,13.15 182.59,13.15C187.07,13.15 190.49,14.2 192.85,16.3C195.21,18.41 196.39,21.52 196.39,25.65L196.39,43L188.78,43L188.78,39.93ZM188.78,31.26C187.88,30.83 186.94,30.48 185.98,30.23C185.02,29.97 183.96,29.84 182.82,29.84C180.98,29.84 179.55,30.25 178.55,31.05C177.54,31.86 177.04,32.85 177.04,34.03C177.04,35.21 177.52,36.16 178.49,36.86C179.45,37.57 180.56,37.93 181.82,37.93C182.84,37.93 183.79,37.74 184.65,37.37C185.52,36.99 186.26,36.5 186.87,35.89C187.48,35.28 187.95,34.57 188.28,33.77C188.62,32.96 188.78,32.12 188.78,31.26ZM202.53,14.09L209.79,14.09L209.79,17.87L210.26,17.87C211.16,16.45 212.39,15.31 213.95,14.44C215.5,13.58 217.22,13.15 219.11,13.15C221.31,13.15 223.16,13.66 224.66,14.68C226.15,15.7 227.21,16.96 227.84,18.46C228.75,17 230.02,15.75 231.68,14.71C233.33,13.67 235.33,13.15 237.69,13.15C239.46,13.15 241,13.43 242.3,14C243.59,14.57 244.67,15.37 245.51,16.39C246.36,17.41 247,18.64 247.43,20.08C247.86,21.51 248.08,23.08 248.08,24.77L248.08,43L240.35,43L240.35,26.19C240.35,22.25 238.74,20.28 235.51,20.28C234.49,20.28 233.58,20.51 232.8,20.96C232.01,21.42 231.35,22.03 230.82,22.79C230.29,23.56 229.88,24.47 229.58,25.54C229.29,26.6 229.14,27.74 229.14,28.96L229.14,43L221.41,43L221.41,26.19C221.41,22.25 219.72,20.28 216.34,20.28C215.35,20.28 214.49,20.51 213.74,20.96C212.99,21.42 212.36,22.03 211.85,22.79C211.34,23.56 210.95,24.47 210.67,25.54C210.4,26.6 210.26,27.74 210.26,28.96L210.26,43L202.53,43L202.53,14.09Z"/>
+-    
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="53.98dp" android:height="19dp" android:viewportWidth="2125" android:viewportHeight="748">
++    <path android:fillColor="#FFFFFFFF" android:pathData="M483.0 616.0H221.0L179.0 740.0H0.0L254.0 38.0H452.0L706.0 740.0H525.0ZM439.0 484.0 352.0 227.0 266.0 484.0ZM944.0 0.0V740.0H773.0V0.0ZM1024.0 461.0Q1024.0 375.0 1062.0 309.5Q1100.0 244.0 1166.0 209.0Q1232.0 174.0 1314.0 174.0Q1396.0 174.0 1462.0 209.0Q1528.0 244.0 1566.0 309.5Q1604.0 375.0 1604.0 461.0Q1604.0 547.0 1565.5 612.5Q1527.0 678.0 1460.5 713.0Q1394.0 748.0 1312.0 748.0Q1230.0 748.0 1164.5 713.0Q1099.0 678.0 1061.5 613.0Q1024.0 548.0 1024.0 461.0ZM1430.0 461.0Q1430.0 394.0 1396.5 358.0Q1363.0 322.0 1314.0 322.0Q1264.0 322.0 1231.0 357.5Q1198.0 393.0 1198.0 461.0Q1198.0 528.0 1230.5 564.0Q1263.0 600.0 1312.0 600.0Q1361.0 600.0 1395.5 564.0Q1430.0 528.0 1430.0 461.0ZM2125.0 38.0V516.0Q2125.0 627.0 2062.5 687.0Q2000.0 747.0 1894.0 747.0Q1783.0 747.0 1716.0 684.0Q1649.0 621.0 1649.0 505.0H1819.0Q1819.0 549.0 1837.0 571.5Q1855.0 594.0 1889.0 594.0Q1920.0 594.0 1937.0 574.0Q1954.0 554.0 1954.0 516.0V38.0Z" />
+ </vector>
+diff --git a/TMessagesProj/src/main/res/drawable/telegram_logo_2.xml b/TMessagesProj/src/main/res/drawable/telegram_logo_2.xml
+index 7325c01..b482e64 100644
+--- a/TMessagesProj/src/main/res/drawable/telegram_logo_2.xml
++++ b/TMessagesProj/src/main/res/drawable/telegram_logo_2.xml
+@@ -1,3 +1,3 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="20.408922dp" android:viewportHeight="61" android:viewportWidth="269" android:width="90dp">
+-    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M49.13,13.66C51.65,13.66 53.88,14.07 55.84,14.9C57.8,15.74 59.44,16.89 60.76,18.36C62.09,19.83 63.09,21.56 63.77,23.57C64.45,25.57 64.79,27.74 64.79,30.08L64.79,30.85C64.75,31.11 64.73,31.34 64.73,31.55C64.69,31.77 64.66,32 64.66,32.26L41.08,32.26C41.25,33.54 41.6,34.63 42.13,35.55C42.67,36.47 43.33,37.23 44.11,37.85C44.9,38.47 45.77,38.92 46.7,39.19C47.64,39.47 48.6,39.61 49.58,39.61C51.5,39.61 53.08,39.17 54.34,38.3C55.6,37.42 56.59,36.33 57.31,35.01L64.28,38.46C62.83,41.01 60.88,43.08 58.43,44.66C55.98,46.23 52.99,47.02 49.45,47.02C47.07,47.02 44.86,46.61 42.84,45.78C40.81,44.95 39.05,43.78 37.56,42.29C36.07,40.8 34.91,39.04 34.08,37.02C33.25,35 32.83,32.77 32.83,30.34C32.83,28.08 33.24,25.94 34.05,23.92C34.86,21.89 35.99,20.12 37.44,18.61C38.88,17.1 40.6,15.9 42.58,15C44.56,14.11 46.75,13.66 49.13,13.66ZM34.73,0.24L34.73,8.42L21.95,8.42L21.95,46L13.32,46L13.32,8.42L0.53,8.42L0.53,0.24L34.73,0.24ZM49.13,20.5C47.34,20.5 45.77,21.01 44.4,22.03C43.04,23.05 42.08,24.48 41.53,26.31L56.67,26.31C56.63,25.76 56.45,25.14 56.13,24.46C55.81,23.78 55.34,23.14 54.72,22.54C54.11,21.95 53.34,21.46 52.42,21.07C51.51,20.69 50.41,20.5 49.13,20.5ZM70.05,46L70.05,0.24L78.43,0.24L78.43,46L70.05,46ZM115.24,38.46C113.79,41.01 111.84,43.08 109.39,44.66C106.94,46.23 103.95,47.02 100.41,47.02C98.03,47.02 95.82,46.61 93.8,45.78C91.78,44.95 90.02,43.78 88.53,42.29C87.03,40.8 85.87,39.04 85.04,37.02C84.21,35 83.8,32.77 83.8,30.34C83.8,28.08 84.2,25.94 85.01,23.92C85.82,21.89 86.95,20.12 88.4,18.61C89.85,17.1 91.56,15.9 93.54,15C95.52,14.11 97.71,13.66 100.09,13.66C102.61,13.66 104.85,14.07 106.81,14.9C108.77,15.74 110.41,16.89 111.73,18.36C113.05,19.83 114.05,21.56 114.73,23.57C115.41,25.57 115.75,27.74 115.75,30.08C115.75,30.38 115.75,30.64 115.75,30.85C115.71,31.11 115.69,31.34 115.69,31.55C115.65,31.77 115.63,32 115.63,32.26L92.04,32.26C92.21,33.54 92.56,34.63 93.1,35.55C93.63,36.47 94.29,37.23 95.08,37.85C95.87,38.47 96.73,38.92 97.67,39.19C98.6,39.47 99.56,39.61 100.54,39.61C102.46,39.61 104.05,39.17 105.3,38.3C106.56,37.42 107.55,36.33 108.28,35.01L115.24,38.46ZM107.64,26.31C107.59,25.76 107.41,25.14 107.09,24.46C106.77,23.78 106.31,23.14 105.69,22.54C105.07,21.95 104.3,21.46 103.39,21.07C102.47,20.69 101.37,20.5 100.09,20.5C98.31,20.5 96.73,21.01 95.37,22.03C94,23.05 93.04,24.48 92.49,26.31L107.64,26.31ZM135.57,60.83C133.35,60.83 131.38,60.54 129.66,59.97C127.93,59.39 126.43,58.64 125.15,57.73C123.87,56.81 122.81,55.8 121.95,54.69C121.1,53.58 120.48,52.48 120.1,51.37L128.09,48.17C128.69,49.83 129.67,51.12 131.03,52.04C132.39,52.96 133.91,53.41 135.57,53.41C138.21,53.41 140.3,52.59 141.83,50.95C143.37,49.31 144.13,47.02 144.13,44.08L144.13,41.91L143.62,41.91C142.64,43.27 141.35,44.35 139.76,45.14C138.16,45.93 136.27,46.32 134.1,46.32C132.22,46.32 130.4,45.94 128.63,45.17C126.87,44.4 125.3,43.3 123.94,41.88C122.57,40.45 121.46,38.73 120.61,36.73C119.76,34.73 119.33,32.49 119.33,30.02C119.33,27.55 119.76,25.3 120.61,23.28C121.46,21.25 122.57,19.53 123.94,18.1C125.3,16.67 126.87,15.58 128.63,14.81C130.4,14.04 132.22,13.66 134.1,13.66C136.27,13.66 138.16,14.05 139.76,14.84C141.35,15.63 142.64,16.7 143.62,18.07L144.13,18.07L144.13,14.68L152.12,14.68L152.12,43.76C152.12,46.4 151.72,48.78 150.91,50.89C150.1,53 148.97,54.79 147.52,56.26C146.07,57.73 144.34,58.86 142.31,59.65C140.29,60.43 138.04,60.83 135.57,60.83ZM135.89,38.78C136.91,38.78 137.92,38.59 138.92,38.2C139.93,37.82 140.81,37.25 141.58,36.51C142.34,35.76 142.96,34.85 143.43,33.76C143.9,32.67 144.13,31.43 144.13,30.02C144.13,28.61 143.9,27.36 143.43,26.25C142.96,25.14 142.34,24.22 141.58,23.47C140.81,22.72 139.93,22.16 138.92,21.78C137.92,21.39 136.91,21.2 135.89,21.2C134.87,21.2 133.86,21.39 132.88,21.78C131.9,22.16 131.03,22.73 130.26,23.5C129.5,24.27 128.88,25.2 128.41,26.28C127.94,27.37 127.71,28.61 127.71,30.02C127.71,31.43 127.94,32.67 128.41,33.76C128.88,34.85 129.5,35.76 130.26,36.51C131.03,37.25 131.9,37.82 132.88,38.2C133.86,38.59 134.87,38.78 135.89,38.78ZM159.28,14.68L167.14,14.68L167.14,19.03L167.65,19.03C168.04,18.26 168.55,17.56 169.19,16.92C169.83,16.28 170.54,15.72 171.33,15.26C172.12,14.79 172.97,14.43 173.89,14.17C174.8,13.91 175.71,13.79 176.6,13.79C177.71,13.79 178.66,13.89 179.45,14.11C180.24,14.32 180.91,14.6 181.46,14.94L179.22,22.54C178.71,22.29 178.15,22.08 177.53,21.94C176.91,21.79 176.16,21.71 175.26,21.71C174.11,21.71 173.07,21.94 172.13,22.38C171.19,22.83 170.39,23.46 169.73,24.27C169.07,25.08 168.56,26.03 168.2,27.11C167.84,28.2 167.65,29.38 167.65,30.66L167.65,46L159.28,46L159.28,14.68ZM204.6,42.68L204.09,42.68C203.11,43.87 201.92,44.89 200.54,45.74C199.16,46.6 197.38,47.02 195.2,47.02C193.58,47.02 192.06,46.76 190.63,46.22C189.21,45.69 187.96,44.96 186.89,44.02C185.83,43.08 185,41.95 184.4,40.63C183.8,39.31 183.51,37.86 183.51,36.28C183.51,34.67 183.83,33.21 184.46,31.91C185.1,30.61 186,29.49 187.15,28.55C188.3,27.61 189.65,26.9 191.21,26.41C192.76,25.92 194.46,25.67 196.29,25.67C198.33,25.67 200.02,25.83 201.34,26.15C202.66,26.47 203.75,26.8 204.6,27.14L204.6,26.19C204.6,24.52 203.94,23.15 202.62,22.06C201.3,20.98 199.66,20.43 197.7,20.43C194.8,20.43 192.35,21.65 190.35,24.08L184.27,19.92C187.6,15.75 192.13,13.66 197.89,13.66C202.75,13.66 206.45,14.8 209.01,17.08C211.57,19.36 212.84,22.73 212.84,27.21L212.84,46L204.6,46L204.6,42.68ZM204.6,33.28C203.62,32.81 202.61,32.44 201.56,32.16C200.52,31.89 199.38,31.75 198.14,31.75C196.14,31.75 194.6,32.18 193.51,33.06C192.42,33.93 191.88,35.01 191.88,36.28C191.88,37.56 192.4,38.59 193.45,39.35C194.49,40.12 195.69,40.5 197.06,40.5C198.16,40.5 199.19,40.3 200.12,39.9C201.06,39.49 201.86,38.96 202.52,38.3C203.18,37.64 203.69,36.87 204.06,36C204.42,35.12 204.6,34.22 204.6,33.28ZM219.49,14.68L227.35,14.68L227.35,18.77L227.86,18.77C228.84,17.24 230.18,16 231.86,15.06C233.54,14.13 235.41,13.66 237.45,13.66C239.84,13.66 241.84,14.21 243.46,15.32C245.08,16.43 246.23,17.79 246.91,19.41C247.89,17.83 249.28,16.48 251.07,15.35C252.86,14.22 255.03,13.66 257.59,13.66C259.5,13.66 261.16,13.97 262.57,14.58C263.98,15.2 265.14,16.07 266.05,17.17C266.97,18.28 267.66,19.61 268.13,21.17C268.6,22.72 268.83,24.42 268.83,26.25L268.83,46L260.46,46L260.46,27.78C260.46,23.52 258.71,21.39 255.22,21.39C254.11,21.39 253.13,21.64 252.28,22.13C251.43,22.62 250.71,23.28 250.14,24.11C249.56,24.94 249.12,25.93 248.8,27.08C248.48,28.23 248.32,29.47 248.32,30.79L248.32,46L239.94,46L239.94,27.78C239.94,23.52 238.11,21.39 234.45,21.39C233.38,21.39 232.44,21.64 231.64,22.13C230.83,22.62 230.14,23.28 229.59,24.11C229.04,24.94 228.61,25.93 228.31,27.08C228.01,28.23 227.86,29.47 227.86,30.79L227.86,46L219.49,46L219.49,14.68Z" android:strokeColor="#00000000" android:strokeWidth="1"/>
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48.30dp" android:height="17dp" android:viewportWidth="2125" android:viewportHeight="748">
++    <path android:fillColor="#FFFFFFFF" android:pathData="M483.0 616.0H221.0L179.0 740.0H0.0L254.0 38.0H452.0L706.0 740.0H525.0ZM439.0 484.0 352.0 227.0 266.0 484.0ZM944.0 0.0V740.0H773.0V0.0ZM1024.0 461.0Q1024.0 375.0 1062.0 309.5Q1100.0 244.0 1166.0 209.0Q1232.0 174.0 1314.0 174.0Q1396.0 174.0 1462.0 209.0Q1528.0 244.0 1566.0 309.5Q1604.0 375.0 1604.0 461.0Q1604.0 547.0 1565.5 612.5Q1527.0 678.0 1460.5 713.0Q1394.0 748.0 1312.0 748.0Q1230.0 748.0 1164.5 713.0Q1099.0 678.0 1061.5 613.0Q1024.0 548.0 1024.0 461.0ZM1430.0 461.0Q1430.0 394.0 1396.5 358.0Q1363.0 322.0 1314.0 322.0Q1264.0 322.0 1231.0 357.5Q1198.0 393.0 1198.0 461.0Q1198.0 528.0 1230.5 564.0Q1263.0 600.0 1312.0 600.0Q1361.0 600.0 1395.5 564.0Q1430.0 528.0 1430.0 461.0ZM2125.0 38.0V516.0Q2125.0 627.0 2062.5 687.0Q2000.0 747.0 1894.0 747.0Q1783.0 747.0 1716.0 684.0Q1649.0 621.0 1649.0 505.0H1819.0Q1819.0 549.0 1837.0 571.5Q1855.0 594.0 1889.0 594.0Q1920.0 594.0 1937.0 574.0Q1954.0 554.0 1954.0 516.0V38.0Z" />
+ </vector>
 diff --git a/TMessagesProj/src/main/res/mipmap-anydpi-v26/ic_launcher.xml b/TMessagesProj/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
 index 5a996b4..14521f8 100644
 --- a/TMessagesProj/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
@@ -63708,7 +63841,7 @@ index d468344..1fd6a57 100644
      <!--date formatters-->
      <string name="formatterBoostExpired">dd MMM yyyy</string>
 diff --git a/TMessagesProj/src/main/res/values/strings.xml b/TMessagesProj/src/main/res/values/strings.xml
-index e4f8cf6..ff60749 100644
+index e4f8cf6..cd13a38 100644
 --- a/TMessagesProj/src/main/res/values/strings.xml
 +++ b/TMessagesProj/src/main/res/values/strings.xml
 @@ -1,7 +1,7 @@
@@ -65554,7 +65687,7 @@ index e4f8cf6..ff60749 100644
      <string name="StoryPrivacyGroupNoContacts">All group members are not in your contact list.</string>
      <string name="StoryPrivacyGroupNonContacts_one">%1$d member is not in your contact list</string>
      <string name="StoryPrivacyGroupNonContacts_other">%1$d members are not in your contact list</string>
-@@ -11673,7 +11673,7 @@
+@@ -11673,10 +11673,11 @@
      <string name="LocationPoweredBy">Powered by</string>
      <string name="SettingsExperimental">Experimental</string>
      <string name="FpnvConsentTitle">Log In with SIM Card</string>
@@ -65563,16 +65696,10 @@ index e4f8cf6..ff60749 100644
      <string name="FpnvConsentContinue">Continue</string>
      <string name="FpnvConsentCarrier">Carrier</string>
      <string name="FpnvConsentSimSlot">SIM Slot</string>
-diff --git a/TMessagesProj/src/main/res/values/strings_aloj.xml b/TMessagesProj/src/main/res/values/strings_aloj.xml
-new file mode 100644
-index 0000000..5fd2928
---- /dev/null
-+++ b/TMessagesProj/src/main/res/values/strings_aloj.xml
-@@ -0,0 +1,4 @@
-+<?xml version="1.0" encoding="utf-8"?>
-+<resources>
+     <string name="FpnvConsentSimSlotValue">SIM %1$d</string>
+     <string name="FpnvConsentPhoneNumber">Phone Number</string>
 +    <string name="AloJTab" translatable="false">AloJ</string>
-+</resources>
+ </resources>
 diff --git a/TMessagesProj_App/build.gradle b/TMessagesProj_App/build.gradle
 index daff205..cdc620e 100644
 --- a/TMessagesProj_App/build.gradle
