@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# AloJ build: Nagram source + AloJ patch -> signed APKs in ./out
+# AloJ build: official Telegram for Android + AloJ patch -> signed APK in ./out
 set -euo pipefail
-BASE_REPO="https://github.com/NextAlone/Nagram.git"
-BASE_COMMIT="8f2a8a03aa7aec599150b09d302bfd5023283344"
+BASE_REPO="https://github.com/DrKLO/Telegram.git"
+BASE_COMMIT="21f7d109da6ab3506c9e9577f98c6a38771ab335"
 ROOT="$(pwd)"
 mkdir -p out
 
@@ -11,26 +11,13 @@ cd src
 git fetch --depth 1 origin "$BASE_COMMIT"
 git checkout -q "$BASE_COMMIT"
 git submodule update --init --recursive --depth 1 --jobs 8 || git submodule update --init --recursive --jobs 8
-git apply "$ROOT/ci/aloj-nagram.patch"
+git apply "$ROOT/ci/aloj-telegram.patch"
 echo "AloJ patch applied"
-
-{
-  echo "sdk.dir=${ANDROID_HOME}"
-  echo "ndk.dir=${ANDROID_HOME}/ndk/27.2.12479018"
-  echo "TELEGRAM_APP_ID=37456841"
-  echo "TELEGRAM_APP_HASH=${ALOJ_API_HASH}"
-  echo "KEYSTORE_PASS=${ALOJ_KEY_PASSWORD}"
-  echo "ALIAS_NAME=aloj"
-  echo "ALIAS_PASS=${ALOJ_KEY_PASSWORD}"
-} > local.properties
-sed -i "s/2000000000000/$(date +%s%N | cut -c1-13)/g" gradle.properties
 
 chmod +x gradlew
 ./gradlew --no-daemon -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g" \
-  TMessagesProj:assembleRelease --stacktrace 2>&1 | tee "$ROOT/build.log"
+  :TMessagesProj_App:assembleAfatRelease --stacktrace 2>&1 | tee "$ROOT/build.log"
 
-ARM64=$(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk' | head -1)
-ARM32=$(find TMessagesProj/build/outputs/apk -name '*armeabi-v7a*.apk' | head -1)
-cp "$ARM64" "$ROOT/out/AloJ.apk"
-[ -n "$ARM32" ] && cp "$ARM32" "$ROOT/out/AloJ-old-phones.apk"
+APK=$(find TMessagesProj_App/build/outputs/apk -name '*.apk' | head -1)
+cp "$APK" "$ROOT/out/AloJ.apk"
 echo OK > "$ROOT/out/status"
