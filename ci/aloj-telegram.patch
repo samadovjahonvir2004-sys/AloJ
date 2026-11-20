@@ -2758,6 +2758,52 @@ index ec76835..d6771d8 100644
          if (action < 0 || action >= sendingTypings.length || dialogId == 0) {
              return false;
          }
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
+index 7fc7292..1b41e84 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/Theme.java
+@@ -4010,13 +4010,13 @@ public class Theme {
+         themeInfo.previewOutColor = 0xff82a8e3;
+         themeInfo.sortIndex = 3;
+         themeInfo.setAccentColorOptions(
+-                new int[]    {                    0xFF927BD4,                    0xFF698AFB,                    0xFF23A7F0,                    0xFF7B71D1,                    0xFF69B955,                    0xFF2990EA,                    0xFF7082E9,                    0xFF66BAED,                    0xff3685fa,                    0xff46c8ed,                    0xff64AC5F,                    0xffeb7cb1,                    0xffee902a,                    0xffa281f0,                    0xffd34324,                    0xffeebd34,                    0xff7f8fab,                    0xff3581e3 },
+-                new int[]    {                    0xFF9D5C99,                    0xFF635545,                    0xFF31818B,                    0xFFAD6426,                    0xFF4A7034,                    0xFF335D82,                    0xFF36576F,                    0xFF597563,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
+-                new int[]    {                    0xFF604DA8,                    0xFF685D4C,                    0xFF1B6080,                    0xFF99354E,                    0xFF275D3B,                    0xFF317A98,                    0xFF376E87,                    0xFF5E7370,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
+-                new int[]    {                    0xFF271e2e,                    0xFF171a22,                    0xFF071e1f,                    0xFF100f13,                    0xFF0e1811,                    0xFF0b131c,                    0xFF1d2129,                    0xFF202c2a,                    0xff0e141a,                    0xff162325,                    0xff161d15,                    0xff24191e,                    0xff251b13,                    0xff1f1d29,                    0xff22160e,                    0xff272115,                    0xff171a1b,                    0xff0e141a },
+-                new int[]    {                    0xFF110e13,                    0xFF26262e,                    0xFF141d26,                    0xFF221a27,                    0xFF1f2818,                    0xFF192330,                    0xFF12161a,                    0xFF141a1e,                    0xff172431,                    0xff0e1718,                    0xff172719,                    0xff23171c,                    0xff201408,                    0xff14131c,                    0xff2d1d16,                    0xff1a160d,                    0xff212328,                    0xff172431 },
+-                new int[]    {                    0xFF2b1e2b,                    0xFF15151b,                    0xFF0c151a,                    0xFF0e0f13,                    0xFF0b170f,                    0xFF131822,                    0xFF17242d,                    0xFF16202b,                    0xff0f171e,                    0xff1e2e2e,                    0xff141e14,                    0xff2b1929,                    0xff2e1f15,                    0xff292331,                    0xff23140c,                    0xff292414,                    0xff181a1d,                    0xff0f171e },
+-                new int[]    {                    0xFF161227,                    0xFF1a1916,                    0xFF0d272c,                    0xFF271d29,                    0xFF171d19,                    0xFF172331,                    0xFF111521,                    0xFF051717,                    0xff141c2b,                    0xff121f1f,                    0xff1c261a,                    0xff1f141d,                    0xff1b130a,                    0xff17131b,                    0xff2d1924,                    0xff1e170e,                    0xff212228,                    0xff141c2b },
++                new int[]    {                    0xFFFF8A3D,                    0xFF698AFB,                    0xFF23A7F0,                    0xFF7B71D1,                    0xFF69B955,                    0xFF2990EA,                    0xFF7082E9,                    0xFF66BAED,                    0xff3685fa,                    0xff46c8ed,                    0xff64AC5F,                    0xffeb7cb1,                    0xffee902a,                    0xffa281f0,                    0xffd34324,                    0xffeebd34,                    0xff7f8fab,                    0xff3581e3 },
++                new int[]    {                    0xFFE8772F,                    0xFF635545,                    0xFF31818B,                    0xFFAD6426,                    0xFF4A7034,                    0xFF335D82,                    0xFF36576F,                    0xFF597563,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
++                new int[]    {                    0xFFB8452B,                    0xFF685D4C,                    0xFF1B6080,                    0xFF99354E,                    0xFF275D3B,                    0xFF317A98,                    0xFF376E87,                    0xFF5E7370,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
++                new int[]    {                    0xFF241a12,                    0xFF171a22,                    0xFF071e1f,                    0xFF100f13,                    0xFF0e1811,                    0xFF0b131c,                    0xFF1d2129,                    0xFF202c2a,                    0xff0e141a,                    0xff162325,                    0xff161d15,                    0xff24191e,                    0xff251b13,                    0xff1f1d29,                    0xff22160e,                    0xff272115,                    0xff171a1b,                    0xff0e141a },
++                new int[]    {                    0xFF120d0a,                    0xFF26262e,                    0xFF141d26,                    0xFF221a27,                    0xFF1f2818,                    0xFF192330,                    0xFF12161a,                    0xFF141a1e,                    0xff172431,                    0xff0e1718,                    0xff172719,                    0xff23171c,                    0xff201408,                    0xff14131c,                    0xff2d1d16,                    0xff1a160d,                    0xff212328,                    0xff172431 },
++                new int[]    {                    0xFF2b1c12,                    0xFF15151b,                    0xFF0c151a,                    0xFF0e0f13,                    0xFF0b170f,                    0xFF131822,                    0xFF17242d,                    0xFF16202b,                    0xff0f171e,                    0xff1e2e2e,                    0xff141e14,                    0xff2b1929,                    0xff2e1f15,                    0xff292331,                    0xff23140c,                    0xff292414,                    0xff181a1d,                    0xff0f171e },
++                new int[]    {                    0xFF1c120c,                    0xFF1a1916,                    0xFF0d272c,                    0xFF271d29,                    0xFF171d19,                    0xFF172331,                    0xFF111521,                    0xFF051717,                    0xff141c2b,                    0xff121f1f,                    0xff1c261a,                    0xff1f141d,                    0xff1b130a,                    0xff17131b,                    0xff2d1924,                    0xff1e170e,                    0xff212228,                    0xff141c2b },
+                 new int[]    {                            11,                            12,                            13,                            14,                            15,                            16,                            17,                            18,                             0,                             1,                             2,                             3,                             4,                             5,                             6,                             7,                             8,                             9 },
+                 new String[] { "O-wmAfBPSFADAAAA4zINVfD_bro", "RepJ5uE_SVABAAAAr4d0YhgB850", "dk_wwlghOFACAAAAfz9xrxi6euw", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "PllZ-bf_SFAEAAAA8crRfwZiDNg", "-Xc-np9y2VMCAAAARKr0yNNPYW0", "kO4jyq55SFABAAAA0WEpcLfahXk", "CJNyxPMgSVAEAAAAvW9sMwc51cw", "fqv01SQemVIBAAAApND8LDRUhRU", "RepJ5uE_SVABAAAAr4d0YhgB850", "CJNyxPMgSVAEAAAAvW9sMwc51cw", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "9GcNVISdSVADAAAAUcw5BYjELW4", "F5oWoCs7QFACAAAAgf2bD_mg8Bw", "9ShF73d1MFIIAAAAjWnm8_ZMe8Q", "3rX-PaKbSFACAAAAEiHNvcEm6X4", "dk_wwlghOFACAAAAfz9xrxi6euw", "fqv01SQemVIBAAAApND8LDRUhRU" },
+                 new int[]    {                           225,                            45,                           225,                           135,                            45,                           225,                            45,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0 },
+@@ -4082,13 +4082,13 @@ public class Theme {
+         themeInfo.previewOutColor = 0xff75A2E6;
+         themeInfo.sortIndex = 4;
+         themeInfo.setAccentColorOptions(
+-                new int[]    {                    0xFF6ABE3F,                    0xFF8D78E3,                    0xFFDE5E7E,                    0xFF5977E8,                    0xFFDBC11A,                    0xff3e88f7,                    0xff4ab5d3,                    0xff4ab841,                    0xffd95576,                    0xffe27d2b,                    0xff936cda,                    0xffd04336,                    0xffe8ae1c,                    0xff7988a3 },
+-                new int[]    {                    0xFF8A5294,                    0xFFB46C1B,                    0xFFAF4F6F,                    0xFF266E8D,                    0xFF744EB7,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
+-                new int[]    {                    0xFF6855BB,                    0xFFA53B4A,                    0xFF62499C,                    0xFF2F919D,                    0xFF298B95,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
+-                new int[]    {                    0xFF16131c,                    0xFF1e1118,                    0xFF0f0b10,                    0xFF090c0c,                    0xFF071519,                    0xff0d0e17,                    0xff111b1c,                    0xff0c110c,                    0xff0e0b0d,                    0xff1d160f,                    0xff09090a,                    0xff1c1210,                    0xff1d1b18,                    0xff0e1012 },
+-                new int[]    {                    0xFF201827,                    0xFF100f13,                    0xFF1b151a,                    0xFF141f22,                    0xFF0c0c0f,                    0xff090a0c,                    0xff0a0e0e,                    0xff080908,                    0xff1a1618,                    0xff13100d,                    0xff1e1a21,                    0xff0f0d0c,                    0xff0c0b08,                    0xff070707 },
+-                new int[]    {                    0xFF0e0b13,                    0xFF211623,                    0xFF130e12,                    0xFF0d0f11,                    0xFF10191f,                    0xff181c28,                    0xff142121,                    0xff121812,                    0xff130e11,                    0xff1a130f,                    0xff0b0a0b,                    0xff120d0b,                    0xff15140f,                    0xff101214 },
+-                new int[]    {                    0xFF1e192a,                    0xFF111016,                    0xFF21141a,                    0xFF111a1b,                    0xFF0a0d13,                    0xff0e0f12,                    0xff070c0b,                    0xff0b0d0b,                    0xff22121e,                    0xff0f0c0c,                    0xff110f17,                    0xff070606,                    0xff0c0a0a,                    0xff09090b },
++                new int[]    {                    0xFFFF8A3D,                    0xFF8D78E3,                    0xFFDE5E7E,                    0xFF5977E8,                    0xFFDBC11A,                    0xff3e88f7,                    0xff4ab5d3,                    0xff4ab841,                    0xffd95576,                    0xffe27d2b,                    0xff936cda,                    0xffd04336,                    0xffe8ae1c,                    0xff7988a3 },
++                new int[]    {                    0xFFE8772F,                    0xFFB46C1B,                    0xFFAF4F6F,                    0xFF266E8D,                    0xFF744EB7,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
++                new int[]    {                    0xFFB8452B,                    0xFFA53B4A,                    0xFF62499C,                    0xFF2F919D,                    0xFF298B95,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000,                    0x00000000 },
++                new int[]    {                    0xFF1d150f,                    0xFF1e1118,                    0xFF0f0b10,                    0xFF090c0c,                    0xFF071519,                    0xff0d0e17,                    0xff111b1c,                    0xff0c110c,                    0xff0e0b0d,                    0xff1d160f,                    0xff09090a,                    0xff1c1210,                    0xff1d1b18,                    0xff0e1012 },
++                new int[]    {                    0xFF15100c,                    0xFF100f13,                    0xFF1b151a,                    0xFF141f22,                    0xFF0c0c0f,                    0xff090a0c,                    0xff0a0e0e,                    0xff080908,                    0xff1a1618,                    0xff13100d,                    0xff1e1a21,                    0xff0f0d0c,                    0xff0c0b08,                    0xff070707 },
++                new int[]    {                    0xFF1f150d,                    0xFF211623,                    0xFF130e12,                    0xFF0d0f11,                    0xFF10191f,                    0xff181c28,                    0xff142121,                    0xff121812,                    0xff130e11,                    0xff1a130f,                    0xff0b0a0b,                    0xff120d0b,                    0xff15140f,                    0xff101214 },
++                new int[]    {                    0xFF130d09,                    0xFF111016,                    0xFF21141a,                    0xFF111a1b,                    0xFF0a0d13,                    0xff0e0f12,                    0xff070c0b,                    0xff0b0d0b,                    0xff22121e,                    0xff0f0c0c,                    0xff110f17,                    0xff070606,                    0xff0c0a0a,                    0xff09090b },
+                 new int[]    {                             9,                            10,                            11,                            12,                            13,                             0,                             1,                             2,                             3,                             4,                             5,                             6,                             7,                             8 },
+                 new String[] { "YIxYGEALQVADAAAAA3QbEH0AowY", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "O-wmAfBPSFADAAAA4zINVfD_bro", "F5oWoCs7QFACAAAAgf2bD_mg8Bw", "-Xc-np9y2VMCAAAARKr0yNNPYW0", "fqv01SQemVIBAAAApND8LDRUhRU", "F5oWoCs7QFACAAAAgf2bD_mg8Bw", "ptuUd96JSFACAAAATobI23sPpz0", "p-pXcflrmFIBAAAAvXYQk-mCwZU", "Nl8Pg2rBQVACAAAA25Lxtb8SDp0", "dhf9pceaQVACAAAAbzdVo4SCiZA", "9GcNVISdSVADAAAAUcw5BYjELW4", "9LW_RcoOSVACAAAAFTk3DTyXN-M", "dk_wwlghOFACAAAAfz9xrxi6euw" },
+                 new int[]    {                            45,                           135,                             0,                           180,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0 },
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
 index 10520ec..76b9e88 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ThemeColors.java
@@ -3506,10 +3552,10 @@ index 0000000..18e904e
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
 new file mode 100644
-index 0000000..619faef
+index 0000000..175806a
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/AloJHubActivity.java
-@@ -0,0 +1,290 @@
+@@ -0,0 +1,293 @@
 +package org.telegram.ui;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -3603,7 +3649,7 @@ index 0000000..619faef
 +    private void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
 +        items.add(UItem.asHeader("Asosiy"));
 +        items.add(UItem.asButton(ID_CONTACTS, R.drawable.msg_contacts, "Kontaktlar"));
-+        items.add(UItem.asButton(ID_BOZOR, R.drawable.msg_payment_card, "Bozor", "tez kunda"));
++        items.add(UItem.asButton(ID_BOZOR, R.drawable.msg_payment_card, "Bozor — sotish va sotib olish", "YANGI"));
 +        items.add(UItem.asShadow(null));
 +
 +        items.add(UItem.asHeader("Muloqot"));
@@ -3640,6 +3686,9 @@ index 0000000..619faef
 +                presentFragment(new ContactsActivity(args));
 +                break;
 +            }
++            case ID_BOZOR:
++                presentFragment(new uz.aloj.bozor.BozorActivity());
++                break;
 +            case ID_TRANSLIT:
 +                showTranslit();
 +                break;
@@ -4294,6 +4343,1796 @@ index 0000000..7f170d0
 +            }
 +        }
 +        return out.toString();
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
+new file mode 100644
+index 0000000..7da1192
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
+@@ -0,0 +1,361 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.content.Context;
++import android.content.Intent;
++import android.graphics.Color;
++import android.net.Uri;
++import android.os.Bundle;
++import android.text.TextUtils;
++import android.view.Gravity;
++import android.view.KeyEvent;
++import android.view.View;
++import android.view.ViewGroup;
++import android.view.inputmethod.EditorInfo;
++import android.widget.EditText;
++import android.widget.FrameLayout;
++import android.widget.HorizontalScrollView;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.GridLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.R;
++import org.telegram.messenger.Utilities;
++import org.telegram.ui.ActionBar.ActionBar;
++import org.telegram.ui.ActionBar.ActionBarMenu;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.Components.LayoutHelper;
++
++import java.util.ArrayList;
++
++/** AloJ Bozor: main feed (search, banners, categories, listings grid). */
++public class BozorActivity extends BaseFragment {
++
++    private static final int MENU_MINE = 1;
++    private static final int MENU_FAVS = 2;
++    private static final int PAGE = 30;
++
++    private final ArrayList<BozorApi.Listing> items = new ArrayList<>();
++    private final ArrayList<BozorApi.Banner> banners = new ArrayList<>();
++    private String category;
++    private String city;
++    private String sort = "new";
++    private String query;
++    private boolean loading;
++    private boolean endReached;
++    private String error;
++    private int requestId;
++
++    private RecyclerView listView;
++    private Adapter adapter;
++    private int cardWidth;
++
++    @Override
++    public View createView(Context context) {
++        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        actionBar.setAllowOverlayTitle(true);
++        actionBar.setTitle("Bozor");
++        ActionBarMenu menu = actionBar.createMenu();
++        menu.addItem(MENU_FAVS, R.drawable.msg_fave);
++        menu.addItem(MENU_MINE, R.drawable.msg_contacts);
++        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
++            @Override
++            public void onItemClick(int id) {
++                if (id == -1) {
++                    finishFragment();
++                } else if (id == MENU_MINE) {
++                    presentFragment(new BozorMyActivity(false));
++                } else if (id == MENU_FAVS) {
++                    presentFragment(new BozorMyActivity(true));
++                }
++            }
++        });
++
++        FrameLayout root = new FrameLayout(context);
++        root.setBackgroundColor(BozorUi.bg(this));
++
++        cardWidth = (AndroidUtilities.displaySize.x - dp(36)) / 2;
++        listView = new RecyclerView(context);
++        GridLayoutManager lm = new GridLayoutManager(context, 2);
++        lm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
++            @Override
++            public int getSpanSize(int position) {
++                return adapter.getItemViewType(position) == 1 ? 1 : 2;
++            }
++        });
++        listView.setLayoutManager(lm);
++        listView.setPadding(dp(6), 0, dp(6), dp(90));
++        listView.setClipToPadding(false);
++        adapter = new Adapter();
++        listView.setAdapter(adapter);
++        listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
++            @Override
++            public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
++                if (!loading && !endReached && error == null && lm.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
++                    load(false);
++                }
++            }
++        });
++        root.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++
++        TextView fab = BozorUi.text(context, Color.WHITE, 15, true);
++        fab.setText("＋  E'lon berish");
++        fab.setGravity(Gravity.CENTER);
++        fab.setPadding(dp(22), 0, dp(22), 0);
++        fab.setBackground(org.telegram.ui.ActionBar.Theme.createSimpleSelectorRoundRectDrawable(dp(26), BozorUi.ORANGE, BozorUi.ORANGE_DARK));
++        fab.setElevation(dp(6));
++        fab.setOnClickListener(v -> presentFragment(new BozorNewActivity()));
++        root.addView(fab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 52, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, 22));
++
++        fragmentView = root;
++        load(true);
++        Utilities.globalQueue.postRunnable(() -> {
++            ArrayList<BozorApi.Banner> b = BozorApi.banners();
++            AndroidUtilities.runOnUIThread(() -> {
++                banners.clear();
++                banners.addAll(b);
++                if (adapter != null) adapter.notifyItemChanged(0);
++            });
++        });
++        return fragmentView;
++    }
++
++    @Override
++    public void onResume() {
++        super.onResume();
++        if (BozorNewActivity.changed) {
++            BozorNewActivity.changed = false;
++            load(true);
++        }
++    }
++
++    private void load(boolean reset) {
++        if (reset) {
++            items.clear();
++            endReached = false;
++            error = null;
++            if (adapter != null) adapter.notifyDataSetChanged();
++        }
++        loading = true;
++        final int req = ++requestId;
++        final int offset = items.size();
++        final String c = category, ci = city, s = sort, q = query;
++        Utilities.globalQueue.postRunnable(() -> {
++            ArrayList<BozorApi.Listing> res = null;
++            String err = null;
++            try {
++                res = BozorApi.feed(c, q, ci, s, offset, PAGE);
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final ArrayList<BozorApi.Listing> r = res;
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                if (req != requestId) return;
++                loading = false;
++                error = er;
++                if (r != null) {
++                    items.addAll(r);
++                    endReached = r.size() < PAGE;
++                }
++                if (adapter != null) adapter.notifyDataSetChanged();
++            });
++        });
++    }
++
++    // ---------------- header ----------------
++
++    private View buildHeader(Context ctx) {
++        LinearLayout h = new LinearLayout(ctx);
++        h.setOrientation(LinearLayout.VERTICAL);
++        h.setPadding(dp(6), dp(10), dp(6), dp(4));
++
++        EditText search = new EditText(ctx);
++        search.setHint("🔍  Nima qidiryapsiz?");
++        search.setText(query == null ? "" : query);
++        search.setSingleLine(true);
++        search.setTextSize(15);
++        search.setTextColor(BozorUi.text(this));
++        search.setHintTextColor(BozorUi.gray(this));
++        search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
++        search.setPadding(dp(14), dp(11), dp(14), dp(11));
++        search.setBackground(BozorUi.round(BozorUi.card(this), 14));
++        search.setOnEditorActionListener((v, actionId, event) -> {
++            if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
++                query = v.getText().toString();
++                AndroidUtilities.hideKeyboard(v);
++                load(true);
++                return true;
++            }
++            return false;
++        });
++        h.addView(search, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 10));
++
++        if (query == null && category == null) {
++            h.addView(buildBanner(ctx), LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 100, 0, 0, 0, 12));
++        }
++
++        // categories
++        HorizontalScrollView hs = new HorizontalScrollView(ctx);
++        hs.setHorizontalScrollBarEnabled(false);
++        LinearLayout row = new LinearLayout(ctx);
++        for (int i = -1; i < BozorApi.CATEGORY_IDS.length; i++) {
++            final String id = i < 0 ? null : BozorApi.CATEGORY_IDS[i];
++            boolean sel = TextUtils.equals(id, category);
++            LinearLayout cat = new LinearLayout(ctx);
++            cat.setOrientation(LinearLayout.VERTICAL);
++            cat.setGravity(Gravity.CENTER_HORIZONTAL);
++            TextView icon = BozorUi.text(ctx, BozorUi.text(this), 24, false);
++            icon.setText(i < 0 ? "🏪" : BozorApi.CATEGORY_EMOJI[i]);
++            icon.setGravity(Gravity.CENTER);
++            icon.setBackground(sel ? BozorUi.stroke(BozorUi.soft(this), BozorUi.ORANGE, 16) : BozorUi.round(BozorUi.soft(this), 16));
++            cat.addView(icon, LayoutHelper.createLinear(56, 56));
++            TextView name = BozorUi.text(ctx, sel ? BozorUi.ORANGE_DARK : BozorUi.text(this), 11, sel);
++            name.setText(i < 0 ? "Hammasi" : BozorApi.CATEGORY_NAMES[i]);
++            name.setGravity(Gravity.CENTER);
++            cat.addView(name, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 4, 0, 0));
++            cat.setOnClickListener(v -> {
++                category = id;
++                load(true);
++            });
++            row.addView(cat, LayoutHelper.createLinear(68, LayoutHelper.WRAP_CONTENT));
++        }
++        hs.addView(row);
++        h.addView(hs, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 8));
++
++        // filters
++        LinearLayout filters = new LinearLayout(ctx);
++        TextView cityChip = BozorUi.chip(ctx, this, "📍 " + (city == null ? "Butun O'zbekiston" : city) + " ▾", city != null);
++        cityChip.setOnClickListener(v -> pickCity());
++        filters.addView(cityChip, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 8, 0));
++        String sortName = "cheap".equals(sort) ? "Arzonroq" : "expensive".equals(sort) ? "Qimmatroq" : "Yangilari";
++        TextView sortChip = BozorUi.chip(ctx, this, "↕ " + sortName, !"new".equals(sort));
++        sortChip.setOnClickListener(v -> pickSort());
++        filters.addView(sortChip);
++        h.addView(filters, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 10));
++
++        TextView title = BozorUi.text(ctx, BozorUi.text(this), 17, true);
++        title.setText(query != null && query.length() > 0 ? "Qidiruv: " + query : category != null ? BozorApi.categoryName(category) : "Siz uchun");
++        h.addView(title, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 4, 0, 0, 2));
++        return h;
++    }
++
++    private View buildBanner(Context ctx) {
++        FrameLayout f = new FrameLayout(ctx);
++        f.setBackground(BozorUi.brandGradient(18));
++        f.setClipToOutline(true);
++        BozorApi.Banner b = banners.isEmpty() ? null : banners.get((int) ((System.currentTimeMillis() / 8000) % banners.size()));
++        if (b != null && b.imageUrl != null) {
++            org.telegram.ui.Components.BackupImageView img = new org.telegram.ui.Components.BackupImageView(ctx);
++            img.setImage(b.imageUrl, null, null);
++            f.addView(img, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        }
++        LinearLayout texts = new LinearLayout(ctx);
++        texts.setOrientation(LinearLayout.VERTICAL);
++        TextView t = BozorUi.text(ctx, Color.WHITE, 18, true);
++        t.setText(b != null ? b.title : "AloJ Bozor");
++        texts.addView(t);
++        TextView s = BozorUi.text(ctx, 0xE6FFFFFF, 13, false);
++        s.setText(b != null ? b.subtitle : "Sotish va sotib olish — AloJ ichida");
++        texts.addView(s);
++        f.addView(texts, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL | Gravity.LEFT, 18, 0, 70, 0));
++        TextView big = BozorUi.text(ctx, Color.WHITE, 40, false);
++        big.setText("🛍️");
++        f.addView(big, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, 0, 16, 0));
++        if (b != null && b.link != null) {
++            f.setOnClickListener(v -> {
++                try {
++                    getParentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(b.link)));
++                } catch (Throwable ignore) {
++                }
++            });
++        }
++        return f;
++    }
++
++    private void pickCity() {
++        if (getParentActivity() == null) return;
++        String[] names = new String[BozorApi.CITIES.length + 1];
++        names[0] = "Butun O'zbekiston";
++        System.arraycopy(BozorApi.CITIES, 0, names, 1, BozorApi.CITIES.length);
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Hudud");
++        b.setItems(names, (d, w) -> {
++            city = w == 0 ? null : BozorApi.CITIES[w - 1];
++            load(true);
++        });
++        showDialog(b.create());
++    }
++
++    private void pickSort() {
++        if (getParentActivity() == null) return;
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Saralash");
++        b.setItems(new CharSequence[]{"Yangilari", "Arzonroq", "Qimmatroq"}, (d, w) -> {
++            sort = w == 1 ? "cheap" : w == 2 ? "expensive" : "new";
++            load(true);
++        });
++        showDialog(b.create());
++    }
++
++    // ---------------- adapter ----------------
++
++    private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
++        @Override
++        public int getItemCount() {
++            return 1 + items.size() + 1;
++        }
++
++        @Override
++        public int getItemViewType(int position) {
++            if (position == 0) return 0;
++            if (position <= items.size()) return 1;
++            return 2;
++        }
++
++        @NonNull
++        @Override
++        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++            FrameLayout holder = new FrameLayout(parent.getContext());
++            holder.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
++            return new RecyclerView.ViewHolder(holder) {};
++        }
++
++        @Override
++        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder vh, int position) {
++            FrameLayout holder = (FrameLayout) vh.itemView;
++            holder.removeAllViews();
++            Context ctx = holder.getContext();
++            int type = getItemViewType(position);
++            if (type == 0) {
++                holder.addView(buildHeader(ctx));
++            } else if (type == 1) {
++                BozorApi.Listing l = items.get(position - 1);
++                View card = BozorUi.listingCard(ctx, BozorActivity.this, l, cardWidth);
++                card.setOnClickListener(v -> presentFragment(new BozorItemActivity(l)));
++                holder.addView(card, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.FILL, 6, 6, 6, 6));
++            } else {
++                TextView t = BozorUi.text(ctx, BozorUi.gray(BozorActivity.this), 14, false);
++                t.setGravity(Gravity.CENTER);
++                t.setPadding(dp(24), dp(28), dp(24), dp(28));
++                if (error != null) {
++                    t.setText(error + "\n\nQayta urinish uchun bosing");
++                    t.setOnClickListener(v -> load(items.isEmpty()));
++                } else if (loading) {
++                    t.setText("Yuklanmoqda...");
++                } else if (items.isEmpty()) {
++                    t.setText("Hozircha e'lon yo'q.\nBirinchi bo'lib e'lon bering! 🙂");
++                } else {
++                    t.setText(endReached ? "Boshqa e'lon yo'q" : "");
++                }
++                holder.addView(t, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++            }
++        }
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
+new file mode 100644
+index 0000000..f7682cd
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
+@@ -0,0 +1,370 @@
++package uz.aloj.bozor;
++
++import android.content.Context;
++import android.content.SharedPreferences;
++
++import org.json.JSONArray;
++import org.json.JSONObject;
++import org.telegram.messenger.ApplicationLoader;
++
++import java.io.ByteArrayOutputStream;
++import java.io.InputStream;
++import java.io.OutputStream;
++import java.net.HttpURLConnection;
++import java.net.URL;
++import java.net.URLEncoder;
++import java.util.ArrayList;
++import java.util.UUID;
++
++/** AloJ Bozor: tiny Supabase REST client (anonymous auth, PostgREST, Storage). Call only from a background thread. */
++public final class BozorApi {
++    public static final String URL_BASE = "https://fjsyxpbxzytjjtxjckvl.supabase.co";
++    public static final String KEY = "sb_publishable_mse7y-aLpjVQG8rITFYmfQ_cpcHgDOc";
++
++    public static final String[] CATEGORY_IDS = {"phones", "electronics", "auto", "realty", "clothes", "home", "jobs", "services", "kids", "other"};
++    public static final String[] CATEGORY_NAMES = {"Telefonlar", "Elektronika", "Avto", "Uy-joy", "Kiyim", "Uy uchun", "Ish", "Xizmatlar", "Bolalar", "Boshqa"};
++    public static final String[] CATEGORY_EMOJI = {"📱", "💻", "🚗", "🏠", "👕", "🛋️", "💼", "🛠️", "🧸", "📦"};
++    public static final String[] CITIES = {"Toshkent", "Toshkent viloyati", "Samarqand", "Buxoro", "Andijon", "Farg'ona", "Namangan",
++            "Qashqadaryo", "Surxondaryo", "Jizzax", "Sirdaryo", "Navoiy", "Xorazm", "Qoraqalpog'iston"};
++
++    public static class ApiException extends Exception {
++        public final int code;
++        public ApiException(int code, String msg) {
++            super(msg);
++            this.code = code;
++        }
++    }
++
++    public static class Listing {
++        public long id;
++        public String owner;
++        public long tgId;
++        public String tgName;
++        public String title;
++        public String description;
++        public double price;
++        public String currency;
++        public String category;
++        public String city;
++        public String condition;
++        public ArrayList<String> photos = new ArrayList<>();
++        public String status;
++        public boolean top;
++        public int views;
++        public String createdAt;
++
++        static Listing from(JSONObject o) {
++            Listing l = new Listing();
++            l.id = o.optLong("id");
++            l.owner = o.optString("owner");
++            l.tgId = o.optLong("tg_id");
++            l.tgName = o.isNull("tg_name") ? null : o.optString("tg_name");
++            l.title = o.optString("title");
++            l.description = o.isNull("description") ? "" : o.optString("description");
++            l.price = o.optDouble("price", 0);
++            l.currency = o.optString("currency", "UZS");
++            l.category = o.optString("category");
++            l.city = o.optString("city");
++            l.condition = o.optString("condition", "used");
++            l.status = o.optString("status", "active");
++            l.views = o.optInt("views");
++            l.createdAt = o.optString("created_at");
++            String top = o.isNull("top_until") ? null : o.optString("top_until");
++            l.top = top != null && top.compareTo(nowIso()) > 0;
++            JSONArray p = o.optJSONArray("photos");
++            if (p != null) for (int i = 0; i < p.length(); i++) l.photos.add(p.optString(i));
++            return l;
++        }
++    }
++
++    public static class Banner {
++        public String title, subtitle, imageUrl, link;
++    }
++
++    private BozorApi() {}
++
++    private static String nowIso() {
++        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.US);
++        f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
++        return f.format(new java.util.Date());
++    }
++
++    private static SharedPreferences prefs() {
++        return ApplicationLoader.applicationContext.getSharedPreferences("aloj_bozor", Context.MODE_PRIVATE);
++    }
++
++    // ---------------- http ----------------
++
++    private static String read(InputStream in) throws Exception {
++        if (in == null) return "";
++        ByteArrayOutputStream bos = new ByteArrayOutputStream();
++        byte[] buf = new byte[8192];
++        int n;
++        while ((n = in.read(buf)) > 0) bos.write(buf, 0, n);
++        in.close();
++        return bos.toString("UTF-8");
++    }
++
++    private static String http(String method, String path, byte[] body, String contentType, String token, String prefer) throws Exception {
++        HttpURLConnection c = (HttpURLConnection) new URL(URL_BASE + path).openConnection();
++        c.setConnectTimeout(15000);
++        c.setReadTimeout(30000);
++        c.setRequestMethod(method);
++        c.setRequestProperty("apikey", KEY);
++        c.setRequestProperty("Authorization", "Bearer " + (token != null ? token : KEY));
++        if (prefer != null) c.setRequestProperty("Prefer", prefer);
++        if (body != null) {
++            c.setDoOutput(true);
++            c.setRequestProperty("Content-Type", contentType != null ? contentType : "application/json");
++            OutputStream os = c.getOutputStream();
++            os.write(body);
++            os.close();
++        }
++        int code = c.getResponseCode();
++        String res = read(code >= 400 ? c.getErrorStream() : c.getInputStream());
++        c.disconnect();
++        if (code >= 400) throw new ApiException(code, res);
++        return res;
++    }
++
++    private static String json(String method, String path, String body, boolean auth, String prefer) throws Exception {
++        String token = auth ? token() : null;
++        try {
++            return http(method, path, body == null ? null : body.getBytes("UTF-8"), "application/json", token, prefer);
++        } catch (ApiException e) {
++            if (auth && e.code == 401) {
++                prefs().edit().remove("access").remove("exp").apply();
++                return http(method, path, body == null ? null : body.getBytes("UTF-8"), "application/json", token(), prefer);
++            }
++            throw e;
++        }
++    }
++
++    // ---------------- auth (anonymous) ----------------
++
++    private static synchronized String token() throws Exception {
++        SharedPreferences p = prefs();
++        String access = p.getString("access", null);
++        long exp = p.getLong("exp", 0);
++        if (access != null && System.currentTimeMillis() / 1000 < exp - 60) return access;
++        String refresh = p.getString("refresh", null);
++        JSONObject r = null;
++        if (refresh != null) {
++            try {
++                r = new JSONObject(http("POST", "/auth/v1/token?grant_type=refresh_token",
++                        new JSONObject().put("refresh_token", refresh).toString().getBytes("UTF-8"), "application/json", null, null));
++            } catch (ApiException ignore) {
++                r = null;
++            }
++        }
++        if (r == null) {
++            r = new JSONObject(http("POST", "/auth/v1/signup", "{}".getBytes("UTF-8"), "application/json", null, null));
++        }
++        access = r.getString("access_token");
++        p.edit().putString("access", access)
++                .putString("refresh", r.optString("refresh_token"))
++                .putLong("exp", r.optLong("expires_at", System.currentTimeMillis() / 1000 + 3000))
++                .putString("uid", r.optJSONObject("user") != null ? r.optJSONObject("user").optString("id") : p.getString("uid", ""))
++                .apply();
++        return access;
++    }
++
++    public static String myIdCached() {
++        return prefs().getString("uid", null);
++    }
++
++    public static String myId() {
++        try {
++            token();
++        } catch (Throwable ignore) {
++        }
++        return prefs().getString("uid", "");
++    }
++
++    // ---------------- listings ----------------
++
++    private static String enc(String s) throws Exception {
++        return URLEncoder.encode(s, "UTF-8");
++    }
++
++    public static ArrayList<Listing> feed(String category, String query, String city, String sort, int offset, int limit) throws Exception {
++        StringBuilder q = new StringBuilder("/rest/v1/listings?select=*&status=eq.active");
++        if (category != null) q.append("&category=eq.").append(enc(category));
++        if (city != null) q.append("&city=eq.").append(enc(city));
++        if (query != null && query.trim().length() > 0) {
++            String t = query.trim().replace("*", "").replace(",", " ").replace("(", " ").replace(")", " ");
++            q.append("&or=").append(enc("(title.ilike.*" + t + "*,description.ilike.*" + t + "*)"));
++        }
++        if ("cheap".equals(sort)) q.append("&order=price.asc");
++        else if ("expensive".equals(sort)) q.append("&order=price.desc");
++        else q.append("&order=top_until.desc.nullslast,created_at.desc");
++        q.append("&offset=").append(offset).append("&limit=").append(limit);
++        return parse(json("GET", q.toString(), null, false, null));
++    }
++
++    public static ArrayList<Listing> mine() throws Exception {
++        String uid = myId();
++        return parse(json("GET", "/rest/v1/listings?select=*&owner=eq." + enc(uid) + "&order=created_at.desc", null, true, null));
++    }
++
++    public static ArrayList<Listing> byIds(ArrayList<Long> ids) throws Exception {
++        if (ids.isEmpty()) return new ArrayList<>();
++        StringBuilder sb = new StringBuilder();
++        for (Long id : ids) {
++            if (sb.length() > 0) sb.append(',');
++            sb.append(id);
++        }
++        return parse(json("GET", "/rest/v1/listings?select=*&id=in.(" + sb + ")", null, false, null));
++    }
++
++    private static ArrayList<Listing> parse(String s) throws Exception {
++        JSONArray a = new JSONArray(s);
++        ArrayList<Listing> list = new ArrayList<>();
++        for (int i = 0; i < a.length(); i++) list.add(Listing.from(a.getJSONObject(i)));
++        return list;
++    }
++
++    public static Listing create(Listing l) throws Exception {
++        JSONObject o = new JSONObject();
++        o.put("tg_id", l.tgId);
++        o.put("tg_name", l.tgName == null ? JSONObject.NULL : l.tgName);
++        o.put("title", l.title);
++        o.put("description", l.description);
++        o.put("price", l.price);
++        o.put("currency", l.currency);
++        o.put("category", l.category);
++        o.put("city", l.city);
++        o.put("condition", l.condition);
++        JSONArray p = new JSONArray();
++        for (String s : l.photos) p.put(s);
++        o.put("photos", p);
++        JSONArray r = new JSONArray(json("POST", "/rest/v1/listings", o.toString(), true, "return=representation"));
++        return Listing.from(r.getJSONObject(0));
++    }
++
++    public static void setStatus(long id, String status) throws Exception {
++        json("POST", "/rest/v1/rpc/listing_set_status", new JSONObject().put("lid", id).put("st", status).toString(), true, null);
++    }
++
++    public static void delete(long id) throws Exception {
++        json("DELETE", "/rest/v1/listings?id=eq." + id, null, true, "return=minimal");
++    }
++
++    public static void viewed(long id) {
++        try {
++            json("POST", "/rest/v1/rpc/listing_viewed", new JSONObject().put("lid", id).toString(), false, null);
++        } catch (Throwable ignore) {
++        }
++    }
++
++    public static void report(long id, String reason) throws Exception {
++        try {
++            json("POST", "/rest/v1/reports", new JSONObject().put("listing_id", id).put("reason", reason).toString(), true, "return=minimal");
++        } catch (ApiException e) {
++            if (e.code != 409) throw e;
++        }
++    }
++
++    public static ArrayList<Banner> banners() {
++        ArrayList<Banner> list = new ArrayList<>();
++        try {
++            JSONArray a = new JSONArray(json("GET", "/rest/v1/banners?select=*&order=sort.asc", null, false, null));
++            for (int i = 0; i < a.length(); i++) {
++                JSONObject o = a.getJSONObject(i);
++                Banner b = new Banner();
++                b.title = o.optString("title");
++                b.subtitle = o.isNull("subtitle") ? "" : o.optString("subtitle");
++                b.imageUrl = o.isNull("image_url") ? null : o.optString("image_url");
++                b.link = o.isNull("link") ? null : o.optString("link");
++                list.add(b);
++            }
++        } catch (Throwable ignore) {
++        }
++        return list;
++    }
++
++    /** Uploads a JPEG and returns its public URL. */
++    public static String uploadPhoto(byte[] jpeg) throws Exception {
++        String uid = myId();
++        String path = uid + "/" + UUID.randomUUID().toString() + ".jpg";
++        http("POST", "/storage/v1/object/photos/" + path, jpeg, "image/jpeg", token(), null);
++        return URL_BASE + "/storage/v1/object/public/photos/" + path;
++    }
++
++    // ---------------- favorites (kept on the device) ----------------
++
++    public static boolean isFav(long id) {
++        return prefs().getBoolean("fav_" + id, false);
++    }
++
++    public static void setFav(long id, boolean fav) {
++        SharedPreferences p = prefs();
++        String all = p.getString("favs", "");
++        String key = "," + id + ",";
++        if (fav && !("," + all + ",").contains(key)) all = all.isEmpty() ? String.valueOf(id) : all + "," + id;
++        if (!fav) {
++            all = ("," + all + ",").replace(key, ",");
++            all = all.replaceAll("^,+|,+$", "");
++        }
++        p.edit().putBoolean("fav_" + id, fav).putString("favs", all).apply();
++    }
++
++    public static ArrayList<Long> favIds() {
++        ArrayList<Long> ids = new ArrayList<>();
++        for (String s : prefs().getString("favs", "").split(",")) {
++            try {
++                if (!s.isEmpty()) ids.add(Long.parseLong(s));
++            } catch (Throwable ignore) {
++            }
++        }
++        return ids;
++    }
++
++    // ---------------- formatting ----------------
++
++    public static String price(Listing l) {
++        if (l.price <= 0) return "Kelishilgan";
++        if ("USD".equals(l.currency)) return "$" + group((long) Math.round(l.price));
++        return group((long) Math.round(l.price)) + " so'm";
++    }
++
++    public static String group(long v) {
++        String s = String.valueOf(v);
++        StringBuilder sb = new StringBuilder();
++        for (int i = 0; i < s.length(); i++) {
++            if (i > 0 && (s.length() - i) % 3 == 0) sb.append(' ');
++            sb.append(s.charAt(i));
++        }
++        return sb.toString();
++    }
++
++    public static String categoryName(String id) {
++        for (int i = 0; i < CATEGORY_IDS.length; i++) if (CATEGORY_IDS[i].equals(id)) return CATEGORY_NAMES[i];
++        return id;
++    }
++
++    public static String ago(String iso) {
++        try {
++            java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.US);
++            f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
++            long t = f.parse(iso.substring(0, 19)).getTime();
++            long d = (System.currentTimeMillis() - t) / 1000;
++            if (d < 3600) return Math.max(1, d / 60) + " daqiqa oldin";
++            if (d < 86400) return (d / 3600) + " soat oldin";
++            if (d < 172800) return "kecha";
++            return (d / 86400) + " kun oldin";
++        } catch (Throwable e) {
++            return "";
++        }
++    }
++
++    public static String errorText(Throwable e) {
++        if (e instanceof ApiException) {
++            String m = e.getMessage() == null ? "" : e.getMessage();
++            if (m.contains("FREE_LIMIT")) return "Sizda 2 ta bepul e'lon bor. Yangisini joylash uchun eskisini \"Sotildi\" qiling yoki o'chiring.";
++            if (m.contains("anonymous") || m.contains("Anonymous")) return "Bozor hali sozlanmagan (anonim kirish o'chiq).";
++            return "Server xatosi (" + ((ApiException) e).code + ")";
++        }
++        return "Internet bilan muammo. Qayta urinib ko'ring.";
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
+new file mode 100644
+index 0000000..7d2c356
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
+@@ -0,0 +1,322 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.content.Context;
++import android.content.Intent;
++import android.graphics.Color;
++import android.view.Gravity;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.FrameLayout;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.PagerSnapHelper;
++import androidx.recyclerview.widget.RecyclerView;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.R;
++import org.telegram.messenger.Utilities;
++import org.telegram.ui.ActionBar.ActionBar;
++import org.telegram.ui.ActionBar.ActionBarMenu;
++import org.telegram.ui.ActionBar.ActionBarMenuItem;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.Components.BackupImageView;
++import org.telegram.ui.Components.LayoutHelper;
++
++import java.util.Map;
++
++import uz.aloj.AloJRates;
++
++/** AloJ Bozor: one listing. */
++public class BozorItemActivity extends BaseFragment {
++
++    private static final int MENU_FAV = 1;
++    private static final int MENU_SHARE = 2;
++    private static final int MENU_REPORT = 3;
++
++    private final BozorApi.Listing l;
++    private TextView converted;
++
++    public BozorItemActivity(BozorApi.Listing listing) {
++        super();
++        l = listing;
++    }
++
++    @Override
++    public View createView(Context context) {
++        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        actionBar.setAllowOverlayTitle(true);
++        actionBar.setTitle(BozorApi.categoryName(l.category));
++        ActionBarMenu menu = actionBar.createMenu();
++        ActionBarMenuItem fav = menu.addItem(MENU_FAV, BozorApi.isFav(l.id) ? R.drawable.msg_fave : R.drawable.msg_fave);
++        fav.setAlpha(BozorApi.isFav(l.id) ? 1f : 0.55f);
++        menu.addItem(MENU_SHARE, R.drawable.msg_share);
++        menu.addItem(MENU_REPORT, R.drawable.msg_report);
++        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
++            @Override
++            public void onItemClick(int id) {
++                if (id == -1) {
++                    finishFragment();
++                } else if (id == MENU_FAV) {
++                    boolean now = !BozorApi.isFav(l.id);
++                    BozorApi.setFav(l.id, now);
++                    fav.setAlpha(now ? 1f : 0.55f);
++                    BozorUi.toast(BozorItemActivity.this, now ? "Sevimlilarga qo'shildi ❤️" : "Sevimlilardan olindi");
++                } else if (id == MENU_SHARE) {
++                    share();
++                } else if (id == MENU_REPORT) {
++                    report();
++                }
++            }
++        });
++
++        FrameLayout root = new FrameLayout(context);
++        root.setBackgroundColor(BozorUi.card(this));
++        ScrollView scroll = new ScrollView(context);
++        LinearLayout col = new LinearLayout(context);
++        col.setOrientation(LinearLayout.VERTICAL);
++        col.setPadding(0, 0, 0, dp(90));
++        scroll.addView(col);
++        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++
++        // gallery
++        FrameLayout gallery = new FrameLayout(context);
++        gallery.setBackgroundColor(BozorUi.dark(this) ? 0xFF2A2A30 : 0xFFF1F2F6);
++        int gh = (int) (AndroidUtilities.displaySize.x * 0.85f);
++        if (l.photos.isEmpty()) {
++            TextView ph = BozorUi.text(context, BozorUi.gray(this), 90, false);
++            ph.setText(BozorUi.emoji(l.category));
++            ph.setGravity(Gravity.CENTER);
++            gallery.addView(ph, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        } else {
++            RecyclerView pager = new RecyclerView(context);
++            pager.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
++            new PagerSnapHelper().attachToRecyclerView(pager);
++            TextView counter = BozorUi.text(context, Color.WHITE, 12, true);
++            counter.setText("1 / " + l.photos.size());
++            counter.setPadding(dp(9), dp(3), dp(9), dp(3));
++            counter.setBackground(BozorUi.round(0x8C000000, 10));
++            pager.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
++                @NonNull
++                @Override
++                public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++                    BackupImageView iv = new BackupImageView(parent.getContext());
++                    iv.getImageReceiver().setAspectFit(true);
++                    iv.setLayoutParams(new RecyclerView.LayoutParams(AndroidUtilities.displaySize.x, ViewGroup.LayoutParams.MATCH_PARENT));
++                    return new RecyclerView.ViewHolder(iv) {};
++                }
++
++                @Override
++                public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
++                    ((BackupImageView) holder.itemView).setImage(l.photos.get(position), null, null);
++                }
++
++                @Override
++                public int getItemCount() {
++                    return l.photos.size();
++                }
++            });
++            pager.addOnScrollListener(new RecyclerView.OnScrollListener() {
++                @Override
++                public void onScrollStateChanged(@NonNull RecyclerView rv, int state) {
++                    if (state == RecyclerView.SCROLL_STATE_IDLE) {
++                        int p = ((LinearLayoutManager) rv.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
++                        if (p >= 0) counter.setText((p + 1) + " / " + l.photos.size());
++                    }
++                }
++            });
++            gallery.addView(pager, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++            gallery.addView(counter, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.RIGHT, 0, 0, 12, 12));
++        }
++        col.addView(gallery, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, gh));
++
++        LinearLayout body = new LinearLayout(context);
++        body.setOrientation(LinearLayout.VERTICAL);
++        body.setPadding(dp(18), dp(16), dp(18), 0);
++        col.addView(body);
++
++        TextView price = BozorUi.text(context, BozorUi.text(this), 26, true);
++        price.setText(BozorApi.price(l));
++        body.addView(price);
++        converted = BozorUi.text(context, BozorUi.gray(this), 13, false);
++        body.addView(converted);
++        TextView title = BozorUi.text(context, BozorUi.text(this), 17, false);
++        title.setText(l.title);
++        title.setPadding(0, dp(6), 0, dp(10));
++        body.addView(title);
++
++        LinearLayout tags = new LinearLayout(context);
++        tags.addView(tag(context, "new".equals(l.condition) ? "Yangi" : "Ishlatilgan"), LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
++        tags.addView(tag(context, "📍 " + l.city), LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
++        tags.addView(tag(context, "👁 " + (l.views + 1)));
++        body.addView(tags);
++
++        if (l.description != null && l.description.length() > 0) {
++            TextView h = BozorUi.text(context, BozorUi.text(this), 15, true);
++            h.setText("Tavsif");
++            h.setPadding(0, dp(16), 0, dp(4));
++            body.addView(h);
++            TextView d = BozorUi.text(context, BozorUi.text(this), 14, false);
++            d.setText(l.description);
++            d.setLineSpacing(dp(3), 1f);
++            d.setTextIsSelectable(true);
++            body.addView(d);
++        }
++
++        // seller
++        LinearLayout seller = new LinearLayout(context);
++        seller.setGravity(Gravity.CENTER_VERTICAL);
++        seller.setPadding(dp(12), dp(12), dp(12), dp(12));
++        seller.setBackground(BozorUi.round(BozorUi.soft(this), 14));
++        TextView av = BozorUi.text(context, Color.WHITE, 18, true);
++        String name = l.tgName == null || l.tgName.isEmpty() ? "Sotuvchi" : l.tgName;
++        av.setText(name.replace("@", "").substring(0, 1).toUpperCase());
++        av.setGravity(Gravity.CENTER);
++        av.setBackground(BozorUi.brandGradient(22));
++        seller.addView(av, LayoutHelper.createLinear(44, 44));
++        LinearLayout st = new LinearLayout(context);
++        st.setOrientation(LinearLayout.VERTICAL);
++        TextView sn = BozorUi.text(context, BozorUi.text(this), 15, true);
++        sn.setText(name);
++        st.addView(sn);
++        TextView sd = BozorUi.text(context, BozorUi.gray(this), 12, false);
++        sd.setText("E'lon " + BozorApi.ago(l.createdAt) + " joylangan");
++        st.addView(sd);
++        seller.addView(st, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 12, 0, 0, 0));
++        body.addView(seller, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 18, 0, 0));
++
++        TextView warn = BozorUi.text(context, 0xFF9A5B00, 13, false);
++        warn.setText("⚠️ Oldindan pul o'tkazmang! Mahsulotni ko'rib, tekshirib, keyin to'lang. Shubhali e'lon bo'lsa — tepadagi ⚠ tugmasi bilan xabar bering.");
++        warn.setPadding(dp(12), dp(10), dp(12), dp(10));
++        warn.setBackground(BozorUi.round(BozorUi.dark(this) ? 0x33FFB020 : 0xFFFFF4E5, 12));
++        body.addView(warn, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 12, 0, 0));
++
++        // bottom bar
++        LinearLayout bar = new LinearLayout(context);
++        bar.setPadding(dp(12), dp(10), dp(12), dp(14));
++        bar.setBackgroundColor(BozorUi.card(this));
++        bar.setElevation(dp(8));
++        String my = BozorApi.myIdCached();
++        if (my != null && my.equals(l.owner)) {
++            TextView sold = BozorUi.button(context, "sold".equals(l.status) ? "Qayta sotuvga" : "Sotildi ✓", false);
++            sold.setOnClickListener(v -> setStatus("sold".equals(l.status) ? "active" : "sold"));
++            bar.addView(sold, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 10, 0));
++            TextView del = BozorUi.button(context, "O'chirish", true);
++            del.setOnClickListener(v -> deleteListing());
++            bar.addView(del, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f));
++        } else {
++            TextView write = BozorUi.button(context, "💬  AloJ'da yozish", true);
++            write.setOnClickListener(v -> BozorUi.openSeller(this, l));
++            bar.addView(write, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++        }
++        root.addView(bar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM));
++
++        fragmentView = root;
++        final long id = l.id;
++        Utilities.globalQueue.postRunnable(() -> {
++            BozorApi.viewed(id);
++            Map<String, Double> rates = null;
++            try {
++                rates = AloJRates.load();
++            } catch (Throwable ignore) {
++            }
++            final Double usd = rates == null ? null : rates.get("USD");
++            AndroidUtilities.runOnUIThread(() -> {
++                if (usd == null || converted == null || l.price <= 0) return;
++                if ("USD".equals(l.currency)) converted.setText("≈ " + AloJRates.formatSom(l.price * usd) + " · Markaziy bank kursi");
++                else converted.setText("≈ $" + BozorApi.group(Math.round(l.price / usd)) + " · Markaziy bank kursi");
++            });
++        });
++        return fragmentView;
++    }
++
++    private TextView tag(Context ctx, String s) {
++        TextView t = BozorUi.text(ctx, BozorUi.text(this), 12, false);
++        t.setText(s);
++        t.setPadding(dp(9), dp(5), dp(9), dp(5));
++        t.setBackground(BozorUi.round(BozorUi.dark(this) ? 0x22FFFFFF : 0xFFF4F4F6, 8));
++        return t;
++    }
++
++    private void share() {
++        try {
++            Intent i = new Intent(Intent.ACTION_SEND);
++            i.setType("text/plain");
++            i.putExtra(Intent.EXTRA_TEXT, l.title + "\n" + BozorApi.price(l) + " · " + l.city + "\n\nAloJ Bozor'da ko'ring 🛍️");
++            getParentActivity().startActivity(Intent.createChooser(i, "Ulashish"));
++        } catch (Throwable ignore) {
++        }
++    }
++
++    private void report() {
++        if (getParentActivity() == null) return;
++        final String[] reasons = {"Firibgarlik / aldov", "Noto'g'ri narx yoki ma'lumot", "Taqiqlangan mahsulot", "Spam / takroriy e'lon", "Boshqa"};
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Shikoyat sababi");
++        b.setItems(reasons, (d, w) -> Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                BozorApi.report(l.id, reasons[w]);
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> BozorUi.toast(this, er == null ? "Rahmat! Shikoyatingiz qabul qilindi." : er));
++        }));
++        showDialog(b.create());
++    }
++
++    private void setStatus(String status) {
++        Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                BozorApi.setStatus(l.id, status);
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                if (er != null) {
++                    BozorUi.toast(this, er);
++                    return;
++                }
++                BozorNewActivity.changed = true;
++                BozorUi.toast(this, "sold".equals(status) ? "E'lon \"Sotildi\" deb belgilandi" : "E'lon qayta faol");
++                finishFragment();
++            });
++        });
++    }
++
++    private void deleteListing() {
++        if (getParentActivity() == null) return;
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("E'lonni o'chirish");
++        b.setMessage("Bu e'lon butunlay o'chiriladi. Davom etasizmi?");
++        b.setPositiveButton("O'chirish", (d, w) -> Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                BozorApi.delete(l.id);
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                if (er != null) {
++                    BozorUi.toast(this, er);
++                    return;
++                }
++                BozorNewActivity.changed = true;
++                BozorUi.toast(this, "E'lon o'chirildi");
++                finishFragment();
++            });
++        }));
++        b.setNegativeButton("Bekor qilish", null);
++        showDialog(b.create());
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
+new file mode 100644
+index 0000000..7f6556c
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
+@@ -0,0 +1,115 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.content.Context;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.FrameLayout;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.R;
++import org.telegram.messenger.Utilities;
++import org.telegram.ui.ActionBar.ActionBar;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.Components.LayoutHelper;
++
++import java.util.ArrayList;
++
++/** AloJ Bozor: my listings or my favorites. */
++public class BozorMyActivity extends BaseFragment {
++
++    private final boolean favorites;
++    private LinearLayout col;
++    private TextView status;
++
++    public BozorMyActivity(boolean favorites) {
++        super();
++        this.favorites = favorites;
++    }
++
++    @Override
++    public View createView(Context context) {
++        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        actionBar.setAllowOverlayTitle(true);
++        actionBar.setTitle(favorites ? "Sevimlilar" : "Mening e'lonlarim");
++        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
++            @Override
++            public void onItemClick(int id) {
++                if (id == -1) finishFragment();
++            }
++        });
++        FrameLayout root = new FrameLayout(context);
++        root.setBackgroundColor(BozorUi.bg(this));
++        ScrollView scroll = new ScrollView(context);
++        col = new LinearLayout(context);
++        col.setOrientation(LinearLayout.VERTICAL);
++        col.setPadding(dp(6), dp(6), dp(6), dp(24));
++        scroll.addView(col);
++        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        fragmentView = root;
++        load();
++        return fragmentView;
++    }
++
++    @Override
++    public void onResume() {
++        super.onResume();
++        if (col != null && BozorNewActivity.changed) {
++            load();
++        }
++    }
++
++    private void load() {
++        col.removeAllViews();
++        status = BozorUi.text(col.getContext(), BozorUi.gray(this), 14, false);
++        status.setGravity(Gravity.CENTER);
++        status.setPadding(dp(24), dp(40), dp(24), dp(24));
++        status.setText("Yuklanmoqda...");
++        col.addView(status);
++        Utilities.globalQueue.postRunnable(() -> {
++            ArrayList<BozorApi.Listing> res = null;
++            String err = null;
++            try {
++                res = favorites ? BozorApi.byIds(BozorApi.favIds()) : BozorApi.mine();
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final ArrayList<BozorApi.Listing> r = res;
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> show(r, er));
++        });
++    }
++
++    private void show(ArrayList<BozorApi.Listing> list, String err) {
++        if (col == null) return;
++        Context ctx = col.getContext();
++        if (err != null) {
++            status.setText(err);
++            return;
++        }
++        if (list == null || list.isEmpty()) {
++            status.setText(favorites ? "Sevimli e'lonlar yo'q.\nE'londagi ⭐ tugmasini bosing." : "Sizda hali e'lon yo'q.\nBozorda \"E'lon berish\" tugmasini bosing.");
++            return;
++        }
++        col.removeAllViews();
++        int w = (AndroidUtilities.displaySize.x - dp(36)) / 2;
++        LinearLayout row = null;
++        for (int i = 0; i < list.size(); i++) {
++            if (i % 2 == 0) {
++                row = new LinearLayout(ctx);
++                col.addView(row);
++            }
++            BozorApi.Listing l = list.get(i);
++            View card = BozorUi.listingCard(ctx, this, l, w);
++            card.setOnClickListener(v -> presentFragment(new BozorItemActivity(l)));
++            row.addView(card, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 6, 6, 6, 6));
++        }
++        if (list.size() % 2 == 1 && row != null) {
++            row.addView(new View(ctx), LayoutHelper.createLinear(0, 1, 1f, 6, 6, 6, 6));
++        }
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
+new file mode 100644
+index 0000000..64dfb93
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
+@@ -0,0 +1,400 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.app.Activity;
++import android.content.ClipData;
++import android.content.Context;
++import android.content.Intent;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
++import android.graphics.Color;
++import android.graphics.Matrix;
++import android.net.Uri;
++import android.text.InputType;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.EditText;
++import android.widget.FrameLayout;
++import android.widget.HorizontalScrollView;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import androidx.exifinterface.media.ExifInterface;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.R;
++import org.telegram.messenger.UserConfig;
++import org.telegram.messenger.UserObject;
++import org.telegram.messenger.Utilities;
++import org.telegram.tgnet.TLRPC;
++import org.telegram.ui.ActionBar.ActionBar;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.Components.LayoutHelper;
++
++import java.io.ByteArrayOutputStream;
++import java.io.InputStream;
++import java.util.ArrayList;
++
++/** AloJ Bozor: post a new listing. */
++public class BozorNewActivity extends BaseFragment {
++
++    public static volatile boolean changed;
++    private static final int REQ_PHOTOS = 7301;
++    private static final int MAX_PHOTOS = 8;
++
++    private final ArrayList<Bitmap> photos = new ArrayList<>();
++    private LinearLayout photoRow;
++    private EditText title, price, description;
++    private String category, city = "Toshkent", currency = "UZS", condition = "used";
++    private TextView categoryBtn, cityBtn;
++    private LinearLayout currencyRow, conditionRow;
++    private TextView submit;
++    private boolean sending;
++
++    @Override
++    public View createView(Context context) {
++        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        actionBar.setAllowOverlayTitle(true);
++        actionBar.setTitle("Yangi e'lon");
++        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
++            @Override
++            public void onItemClick(int id) {
++                if (id == -1) finishFragment();
++            }
++        });
++
++        FrameLayout root = new FrameLayout(context);
++        root.setBackgroundColor(BozorUi.card(this));
++        ScrollView scroll = new ScrollView(context);
++        LinearLayout col = new LinearLayout(context);
++        col.setOrientation(LinearLayout.VERTICAL);
++        col.setPadding(dp(16), dp(14), dp(16), dp(100));
++        scroll.addView(col);
++        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++
++        col.addView(label(context, "Rasmlar (" + MAX_PHOTOS + " tagacha) — birinchisi asosiy bo'ladi"));
++        HorizontalScrollView hs = new HorizontalScrollView(context);
++        hs.setHorizontalScrollBarEnabled(false);
++        photoRow = new LinearLayout(context);
++        hs.addView(photoRow);
++        col.addView(hs, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 84, 0, 0, 0, 14));
++        refreshPhotos();
++
++        col.addView(label(context, "Nomi"));
++        title = input(context, "Masalan: iPhone 15 Pro 256GB", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
++        col.addView(title, field());
++
++        col.addView(label(context, "Kategoriya"));
++        categoryBtn = picker(context, "Tanlang ▾");
++        categoryBtn.setOnClickListener(v -> pickCategory());
++        col.addView(categoryBtn, field());
++
++        col.addView(label(context, "Narxi (0 = kelishilgan)"));
++        LinearLayout priceRow = new LinearLayout(context);
++        priceRow.setGravity(Gravity.CENTER_VERTICAL);
++        price = input(context, "9 800 000", InputType.TYPE_CLASS_NUMBER);
++        priceRow.addView(price, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 8, 0));
++        currencyRow = new LinearLayout(context);
++        priceRow.addView(currencyRow);
++        col.addView(priceRow, field());
++        refreshCurrency();
++
++        col.addView(label(context, "Holati"));
++        conditionRow = new LinearLayout(context);
++        col.addView(conditionRow, field());
++        refreshCondition();
++
++        col.addView(label(context, "Shahar / viloyat"));
++        cityBtn = picker(context, "📍 " + city + " ▾");
++        cityBtn.setOnClickListener(v -> pickCity());
++        col.addView(cityBtn, field());
++
++        col.addView(label(context, "Tavsif"));
++        description = input(context, "Holati, xususiyatlari, telefon raqamingiz...", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
++        description.setMinLines(4);
++        description.setGravity(Gravity.TOP);
++        col.addView(description, field());
++
++        TextView free = BozorUi.text(context, 0xFF2E8B57, 13, false);
++        free.setText("✅ Har bir foydalanuvchiga 2 ta faol e'lon bepul. TOP'ga chiqarish tez kunda.");
++        free.setPadding(dp(12), dp(10), dp(12), dp(10));
++        free.setBackground(BozorUi.round(BozorUi.dark(this) ? 0x332E8B57 : 0xFFEAF7EF, 12));
++        col.addView(free);
++
++        submit = BozorUi.button(context, "E'lonni joylash", true);
++        submit.setOnClickListener(v -> send());
++        root.addView(submit, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 16, 0, 16, 16));
++
++        fragmentView = root;
++        return fragmentView;
++    }
++
++    private LinearLayout.LayoutParams field() {
++        return LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 14);
++    }
++
++    private TextView label(Context ctx, String s) {
++        TextView t = BozorUi.text(ctx, BozorUi.gray(this), 12, false);
++        t.setText(s);
++        t.setPadding(dp(2), 0, 0, dp(5));
++        return t;
++    }
++
++    private EditText input(Context ctx, String hint, int type) {
++        EditText e = new EditText(ctx);
++        e.setHint(hint);
++        e.setInputType(type);
++        e.setTextSize(15);
++        e.setTextColor(BozorUi.text(this));
++        e.setHintTextColor(BozorUi.gray(this));
++        e.setPadding(dp(14), dp(12), dp(14), dp(12));
++        e.setBackground(BozorUi.stroke(BozorUi.card(this), BozorUi.dark(this) ? 0x22FFFFFF : 0xFFEBEBEB, 12));
++        return e;
++    }
++
++    private TextView picker(Context ctx, String s) {
++        TextView t = BozorUi.text(ctx, BozorUi.text(this), 15, false);
++        t.setText(s);
++        t.setPadding(dp(14), dp(13), dp(14), dp(13));
++        t.setBackground(BozorUi.stroke(BozorUi.card(this), BozorUi.dark(this) ? 0x22FFFFFF : 0xFFEBEBEB, 12));
++        return t;
++    }
++
++    private void refreshCurrency() {
++        currencyRow.removeAllViews();
++        Context ctx = currencyRow.getContext();
++        TextView som = BozorUi.chip(ctx, this, "so'm", "UZS".equals(currency));
++        som.setOnClickListener(v -> {
++            currency = "UZS";
++            refreshCurrency();
++        });
++        currencyRow.addView(som, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 6, 0));
++        TextView usd = BozorUi.chip(ctx, this, "$", "USD".equals(currency));
++        usd.setOnClickListener(v -> {
++            currency = "USD";
++            refreshCurrency();
++        });
++        currencyRow.addView(usd);
++    }
++
++    private void refreshCondition() {
++        conditionRow.removeAllViews();
++        Context ctx = conditionRow.getContext();
++        TextView n = BozorUi.chip(ctx, this, "Yangi", "new".equals(condition));
++        n.setOnClickListener(v -> {
++            condition = "new";
++            refreshCondition();
++        });
++        conditionRow.addView(n, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, 0, 0, 8, 0));
++        TextView u = BozorUi.chip(ctx, this, "Ishlatilgan", "used".equals(condition));
++        u.setOnClickListener(v -> {
++            condition = "used";
++            refreshCondition();
++        });
++        conditionRow.addView(u);
++    }
++
++    private void refreshPhotos() {
++        photoRow.removeAllViews();
++        Context ctx = photoRow.getContext();
++        if (photos.size() < MAX_PHOTOS) {
++            TextView add = BozorUi.text(ctx, BozorUi.ORANGE, 12, true);
++            add.setText("📷\nRasm\nqo'shish");
++            add.setGravity(Gravity.CENTER);
++            add.setBackground(BozorUi.stroke(BozorUi.soft(this), BozorUi.ORANGE, 12));
++            add.setOnClickListener(v -> pickPhotos());
++            photoRow.addView(add, LayoutHelper.createLinear(80, 80, 0, 0, 8, 0));
++        }
++        for (int i = 0; i < photos.size(); i++) {
++            final int index = i;
++            FrameLayout f = new FrameLayout(ctx);
++            f.setBackground(BozorUi.round(0xFFF1F2F6, 12));
++            f.setClipToOutline(true);
++            ImageView iv = new ImageView(ctx);
++            iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
++            iv.setImageBitmap(photos.get(i));
++            f.addView(iv, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++            TextView x = BozorUi.text(ctx, Color.WHITE, 12, true);
++            x.setText("✕");
++            x.setGravity(Gravity.CENTER);
++            x.setBackground(BozorUi.round(0x99000000, 11));
++            x.setOnClickListener(v -> {
++                photos.remove(index);
++                refreshPhotos();
++            });
++            f.addView(x, LayoutHelper.createFrame(22, 22, Gravity.TOP | Gravity.RIGHT, 0, 4, 4, 0));
++            photoRow.addView(f, LayoutHelper.createLinear(80, 80, 0, 0, 8, 0));
++        }
++    }
++
++    private void pickPhotos() {
++        if (getParentActivity() == null) return;
++        try {
++            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
++            i.setType("image/*");
++            i.addCategory(Intent.CATEGORY_OPENABLE);
++            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
++            getParentActivity().startActivityForResult(Intent.createChooser(i, "Rasm tanlang"), REQ_PHOTOS);
++        } catch (Throwable e) {
++            BozorUi.toast(this, "Galereyani ochib bo'lmadi");
++        }
++    }
++
++    @Override
++    public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
++        if (requestCode != REQ_PHOTOS || resultCode != Activity.RESULT_OK || data == null) return;
++        final ArrayList<Uri> uris = new ArrayList<>();
++        ClipData clip = data.getClipData();
++        if (clip != null) {
++            for (int i = 0; i < clip.getItemCount(); i++) uris.add(clip.getItemAt(i).getUri());
++        } else if (data.getData() != null) {
++            uris.add(data.getData());
++        }
++        final Context ctx = getParentActivity();
++        if (ctx == null) return;
++        Utilities.globalQueue.postRunnable(() -> {
++            ArrayList<Bitmap> loaded = new ArrayList<>();
++            for (Uri u : uris) {
++                Bitmap b = decode(ctx, u, 1280);
++                if (b != null) loaded.add(b);
++            }
++            AndroidUtilities.runOnUIThread(() -> {
++                for (Bitmap b : loaded) {
++                    if (photos.size() < MAX_PHOTOS) photos.add(b);
++                }
++                if (photoRow != null) refreshPhotos();
++            });
++        });
++    }
++
++    private static Bitmap decode(Context ctx, Uri uri, int max) {
++        try {
++            BitmapFactory.Options o = new BitmapFactory.Options();
++            o.inJustDecodeBounds = true;
++            InputStream in = ctx.getContentResolver().openInputStream(uri);
++            BitmapFactory.decodeStream(in, null, o);
++            in.close();
++            int sample = 1;
++            while (Math.max(o.outWidth, o.outHeight) / (sample * 2) >= max) sample *= 2;
++            BitmapFactory.Options o2 = new BitmapFactory.Options();
++            o2.inSampleSize = sample;
++            in = ctx.getContentResolver().openInputStream(uri);
++            Bitmap b = BitmapFactory.decodeStream(in, null, o2);
++            in.close();
++            if (b == null) return null;
++            int rotation = 0;
++            try {
++                in = ctx.getContentResolver().openInputStream(uri);
++                ExifInterface exif = new ExifInterface(in);
++                int or = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
++                rotation = or == ExifInterface.ORIENTATION_ROTATE_90 ? 90 : or == ExifInterface.ORIENTATION_ROTATE_180 ? 180 : or == ExifInterface.ORIENTATION_ROTATE_270 ? 270 : 0;
++                in.close();
++            } catch (Throwable ignore) {
++            }
++            float scale = Math.min(1f, max / (float) Math.max(b.getWidth(), b.getHeight()));
++            if (scale < 1f || rotation != 0) {
++                Matrix m = new Matrix();
++                m.postScale(scale, scale);
++                m.postRotate(rotation);
++                Bitmap r = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), m, true);
++                if (r != b) b.recycle();
++                b = r;
++            }
++            return b;
++        } catch (Throwable e) {
++            return null;
++        }
++    }
++
++    private void pickCategory() {
++        if (getParentActivity() == null) return;
++        String[] names = new String[BozorApi.CATEGORY_IDS.length];
++        for (int i = 0; i < names.length; i++) names[i] = BozorApi.CATEGORY_EMOJI[i] + "  " + BozorApi.CATEGORY_NAMES[i];
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Kategoriya");
++        b.setItems(names, (d, w) -> {
++            category = BozorApi.CATEGORY_IDS[w];
++            categoryBtn.setText(names[w]);
++        });
++        showDialog(b.create());
++    }
++
++    private void pickCity() {
++        if (getParentActivity() == null) return;
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Shahar / viloyat");
++        b.setItems(BozorApi.CITIES, (d, w) -> {
++            city = BozorApi.CITIES[w];
++            cityBtn.setText("📍 " + city + " ▾");
++        });
++        showDialog(b.create());
++    }
++
++    private void send() {
++        if (sending) return;
++        String t = title.getText().toString().trim();
++        String p = price.getText().toString().replaceAll("[^0-9]", "");
++        if (t.length() < 3) {
++            BozorUi.toast(this, "E'lon nomini yozing (kamida 3 harf)");
++            return;
++        }
++        if (category == null) {
++            BozorUi.toast(this, "Kategoriyani tanlang");
++            return;
++        }
++        if (photos.isEmpty()) {
++            BozorUi.toast(this, "Kamida bitta rasm qo'shing — rasmli e'lonlar 5 barobar tez sotiladi");
++            return;
++        }
++        final BozorApi.Listing l = new BozorApi.Listing();
++        TLRPC.User me = UserConfig.getInstance(currentAccount).getCurrentUser();
++        if (me != null) {
++            l.tgId = me.id;
++            String uname = UserObject.getPublicUsername(me);
++            l.tgName = uname != null && uname.length() > 0 ? "@" + uname : UserObject.getFirstName(me);
++        }
++        l.title = t;
++        l.description = description.getText().toString().trim();
++        try {
++            l.price = p.isEmpty() ? 0 : Double.parseDouble(p);
++        } catch (Throwable e) {
++            l.price = 0;
++        }
++        l.currency = currency;
++        l.category = category;
++        l.city = city;
++        l.condition = condition;
++        sending = true;
++        submit.setText("Yuklanmoqda...");
++        final ArrayList<Bitmap> toSend = new ArrayList<>(photos);
++        Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                for (Bitmap b : toSend) {
++                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
++                    b.compress(Bitmap.CompressFormat.JPEG, 80, bos);
++                    l.photos.add(BozorApi.uploadPhoto(bos.toByteArray()));
++                }
++                BozorApi.create(l);
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                sending = false;
++                if (submit != null) submit.setText("E'lonni joylash");
++                if (er != null) {
++                    BozorUi.toast(this, er);
++                    return;
++                }
++                changed = true;
++                BozorUi.toast(this, "E'loningiz joylandi! 🎉");
++                finishFragment();
++            });
++        });
++    }
++}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
+new file mode 100644
+index 0000000..00bcfd3
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
+@@ -0,0 +1,186 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.content.Context;
++import android.graphics.Color;
++import android.graphics.drawable.GradientDrawable;
++import android.text.TextUtils;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.FrameLayout;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.MessagesController;
++import org.telegram.messenger.UserConfig;
++import org.telegram.tgnet.TLRPC;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.ActionBar.Theme;
++import org.telegram.ui.ChatActivity;
++import org.telegram.ui.Components.BackupImageView;
++import org.telegram.ui.Components.LayoutHelper;
++
++/** AloJ Bozor: shared look (colors, cards, chips). */
++public final class BozorUi {
++    public static final int ORANGE = 0xFFFF8A3D;
++    public static final int ORANGE_DARK = 0xFFE8712A;
++    public static final int GOLD = 0xFFFFC531;
++
++    private BozorUi() {}
++
++    public static int bg(BaseFragment f) {
++        return Theme.getColor(Theme.key_windowBackgroundGray, f.getResourceProvider());
++    }
++
++    public static int card(BaseFragment f) {
++        return Theme.getColor(Theme.key_windowBackgroundWhite, f.getResourceProvider());
++    }
++
++    public static int text(BaseFragment f) {
++        return Theme.getColor(Theme.key_windowBackgroundWhiteBlackText, f.getResourceProvider());
++    }
++
++    public static int gray(BaseFragment f) {
++        return Theme.getColor(Theme.key_windowBackgroundWhiteGrayText, f.getResourceProvider());
++    }
++
++    public static boolean dark(BaseFragment f) {
++        return AndroidUtilities.computePerceivedBrightness(card(f)) < 0.5f;
++    }
++
++    public static int soft(BaseFragment f) {
++        return dark(f) ? 0x33FF8A3D : 0xFFFFF3EA;
++    }
++
++    public static TextView text(Context ctx, int color, float sp, boolean bold) {
++        TextView t = new TextView(ctx);
++        t.setTextColor(color);
++        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, sp);
++        if (bold) t.setTypeface(AndroidUtilities.bold());
++        return t;
++    }
++
++    public static GradientDrawable round(int color, float radiusDp) {
++        GradientDrawable d = new GradientDrawable();
++        d.setColor(color);
++        d.setCornerRadius(dp(radiusDp));
++        return d;
++    }
++
++    public static GradientDrawable stroke(int fill, int strokeColor, float radiusDp) {
++        GradientDrawable d = round(fill, radiusDp);
++        d.setStroke(dp(1.5f), strokeColor);
++        return d;
++    }
++
++    public static GradientDrawable brandGradient(float radiusDp) {
++        GradientDrawable d = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF5B3DF5, 0xFFE0457B, 0xFFFF9A2E});
++        d.setCornerRadius(dp(radiusDp));
++        return d;
++    }
++
++    public static TextView button(Context ctx, String label, boolean primary) {
++        TextView b = text(ctx, primary ? Color.WHITE : ORANGE_DARK, 15, true);
++        b.setText(label);
++        b.setGravity(Gravity.CENTER);
++        b.setPadding(dp(16), dp(13), dp(16), dp(13));
++        b.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(14), primary ? ORANGE : 0x1FFF8A3D, primary ? ORANGE_DARK : 0x33FF8A3D));
++        return b;
++    }
++
++    public static TextView chip(Context ctx, BaseFragment f, String label, boolean selected) {
++        TextView c = text(ctx, selected ? ORANGE_DARK : text(f), 13, selected);
++        c.setText(label);
++        c.setGravity(Gravity.CENTER);
++        c.setPadding(dp(14), dp(8), dp(14), dp(8));
++        c.setBackground(stroke(selected ? soft(f) : card(f), selected ? ORANGE : (dark(f) ? 0x22FFFFFF : 0xFFEBEBEB), 10));
++        return c;
++    }
++
++    /** Grid card: photo, TOP badge, title, price, place/time. */
++    public static View listingCard(Context ctx, BaseFragment f, BozorApi.Listing l, int widthPx) {
++        LinearLayout box = new LinearLayout(ctx);
++        box.setOrientation(LinearLayout.VERTICAL);
++        box.setBackground(round(card(f), 14));
++        box.setClipToOutline(true);
++        box.setElevation(dp(1.5f));
++
++        FrameLayout photo = new FrameLayout(ctx);
++        photo.setBackgroundColor(dark(f) ? 0xFF2A2A30 : 0xFFF1F2F6);
++        BackupImageView img = new BackupImageView(ctx);
++        if (!l.photos.isEmpty()) {
++            img.setImage(l.photos.get(0), "300_300", null);
++        } else {
++            TextView ph = text(ctx, gray(f), 40, false);
++            ph.setText(emoji(l.category));
++            ph.setGravity(Gravity.CENTER);
++            photo.addView(ph, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        }
++        photo.addView(img, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        if (l.top) {
++            TextView top = text(ctx, 0xFF5A3C00, 10, true);
++            top.setText("TOP");
++            top.setPadding(dp(6), dp(2), dp(6), dp(2));
++            top.setBackground(round(GOLD, 6));
++            photo.addView(top, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP | Gravity.LEFT, 6, 6, 0, 0));
++        }
++        if ("sold".equals(l.status)) {
++            TextView sold = text(ctx, Color.WHITE, 11, true);
++            sold.setText("SOTILDI");
++            sold.setPadding(dp(6), dp(2), dp(6), dp(2));
++            sold.setBackground(round(0xCC000000, 6));
++            photo.addView(sold, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP | Gravity.RIGHT, 0, 6, 6, 0));
++        }
++        box.addView(photo, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (widthPx * 0.8f)));
++
++        TextView title = text(ctx, text(f), 13, false);
++        title.setText(l.title);
++        title.setMaxLines(2);
++        title.setEllipsize(TextUtils.TruncateAt.END);
++        title.setPadding(dp(9), dp(7), dp(9), 0);
++        box.addView(title);
++        TextView price = text(ctx, text(f), 15, true);
++        price.setText(BozorApi.price(l));
++        price.setPadding(dp(9), dp(2), dp(9), 0);
++        box.addView(price);
++        TextView place = text(ctx, gray(f), 11, false);
++        place.setText(l.city + " · " + BozorApi.ago(l.createdAt));
++        place.setSingleLine(true);
++        place.setEllipsize(TextUtils.TruncateAt.END);
++        place.setPadding(dp(9), dp(2), dp(9), dp(9));
++        box.addView(place);
++        return box;
++    }
++
++    public static String emoji(String category) {
++        for (int i = 0; i < BozorApi.CATEGORY_IDS.length; i++) {
++            if (BozorApi.CATEGORY_IDS[i].equals(category)) return BozorApi.CATEGORY_EMOJI[i];
++        }
++        return "📦";
++    }
++
++    public static void toast(BaseFragment f, String s) {
++        if (f.getParentActivity() != null) Toast.makeText(f.getParentActivity(), s, Toast.LENGTH_LONG).show();
++    }
++
++    /** Opens the AloJ chat with the seller. */
++    public static void openSeller(BaseFragment f, BozorApi.Listing l) {
++        int acc = UserConfig.selectedAccount;
++        if (l.tgName != null && l.tgName.startsWith("@") && l.tgName.length() > 1) {
++            MessagesController.getInstance(acc).openByUserName(l.tgName.substring(1), f, 0);
++            return;
++        }
++        TLRPC.User u = l.tgId != 0 ? MessagesController.getInstance(acc).getUser(l.tgId) : null;
++        if (u != null) {
++            android.os.Bundle args = new android.os.Bundle();
++            args.putLong("user_id", u.id);
++            f.presentFragment(new ChatActivity(args));
++        } else {
++            toast(f, "Sotuvchining username'i yo'q. E'lon tavsifidagi telefon raqami orqali bog'laning.");
++        }
 +    }
 +}
 diff --git a/TMessagesProj/src/main/res/drawable-nodpi/aloj_intro_logo.png b/TMessagesProj/src/main/res/drawable-nodpi/aloj_intro_logo.png
@@ -7720,6 +9559,26 @@ index 0000000..c75c301
 +        <path android:pathData="M106,44 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" android:fillColor="#FFFFFFFF" />
 +    </group>
 +</vector>
+diff --git a/TMessagesProj/src/main/res/drawable/aloj_splash.xml b/TMessagesProj/src/main/res/drawable/aloj_splash.xml
+new file mode 100644
+index 0000000..aad361f
+--- /dev/null
++++ b/TMessagesProj/src/main/res/drawable/aloj_splash.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item android:width="240dp" android:height="240dp" android:gravity="center">
++        <inset android:inset="44dp">
++            <shape android:shape="oval">
++                <gradient android:type="linear" android:angle="45"
++                    android:startColor="#5B3DF5" android:centerColor="#E0457B" android:endColor="#FF9A2E" />
++            </shape>
++        </inset>
++    </item>
++    <item android:width="240dp" android:height="240dp" android:gravity="center">
++        <inset android:inset="30dp" android:drawable="@mipmap/aloj_icon_fg" />
++    </item>
++</layer-list>
 diff --git a/TMessagesProj/src/main/res/drawable/icon_background.xml b/TMessagesProj/src/main/res/drawable/icon_background.xml
 index a2d4361..91f382d 100644
 --- a/TMessagesProj/src/main/res/drawable/icon_background.xml
@@ -63220,6 +65079,22 @@ index 6f75e2e..f8084e1 100644
      <string name="PermissionNoLocationFriends">**텔레그램**이 친구들과 위치를 공유하려면 위치 접근 권한이 필요합니다. 설정 &gt; 권한을 탭하고 **위치**를 활성화 해주세요.</string>
      <string name="PermissionNoLocationNavigation">**텔레그램**이 길을 찾으려면 위치 접근 권한이 필요합니다. 설정 &gt; 권한을 탭하고 **위치**를 활성화 해주세요.</string>
      <string name="PermissionNoContactsSharing">**텔레그램**에서 연락처를 친구들에게 공유 하려면 연락처 접근 권한이 필요합니다. 설정 &gt; 권한을 탭하고 **연락처**를 활성화 해주세요.</string>
+diff --git a/TMessagesProj/src/main/res/values-night/styles.xml b/TMessagesProj/src/main/res/values-night/styles.xml
+index e5a85d9..a777f3d 100644
+--- a/TMessagesProj/src/main/res/values-night/styles.xml
++++ b/TMessagesProj/src/main/res/values-night/styles.xml
+@@ -22,9 +22,9 @@
+         <item name="android:colorPrimary">#232d3a</item>
+         <item name="android:navigationBarColor">#000000</item>
+         <item name="android:forceDarkAllowed">false</item>
+-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/tg_splash_320</item>
++        <item name="android:windowSplashScreenAnimatedIcon">@drawable/aloj_splash</item>
+         <item name="android:windowSplashScreenAnimationDuration">@integer/splash_screen_duration</item>
+-        <item name="android:windowSplashScreenBackground">#1f2732</item>
++        <item name="android:windowSplashScreenBackground">#16110d</item>
+     </style>
+ 
+     <style name="ActionBar.Transparent.TMessages.Start" parent="android:style/Widget.Material.Light.ActionBar">
 diff --git a/TMessagesProj/src/main/res/values-nl/strings.xml b/TMessagesProj/src/main/res/values-nl/strings.xml
 index f3df87e..2a980c9 100644
 --- a/TMessagesProj/src/main/res/values-nl/strings.xml
@@ -64181,6 +66056,19 @@ index d468344..1fd6a57 100644
      <string name="StartMessaging">Почати спілкування</string>
      <!--date formatters-->
      <string name="formatterBoostExpired">dd MMM yyyy</string>
+diff --git a/TMessagesProj/src/main/res/values-v31/styles.xml b/TMessagesProj/src/main/res/values-v31/styles.xml
+index acec6de..758df0e 100644
+--- a/TMessagesProj/src/main/res/values-v31/styles.xml
++++ b/TMessagesProj/src/main/res/values-v31/styles.xml
+@@ -28,7 +28,7 @@
+         <item name="android:navigationBarColor">#000000</item>
+         <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+         <item name="android:forceDarkAllowed">false</item>
+-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/tg_splash_320</item>
++        <item name="android:windowSplashScreenAnimatedIcon">@drawable/aloj_splash</item>
+         <item name="android:windowSplashScreenAnimationDuration">@integer/splash_screen_duration</item>
+         <item name="android:windowSplashScreenBackground">?android:windowBackground</item>
+     </style>
 diff --git a/TMessagesProj/src/main/res/values/strings.xml b/TMessagesProj/src/main/res/values/strings.xml
 index e4f8cf6..cd13a38 100644
 --- a/TMessagesProj/src/main/res/values/strings.xml
