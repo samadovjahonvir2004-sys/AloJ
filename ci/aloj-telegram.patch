@@ -10474,7 +10474,7 @@ index 0000000..ce36ee9
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-index a54b134..04b643e 100644
+index a54b134..f1a2ad2 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 @@ -3988,6 +3988,8 @@ public class ChatActivity extends BaseFragment implements
@@ -10491,7 +10491,7 @@ index a54b134..04b643e 100644
          }
  
 +        if (chatMode == 0 && !isReport() && currentEncryptedChat == null) {
-+            ActionBarMenuItem alojItem = menu.addItem(uz.aloj.AloJChatSheet.MENU_ID + 1, R.drawable.msg_customize);
++            ActionBarMenuItem alojItem = menu.addItem(uz.aloj.AloJChatSheet.MENU_ID + 1, R.drawable.aloj_sparkle);
 +            alojItem.setContentDescription("AloJ");
 +        }
          if (chatMode == 0 && (threadMessageId == 0 || isTopic) && !UserObject.isReplyUser(currentUser) && !isReport()) {
@@ -10501,7 +10501,7 @@ index a54b134..04b643e 100644
                  RLottieDrawable drawable = new RLottieDrawable(R.raw.boosts, dp(24), dp(24));
                  headerItem.lazilyAddSubItem(boost_group, drawable, LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(currentChat) ? R.string.BoostingBoostChannelMenu : R.string.BoostingBoostGroupMenu));
              }
-+            headerItem.lazilyAddSubItem(uz.aloj.AloJChatSheet.MENU_ID, R.drawable.msg_customize, uz.aloj.L.t("AloJ vositalari", "Инструменты AloJ"));
++            headerItem.lazilyAddSubItem(uz.aloj.AloJChatSheet.MENU_ID, R.drawable.aloj_sparkle, uz.aloj.L.t("AloJ vositalari", "Инструменты AloJ"));
              translateItem = headerItem.lazilyAddSubItem(translate, R.drawable.msg_translate, LocaleController.getString(R.string.TranslateMessage));
              updateTranslateItemVisibility();
              if (currentChat != null && !currentChat.creator && !ChatObject.hasAdminRights(currentChat)) {
@@ -10521,53 +10521,31 @@ index a54b134..04b643e 100644
          activityResumeTime = System.currentTimeMillis();
          if (openImport && getSendMessagesHelper().getImportingHistory(dialog_id) != null) {
              ImportingAlert alert = new ImportingAlert(getParentActivity(), null, this, themeDelegate);
-@@ -34291,6 +34300,12 @@ public class ChatActivity extends BaseFragment implements
+@@ -31957,6 +31966,11 @@ public class ChatActivity extends BaseFragment implements
+                 icons.add(R.drawable.msg_calendar2);
+             }
+ 
++            if (selectedObject != null && selectedObject.messageText != null && selectedObject.messageText.length() > 0 && !selectedObject.isSponsored() && !options.contains(uz.aloj.AloJChatTools.OPTION_ALOJ)) {
++                items.add(0, "AloJ");
++                options.add(0, uz.aloj.AloJChatTools.OPTION_ALOJ);
++                icons.add(0, R.drawable.aloj_sparkle);
++            }
+             if (options.isEmpty() && optionsView == null) {
+                 return false;
+             }
+@@ -34291,6 +34305,12 @@ public class ChatActivity extends BaseFragment implements
          if (selectedObject == null || getParentActivity() == null) {
              return;
          }
-+        if (option == uz.aloj.AloJChatTools.OPTION_MONEY || option == uz.aloj.AloJChatTools.OPTION_TRANSLIT) {
-+            final CharSequence alojText = selectedObject.messageText;
++        if (option == uz.aloj.AloJChatTools.OPTION_ALOJ) {
++            final MessageObject alojMsg = selectedObject;
 +            closeMenu();
-+            uz.aloj.AloJChatTools.handle(this, option, alojText);
++            uz.aloj.AloJChatSheet.showForMessage(this, alojMsg);
 +            return;
 +        }
          boolean preserveDim = false;
          switch (option) {
              case OPTION_RETRY: {
-@@ -46602,6 +46617,16 @@ public class ChatActivity extends BaseFragment implements
-                     options.add(OPTION_TRANSLATE);
-                     icons.add(R.drawable.msg_translate);
-                 }
-+                if (selectedObject != null && selectedObject.messageText != null && selectedObject.messageText.length() > 0 && !selectedObject.isSponsored()) {
-+                    if (uz.aloj.AloJChatTools.hasMoney(selectedObject.messageText)) {
-+                        items.add(uz.aloj.L.t("So'mga hisoblash", "Пересчитать в сумы"));
-+                        options.add(uz.aloj.AloJChatTools.OPTION_MONEY);
-+                        icons.add(R.drawable.msg_payment_card);
-+                    }
-+                    items.add(uz.aloj.L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица"));
-+                    options.add(uz.aloj.AloJChatTools.OPTION_TRANSLIT);
-+                    icons.add(R.drawable.msg_text_outlined);
-+                }
-                 if (message.canEditMessage(currentChat) && message.type != MessageObject.TYPE_POLL || chatMode == MODE_WELCOME_MESSAGES) {
-                     items.add(LocaleController.getString(R.string.Edit));
-                     options.add(OPTION_EDIT);
-@@ -46957,6 +46982,16 @@ public class ChatActivity extends BaseFragment implements
-                     options.add(OPTION_TRANSLATE);
-                     icons.add(R.drawable.msg_translate);
-                 }
-+                if (selectedObject != null && selectedObject.messageText != null && selectedObject.messageText.length() > 0 && !selectedObject.isSponsored()) {
-+                    if (uz.aloj.AloJChatTools.hasMoney(selectedObject.messageText)) {
-+                        items.add(uz.aloj.L.t("So'mga hisoblash", "Пересчитать в сумы"));
-+                        options.add(uz.aloj.AloJChatTools.OPTION_MONEY);
-+                        icons.add(R.drawable.msg_payment_card);
-+                    }
-+                    items.add(uz.aloj.L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица"));
-+                    options.add(uz.aloj.AloJChatTools.OPTION_TRANSLIT);
-+                    icons.add(R.drawable.msg_text_outlined);
-+                }
-                 if (allowEdit || chatMode == MODE_WELCOME_MESSAGES) {
-                     items.add(LocaleController.getString(R.string.Edit));
-                     options.add(OPTION_EDIT);
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
 index 266e570..7db6d72 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
@@ -10580,6 +10558,60 @@ index 266e570..7db6d72 100644
          final boolean allowConfirmFinal = allowConfirm && !animatorEphemeralMessageVisibility.getValue();
  
          final Runnable send = () -> {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/glass/GlassTabView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/glass/GlassTabView.java
+index 83cbe6c..2891191 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/glass/GlassTabView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/glass/GlassTabView.java
+@@ -580,6 +580,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
+         REPLIES(R.raw.tab_reply, R.raw.tab_reply_reverse),
+         WALLET(R.raw.tab_wallet, R.raw.tab_wallet_reverse),
+         LINK(TabAnimationType.STATIC, R.drawable.tabs_link_24),
++        ALOJ_BOZOR(TabAnimationType.STATIC, R.drawable.aloj_tab_bozor),
+         ARTICLE(R.raw.tab_article, R.raw.tab_article_reverse),
+         GRAM(R.raw.gram, R.raw.gram_reverse),
+ 
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+index e6478ee..9bc88e4 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+@@ -3436,11 +3436,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+             } else {
+                 statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
+                 statusDrawable.center = true;
+-                logoDrawable = context.getResources().getDrawable(R.drawable.telegram_logo_2).mutate();
++                logoDrawable = context.getResources().getDrawable(R.drawable.aloj_wordmark).mutate();
+                 logoDrawable.setBounds(0, dp(2), logoDrawable.getIntrinsicWidth(), dp(2) + logoDrawable.getIntrinsicHeight());
+                 // a new drawable (also when the view is recreated after a theme switch made elsewhere): remember its tint, the
+                 // theme hook only recolors when the color differs from the last one applied
+-                logoDrawable.setColorFilter(lastLogoDrawableColor = getThemedColor(Theme.key_telegram_color_dialogsLogo), PorterDuff.Mode.MULTIPLY);
++                lastLogoDrawableColor = getThemedColor(Theme.key_telegram_color_dialogsLogo); // AloJ: gradient logo keeps its own colors
+                 SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.AppName));
+                 ssb.setSpan(new ImageSpan(logoDrawable), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                 actionBar.setTitle(ssb, statusDrawable);
+@@ -13389,6 +13389,15 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+             Bundle args = new Bundle();
+             presentFragment(new GroupCreateActivity(args));
+         });
++        io.add(R.drawable.msg_channel_create, getString(R.string.NewChannel), () -> {
++            Bundle args = new Bundle();
++            args.putInt("step", 0);
++            presentFragment(new ChannelCreateActivity(args));
++        });
++        io.add(R.drawable.msg_bots, uz.aloj.L.t("Bot yaratish", "Создать бота"), () -> {
++            getMessagesController().openByUserName("BotFather", this, 1);
++        });
++        io.add(R.drawable.aloj_sparkle, "AloJ", () -> presentFragment(new AloJHubActivity(null)));
+         io.add(R.drawable.outline_saved_24, getString(R.string.SavedMessages), () -> {
+             Bundle args = new Bundle();
+             args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
+@@ -14284,7 +14293,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+                         final int logoColor = getThemedColor(Theme.key_telegram_color_dialogsLogo);
+                         if (logoColor != lastLogoDrawableColor) {
+                             lastLogoDrawableColor = logoColor;
+-                            logoDrawable.setColorFilter(logoColor, PorterDuff.Mode.MULTIPLY);
+                         }
+                     }
+                     // actionModeCloseView: colors are kept by its ThemeBind bindings
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java
 index 9f8f097..de7537c 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/IntroActivity.java
@@ -10597,7 +10629,7 @@ index 9f8f097..de7537c 100644
              @Override
              public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
-index d1ac117..d14163e 100644
+index d1ac117..0d43539 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/MainTabsActivity.java
 @@ -301,7 +301,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
@@ -10614,7 +10646,7 @@ index d1ac117..d14163e 100644
          tabs = new GlassTabView[5];
          tabs[INDEX_CHATS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CHATS, R.string.MainTabsChats);
 -        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CONTACTS, R.string.MainTabsContacts);
-+        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.GIFT, R.string.AloJBozorTab);
++        tabs[INDEX_CONTACTS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.ALOJ_BOZOR, R.string.AloJBozorTab);
          tabs[INDEX_SETTINGS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.SETTINGS, R.string.Settings);
          tabs[INDEX_CALLS] = GlassTabView.createMainTab(context, resourceProvider, GlassTabView.TabAnimation.CALLS, R.string.MainTabsCalls);
          tabs[INDEX_PROFILE] = GlassTabView.createAvatar(context, resourceProvider, currentAccount, R.string.MainTabsProfile);
@@ -10631,14 +10663,14 @@ index d1ac117..d14163e 100644
              if (getUserConfig().showCallsTab) {
                  Bundle args = new Bundle();
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
-index e2b917b..b7681ed 100644
+index e2b917b..4c1c381 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 @@ -722,6 +722,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
          }
  
          items.add(UItem.asCustomShadow(topView, 200 - 12));
-+        items.add(UItem.asButton(990001, R.drawable.msg_customize, "AloJ"));
++        items.add(UItem.asButton(990001, R.drawable.aloj_sparkle, "AloJ"));
 +        items.add(UItem.asShadow(null));
  
          accountNumbers.clear();
@@ -10668,10 +10700,10 @@ index 529eb5c..7472988 100644
  
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
 new file mode 100644
-index 0000000..d5a6738
+index 0000000..047ce8d
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatSheet.java
-@@ -0,0 +1,405 @@
+@@ -0,0 +1,488 @@
 +package uz.aloj;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -10776,6 +10808,89 @@ index 0000000..d5a6738
 +                case 8: f.presentFragment(new org.telegram.ui.AloJHubActivity(null)); break;
 +            }
 +        });
++        f.showDialog(b.create());
++    }
++
++    // ---------------- "✨ AloJ" on a message ----------------
++
++    public static void showForMessage(ChatActivity f, MessageObject m) {
++        Activity a = f.getParentActivity();
++        if (a == null || m == null || m.messageText == null) return;
++        final String text = m.messageText.toString();
++        final boolean money = AloJChatTools.hasMoney(text);
++        ArrayList<CharSequence> items = new ArrayList<>();
++        ArrayList<Integer> icons = new ArrayList<>();
++        final ArrayList<Integer> actions = new ArrayList<>();
++        items.add(L.t("Tarjima qilish (istalgan tilga)", "Перевести (на любой язык)")); icons.add(R.drawable.msg_translate); actions.add(1);
++        if (money) { items.add(L.t("So'mga hisoblash", "Пересчитать в сумы")); icons.add(R.drawable.msg_payment_card); actions.add(2); }
++        items.add(L.t("Lotin ↔ Kirill", "Латиница ↔ кириллица")); icons.add(R.drawable.msg_text_outlined); actions.add(3);
++        if (!m.isOut()) { items.add(L.t("Firibgarlikka tekshirish", "Проверить на мошенничество")); icons.add(R.drawable.msg_report); actions.add(4); }
++        items.add(L.t("Javobni tarjima qilib yozish", "Ответить с переводом")); icons.add(R.drawable.menu_reply); actions.add(5);
++        int[] ic = new int[icons.size()];
++        for (int i = 0; i < ic.length; i++) ic[i] = icons.get(i);
++        BottomSheet.Builder b = new BottomSheet.Builder(a, false, f.getResourceProvider());
++        b.setTitle("✨ AloJ", true);
++        b.setItems(items.toArray(new CharSequence[0]), ic, (d, which) -> {
++            switch (actions.get(which)) {
++                case 1: {
++                    AlertDialog.Builder lb = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++                    lb.setTitle(L.t("Qaysi tilga tarjima qilay?", "На какой язык перевести?"));
++                    lb.setItems(LANG_NAMES, (d2, w) -> translate(f, text, LANG_CODES[w], r -> resultDialog(f, LANG_NAMES[w], r)));
++                    f.showDialog(lb.create());
++                    break;
++                }
++                case 2: AloJChatTools.handle(f, AloJChatTools.OPTION_MONEY, text); break;
++                case 3: AloJChatTools.handle(f, AloJChatTools.OPTION_TRANSLIT, text); break;
++                case 4: scanOne(f, m); break;
++                case 5: {
++                    AlertDialog.Builder lb = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++                    lb.setTitle(L.t("Javobim qaysi tilga o'girilsin?", "На какой язык переводить мой ответ?"));
++                    lb.setItems(LANG_NAMES, (d2, w) -> {
++                        setTranslateMode(f.getDialogId(), LANG_CODES[w]);
++                        toast(f, L.t("✅ Endi yozganingiz ", "✅ Ваши сообщения будут переводиться: ") + LANG_NAMES[w]);
++                    });
++                    f.showDialog(lb.create());
++                    break;
++                }
++            }
++        });
++        f.showDialog(b.create());
++    }
++
++    private static void resultDialog(ChatActivity f, String langName, String result) {
++        if (f.getParentActivity() == null) return;
++        LinearLayout box = new LinearLayout(f.getParentActivity());
++        box.setPadding(dp(24), dp(4), dp(24), 0);
++        TextView t = new TextView(f.getParentActivity());
++        t.setText(result);
++        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
++        t.setTextIsSelectable(true);
++        t.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, f.getResourceProvider()));
++        box.addView(t);
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle("🌐 " + langName);
++        b.setView(box);
++        b.setPositiveButton(L.t("Nusxa olish", "Копировать"), (d, w) -> {
++            android.content.ClipboardManager cm = (android.content.ClipboardManager) f.getParentActivity().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
++            cm.setPrimaryClip(android.content.ClipData.newPlainText("AloJ", result));
++            toast(f, L.t("Nusxa olindi", "Скопировано"));
++        });
++        b.setNegativeButton(L.t("Yopish", "Закрыть"), null);
++        f.showDialog(b.create());
++    }
++
++    private static void scanOne(ChatActivity f, MessageObject m) {
++        String t = m.messageText.toString();
++        ArrayList<String> r = new ArrayList<>();
++        if (CARD.matcher(t).find() && MONEY_ASK.matcher(t).find()) r.add(L.t("💳 Karta raqami va oldindan to'lov so'ralmoqda.", "💳 Просят номер карты и предоплату."));
++        else if (MONEY_ASK.matcher(t).find()) r.add(L.t("💸 Oldindan pul so'ralmoqda.", "💸 Просят предоплату."));
++        if (CODE_ASK.matcher(t).find()) r.add(L.t("🔑 SMS kod yoki parol so'ralmoqda — hech kimga aytmang!", "🔑 Просят SMS-код или пароль — никому не говорите!"));
++        if (PRIZE.matcher(t).find()) r.add(L.t("🎁 \"Yutib oldingiz\" — odatda aldov.", "🎁 «Вы выиграли» — обычно обман."));
++        if (BAD_LINK.matcher(t).find()) r.add(L.t("🔗 Shubhali havola.", "🔗 Подозрительная ссылка."));
++        AlertDialog.Builder b = new AlertDialog.Builder(f.getParentActivity(), f.getResourceProvider());
++        b.setTitle(r.isEmpty() ? L.t("✅ Xavf topilmadi", "✅ Угроз не найдено") : L.t("⚠️ Ehtiyot bo'ling!", "⚠️ Осторожно!"));
++        b.setMessage(r.isEmpty() ? L.t("Bu xabarda tanish aldov belgilari yo'q. Baribir oldindan pul o'tkazmang.", "В сообщении нет известных признаков обмана. Всё равно не переводите предоплату.") : android.text.TextUtils.join("\n", r));
++        b.setPositiveButton(L.t("Tushundim", "Понятно"), null);
 +        f.showDialog(b.create());
 +    }
 +
@@ -11079,10 +11194,10 @@ index 0000000..d5a6738
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java b/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java
 new file mode 100644
-index 0000000..32bdf21
+index 0000000..a99a2a8
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/AloJChatTools.java
-@@ -0,0 +1,152 @@
+@@ -0,0 +1,153 @@
 +package uz.aloj;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -11110,6 +11225,7 @@ index 0000000..32bdf21
 +public final class AloJChatTools {
 +    public static final int OPTION_MONEY = 9001;
 +    public static final int OPTION_TRANSLIT = 9002;
++    public static final int OPTION_ALOJ = 9003;
 +
 +    private static final String NUM = "(\\d{1,3}(?:[ \\u00a0.,]\\d{3})+|\\d+)(?:[.,](\\d{1,2}))?\\s*(k|ming|тыс)?";
 +    private static final String CUR = "(\\$|usd|dollar|dollor|долл\\w*|€|eur|euro|yevro|евро|₽|rub|rubl\\w*|руб\\w*|£|gbp|kzt|tenge|тенге|¥|cny|yuan|aed|dirham|дирхам|tl|try|lira)";
@@ -11525,10 +11641,10 @@ index 0000000..ede164f
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
 new file mode 100644
-index 0000000..dbea238
+index 0000000..b645090
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorActivity.java
-@@ -0,0 +1,464 @@
+@@ -0,0 +1,465 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -11666,6 +11782,7 @@ index 0000000..dbea238
 +        load(true);
 +        Utilities.globalQueue.postRunnable(() -> {
 +            ArrayList<BozorApi.Banner> b = BozorApi.banners();
++            BozorAdminActivity.admin = BozorApi.isAdmin();
 +            AndroidUtilities.runOnUIThread(() -> {
 +                banners.clear();
 +                banners.addAll(b);
@@ -11993,12 +12110,281 @@ index 0000000..dbea238
 +        }
 +    }
 +}
+diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorAdminActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorAdminActivity.java
+new file mode 100644
+index 0000000..2fed513
+--- /dev/null
++++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorAdminActivity.java
+@@ -0,0 +1,263 @@
++package uz.aloj.bozor;
++
++import static org.telegram.messenger.AndroidUtilities.dp;
++
++import android.app.Activity;
++import android.content.Context;
++import android.content.Intent;
++import android.graphics.Bitmap;
++import android.text.InputType;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.EditText;
++import android.widget.FrameLayout;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import org.telegram.messenger.AndroidUtilities;
++import org.telegram.messenger.R;
++import org.telegram.messenger.Utilities;
++import org.telegram.ui.ActionBar.ActionBar;
++import org.telegram.ui.ActionBar.AlertDialog;
++import org.telegram.ui.ActionBar.BaseFragment;
++import org.telegram.ui.Components.BackupImageView;
++import org.telegram.ui.Components.LayoutHelper;
++
++import java.io.ByteArrayOutputStream;
++import java.util.ArrayList;
++
++/** AloJ Bozor: owner-only admin panel (banners / ads). */
++public class BozorAdminActivity extends BaseFragment {
++
++    private static final int REQ_IMAGE = 7302;
++    public static volatile Boolean admin;
++
++    private LinearLayout col;
++    private Bitmap pendingImage;
++    private Runnable afterImage;
++
++    /** Checks admin rights (with code entry if needed) and opens the panel. */
++    public static void open(BaseFragment from) {
++        Utilities.globalQueue.postRunnable(() -> {
++            boolean ok = BozorApi.isAdmin();
++            admin = ok;
++            AndroidUtilities.runOnUIThread(() -> {
++                if (ok) {
++                    from.presentFragment(new BozorAdminActivity());
++                } else {
++                    askCode(from);
++                }
++            });
++        });
++    }
++
++    private static void askCode(BaseFragment from) {
++        Context ctx = from.getParentActivity();
++        if (ctx == null) return;
++        EditText e = new EditText(ctx);
++        e.setHint("Admin kodi");
++        e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
++        e.setTextColor(BozorUi.text(from));
++        LinearLayout box = new LinearLayout(ctx);
++        box.setPadding(dp(24), dp(4), dp(24), 0);
++        box.addView(e, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++        AlertDialog.Builder b = new AlertDialog.Builder(ctx, from.getResourceProvider());
++        b.setTitle("AloJ Admin");
++        b.setView(box);
++        b.setPositiveButton("OK", (d, w) -> {
++            final String code = e.getText().toString().trim();
++            Utilities.globalQueue.postRunnable(() -> {
++                boolean ok;
++                try {
++                    ok = BozorApi.claimAdmin(code);
++                } catch (Throwable t) {
++                    ok = false;
++                }
++                final boolean r = ok;
++                admin = r;
++                AndroidUtilities.runOnUIThread(() -> {
++                    if (r) from.presentFragment(new BozorAdminActivity());
++                    else BozorUi.toast(from, "Kod noto'g'ri");
++                });
++            });
++        });
++        b.setNegativeButton(uz.aloj.L.t("Bekor qilish", "Отмена"), null);
++        from.showDialog(b.create());
++    }
++
++    @Override
++    public View createView(Context context) {
++        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
++        actionBar.setAllowOverlayTitle(true);
++        actionBar.setTitle("AloJ Admin");
++        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
++            @Override
++            public void onItemClick(int id) {
++                if (id == -1) finishFragment();
++            }
++        });
++        FrameLayout root = new FrameLayout(context);
++        root.setBackgroundColor(BozorUi.bg(this));
++        ScrollView scroll = new ScrollView(context);
++        col = new LinearLayout(context);
++        col.setOrientation(LinearLayout.VERTICAL);
++        col.setPadding(dp(14), dp(12), dp(14), dp(40));
++        scroll.addView(col);
++        root.addView(scroll, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
++        BozorUi.fitUnderActionBar(this, col);
++        fragmentView = root;
++        reload();
++        return fragmentView;
++    }
++
++    private void reload() {
++        if (col == null) return;
++        col.removeAllViews();
++        Context ctx = col.getContext();
++        TextView h = BozorUi.text(ctx, BozorUi.text(this), 18, true);
++        h.setText(uz.aloj.L.t("Bannerlar (reklama)", "Баннеры (реклама)"));
++        col.addView(h);
++        TextView info = BozorUi.text(ctx, BozorUi.gray(this), 13, false);
++        info.setText(uz.aloj.L.t("Bozor tepasida aylanib turadi. Rasm 2:1 nisbatda bo'lsa chiroyli chiqadi. E'lonlarni TOP qilish yoki bloklash — e'lon sahifasidagi \"Admin\" tugmasi orqali.",
++                "Крутятся вверху Базара. Лучше всего картинка 2:1. Поднять объявление в ТОП или заблокировать — кнопка «Admin» на странице объявления."));
++        info.setPadding(0, dp(4), 0, dp(12));
++        col.addView(info);
++        TextView add = BozorUi.button(ctx, uz.aloj.L.t("＋ Banner qo'shish", "＋ Добавить баннер"), true);
++        add.setOnClickListener(v -> edit(null));
++        col.addView(add, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 12));
++        Utilities.globalQueue.postRunnable(() -> {
++            ArrayList<BozorApi.Banner> list = BozorApi.banners();
++            AndroidUtilities.runOnUIThread(() -> {
++                for (BozorApi.Banner bn : list) col.addView(card(bn), LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 10));
++            });
++        });
++    }
++
++    private View card(BozorApi.Banner bn) {
++        Context ctx = col.getContext();
++        LinearLayout c = new LinearLayout(ctx);
++        c.setOrientation(LinearLayout.VERTICAL);
++        c.setPadding(dp(12), dp(12), dp(12), dp(12));
++        c.setBackground(BozorUi.round(BozorUi.card(this), 14));
++        if (bn.imageUrl != null) {
++            BackupImageView iv = new BackupImageView(ctx);
++            iv.setRoundRadius(dp(10));
++            iv.setImage(bn.imageUrl, null, null);
++            c.addView(iv, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 120, 0, 0, 0, 8));
++        }
++        TextView t = BozorUi.text(ctx, BozorUi.text(this), 16, true);
++        t.setText(bn.title);
++        c.addView(t);
++        TextView s = BozorUi.text(ctx, BozorUi.gray(this), 13, false);
++        s.setText((bn.subtitle == null ? "" : bn.subtitle) + (bn.link != null ? "\n🔗 " + bn.link : "") + "\n#" + bn.sort);
++        c.addView(s);
++        LinearLayout row = new LinearLayout(ctx);
++        TextView e = BozorUi.button(ctx, uz.aloj.L.t("Tahrirlash", "Изменить"), false);
++        e.setOnClickListener(v -> edit(bn));
++        row.addView(e, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 0, 8, 8, 0));
++        TextView d = BozorUi.button(ctx, uz.aloj.L.t("O'chirish", "Удалить"), false);
++        d.setOnClickListener(v -> run(() -> BozorApi.adminBannerDelete(bn.id)));
++        row.addView(d, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f, 0, 8, 0, 0));
++        c.addView(row);
++        return c;
++    }
++
++    private interface Job {
++        void run() throws Exception;
++    }
++
++    private void run(Job job) {
++        Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                job.run();
++            } catch (Throwable t) {
++                err = BozorApi.errorText(t);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                BozorUi.toast(this, er == null ? "✅" : er);
++                reload();
++            });
++        });
++    }
++
++    private EditText field(Context ctx, LinearLayout box, String hint, String value) {
++        EditText e = new EditText(ctx);
++        e.setHint(hint);
++        e.setText(value == null ? "" : value);
++        e.setTextColor(BozorUi.text(this));
++        e.setHintTextColor(BozorUi.gray(this));
++        box.addView(e, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++        return e;
++    }
++
++    private void edit(BozorApi.Banner bn) {
++        Context ctx = getParentActivity();
++        if (ctx == null) return;
++        LinearLayout box = new LinearLayout(ctx);
++        box.setOrientation(LinearLayout.VERTICAL);
++        box.setPadding(dp(24), dp(4), dp(24), 0);
++        EditText title = field(ctx, box, uz.aloj.L.t("Sarlavha", "Заголовок"), bn == null ? "" : bn.title);
++        EditText sub = field(ctx, box, uz.aloj.L.t("Qisqa matn", "Подзаголовок"), bn == null ? "" : bn.subtitle);
++        EditText link = field(ctx, box, uz.aloj.L.t("Havola (https://… yoki t.me/…)", "Ссылка (https://… или t.me/…)"), bn == null ? "" : bn.link);
++        EditText sort = field(ctx, box, uz.aloj.L.t("Tartib raqami (0 = birinchi)", "Порядок (0 = первый)"), bn == null ? "0" : String.valueOf(bn.sort));
++        sort.setInputType(InputType.TYPE_CLASS_NUMBER);
++        final String[] image = {bn == null ? null : bn.imageUrl};
++        TextView pick = BozorUi.button(ctx, image[0] == null ? uz.aloj.L.t("📷 Rasm tanlash", "📷 Выбрать картинку") : uz.aloj.L.t("📷 Rasmni almashtirish", "📷 Заменить картинку"), false);
++        box.addView(pick, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 8, 0, 0));
++        pick.setOnClickListener(v -> {
++            afterImage = () -> pick.setText(uz.aloj.L.t("✅ Rasm tanlandi", "✅ Картинка выбрана"));
++            try {
++                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
++                i.setType("image/*");
++                getParentActivity().startActivityForResult(Intent.createChooser(i, "Banner"), REQ_IMAGE);
++            } catch (Throwable ignore) {
++            }
++        });
++        AlertDialog.Builder b = new AlertDialog.Builder(ctx, getResourceProvider());
++        b.setTitle(bn == null ? uz.aloj.L.t("Yangi banner", "Новый баннер") : uz.aloj.L.t("Bannerni tahrirlash", "Изменить баннер"));
++        b.setView(box);
++        b.setPositiveButton(uz.aloj.L.t("Saqlash", "Сохранить"), (d, w) -> {
++            final String t = title.getText().toString().trim();
++            if (t.isEmpty()) {
++                BozorUi.toast(this, uz.aloj.L.t("Sarlavha yozing", "Введите заголовок"));
++                return;
++            }
++            final Bitmap img = pendingImage;
++            pendingImage = null;
++            int s = 0;
++            try {
++                s = Integer.parseInt(sort.getText().toString().trim());
++            } catch (Throwable ignore) {
++            }
++            final int srt = s;
++            run(() -> {
++                String url = image[0];
++                if (img != null) {
++                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
++                    img.compress(Bitmap.CompressFormat.JPEG, 85, bos);
++                    url = BozorApi.uploadBannerImage(bos.toByteArray());
++                }
++                BozorApi.adminBannerSave(bn == null ? 0 : bn.id, t, sub.getText().toString().trim(), url, link.getText().toString().trim(), srt);
++            });
++        });
++        b.setNegativeButton(uz.aloj.L.t("Bekor qilish", "Отмена"), (d, w) -> pendingImage = null);
++        showDialog(b.create());
++    }
++
++    @Override
++    public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
++        if (requestCode != REQ_IMAGE || resultCode != Activity.RESULT_OK || data == null || data.getData() == null) return;
++        final Context ctx = getParentActivity();
++        if (ctx == null) return;
++        Utilities.globalQueue.postRunnable(() -> {
++            Bitmap b = BozorNewActivity.decode(ctx, data.getData(), 1280);
++            AndroidUtilities.runOnUIThread(() -> {
++                pendingImage = b;
++                if (b != null && afterImage != null) afterImage.run();
++            });
++        });
++    }
++}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
 new file mode 100644
-index 0000000..c52c40b
+index 0000000..f0f11d1
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorApi.java
-@@ -0,0 +1,381 @@
+@@ -0,0 +1,426 @@
 +package uz.aloj.bozor;
 +
 +import android.content.Context;
@@ -12079,6 +12465,8 @@ index 0000000..c52c40b
 +    }
 +
 +    public static class Banner {
++        public long id;
++        public int sort;
 +        public String title, subtitle, imageUrl, link;
 +    }
 +
@@ -12277,6 +12665,47 @@ index 0000000..c52c40b
 +        }
 +    }
 +
++    // ---------------- admin ----------------
++
++    public static boolean isAdmin() {
++        try {
++            return "true".equals(json("POST", "/rest/v1/rpc/is_admin", "{}", true, null).trim());
++        } catch (Throwable e) {
++            return false;
++        }
++    }
++
++    public static boolean claimAdmin(String code) throws Exception {
++        return "true".equals(json("POST", "/rest/v1/rpc/claim_admin", new JSONObject().put("c", code).toString(), true, null).trim());
++    }
++
++    public static void adminTop(long id, int days) throws Exception {
++        json("POST", "/rest/v1/rpc/admin_set_top", new JSONObject().put("lid", id).put("days", days).toString(), true, null);
++    }
++
++    public static void adminStatus(long id, String st) throws Exception {
++        json("POST", "/rest/v1/rpc/admin_set_status", new JSONObject().put("lid", id).put("st", st).toString(), true, null);
++    }
++
++    public static void adminDelete(long id) throws Exception {
++        json("POST", "/rest/v1/rpc/admin_delete", new JSONObject().put("lid", id).toString(), true, null);
++    }
++
++    public static void adminBannerSave(long id, String title, String sub, String img, String link, int sort) throws Exception {
++        JSONObject o = new JSONObject().put("bid", id).put("t", title).put("sub", sub).put("img", img == null ? "" : img).put("lnk", link == null ? "" : link).put("srt", sort);
++        json("POST", "/rest/v1/rpc/admin_banner_save", o.toString(), true, null);
++    }
++
++    public static void adminBannerDelete(long id) throws Exception {
++        json("POST", "/rest/v1/rpc/admin_banner_delete", new JSONObject().put("bid", id).toString(), true, null);
++    }
++
++    public static String uploadBannerImage(byte[] jpeg) throws Exception {
++        String path = "banners/" + UUID.randomUUID().toString() + ".jpg";
++        http("POST", "/storage/v1/object/photos/" + path, jpeg, "image/jpeg", token(), null);
++        return URL_BASE + "/storage/v1/object/public/photos/" + path;
++    }
++
 +    public static ArrayList<Banner> banners() {
 +        ArrayList<Banner> list = new ArrayList<>();
 +        try {
@@ -12284,6 +12713,8 @@ index 0000000..c52c40b
 +            for (int i = 0; i < a.length(); i++) {
 +                JSONObject o = a.getJSONObject(i);
 +                Banner b = new Banner();
++                b.id = o.optLong("id");
++                b.sort = o.optInt("sort");
 +                b.title = o.optString("title");
 +                b.subtitle = o.isNull("subtitle") ? "" : o.optString("subtitle");
 +                b.imageUrl = o.isNull("image_url") ? null : o.optString("image_url");
@@ -12382,10 +12813,10 @@ index 0000000..c52c40b
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
 new file mode 100644
-index 0000000..cade24e
+index 0000000..dc59944
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorItemActivity.java
-@@ -0,0 +1,355 @@
+@@ -0,0 +1,387 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -12427,6 +12858,7 @@ index 0000000..cade24e
 +    private static final int MENU_FAV = 1;
 +    private static final int MENU_SHARE = 2;
 +    private static final int MENU_REPORT = 3;
++    private static final int MENU_ADMIN = 4;
 +
 +    private final BozorApi.Listing l;
 +    private TextView converted;
@@ -12446,6 +12878,7 @@ index 0000000..cade24e
 +        fav.setAlpha(BozorApi.isFav(l.id) ? 1f : 0.55f);
 +        menu.addItem(MENU_SHARE, R.drawable.msg_share);
 +        menu.addItem(MENU_REPORT, R.drawable.msg_report);
++        if (Boolean.TRUE.equals(BozorAdminActivity.admin)) menu.addItem(MENU_ADMIN, R.drawable.msg_settings_old);
 +        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
 +            @Override
 +            public void onItemClick(int id) {
@@ -12460,6 +12893,8 @@ index 0000000..cade24e
 +                    share();
 +                } else if (id == MENU_REPORT) {
 +                    report();
++                } else if (id == MENU_ADMIN) {
++                    adminActions();
 +                }
 +            }
 +        });
@@ -12675,6 +13110,34 @@ index 0000000..cade24e
 +        }
 +    }
 +
++    private void adminActions() {
++        if (getParentActivity() == null) return;
++        CharSequence[] items = {"⭐ TOP 7 kun", "⭐ TOP 30 kun", "TOP'ni olib tashlash", "⛔ Bloklash", "✅ Blokdan chiqarish", "🗑 O'chirish"};
++        AlertDialog.Builder b = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
++        b.setTitle("Admin");
++        b.setItems(items, (d, w) -> Utilities.globalQueue.postRunnable(() -> {
++            String err = null;
++            try {
++                switch (w) {
++                    case 0: BozorApi.adminTop(l.id, 7); break;
++                    case 1: BozorApi.adminTop(l.id, 30); break;
++                    case 2: BozorApi.adminTop(l.id, 0); break;
++                    case 3: BozorApi.adminStatus(l.id, "blocked"); break;
++                    case 4: BozorApi.adminStatus(l.id, "active"); break;
++                    case 5: BozorApi.adminDelete(l.id); break;
++                }
++            } catch (Throwable e) {
++                err = BozorApi.errorText(e);
++            }
++            final String er = err;
++            AndroidUtilities.runOnUIThread(() -> {
++                BozorUi.toast(this, er == null ? "✅" : er);
++                if (er == null) BozorNewActivity.changed = true;
++            });
++        }));
++        showDialog(b.create());
++    }
++
 +    private void report() {
 +        if (getParentActivity() == null) return;
 +        final String[] reasons = {uz.aloj.L.t("Firibgarlik / aldov", "Мошенничество / обман"), uz.aloj.L.t("Noto'g'ri narx yoki ma'lumot", "Неверная цена или данные"), uz.aloj.L.t("Taqiqlangan mahsulot", "Запрещённый товар"), uz.aloj.L.t("Spam / takroriy e'lon", "Спам / дубликат"), uz.aloj.L.t("Boshqa", "Другое")};
@@ -12743,10 +13206,10 @@ index 0000000..cade24e
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
 new file mode 100644
-index 0000000..60dd009
+index 0000000..ca1f6ff
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorMyActivity.java
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,131 @@
 +package uz.aloj.bozor;
 +
 +import static org.telegram.messenger.AndroidUtilities.dp;
@@ -12834,6 +13297,19 @@ index 0000000..60dd009
 +        });
 +    }
 +
++    private void addAdminLink() {
++        if (favorites || col == null) return;
++        TextView a = BozorUi.text(col.getContext(), BozorUi.gray(this), 12, false);
++        a.setText("AloJ Bozor · admin");
++        a.setGravity(Gravity.CENTER);
++        a.setPadding(dp(16), dp(28), dp(16), dp(16));
++        a.setOnLongClickListener(v -> {
++            BozorAdminActivity.open(this);
++            return true;
++        });
++        col.addView(a, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
++    }
++
 +    private void show(ArrayList<BozorApi.Listing> list, String err) {
 +        if (col == null) return;
 +        Context ctx = col.getContext();
@@ -12842,6 +13318,7 @@ index 0000000..60dd009
 +            return;
 +        }
 +        if (list == null || list.isEmpty()) {
++            addAdminLink();
 +            status.setText(favorites ? uz.aloj.L.t("Sevimli e'lonlar yo'q.\nE'londagi ⭐ tugmasini bosing.", "Нет избранных.\nНажмите ⭐ в объявлении.") : uz.aloj.L.t("Sizda hali e'lon yo'q.\nBozorda \"E'lon berish\" tugmasini bosing.", "У вас пока нет объявлений.\nНажмите «Подать объявление» в Базаре."));
 +            return;
 +        }
@@ -12861,11 +13338,12 @@ index 0000000..60dd009
 +        if (list.size() % 2 == 1 && row != null) {
 +            row.addView(new View(ctx), LayoutHelper.createLinear(0, 1, 1f, 6, 6, 6, 6));
 +        }
++        addAdminLink();
 +    }
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
 new file mode 100644
-index 0000000..963057b
+index 0000000..2f81637
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorNewActivity.java
 @@ -0,0 +1,401 @@
@@ -13143,7 +13621,7 @@ index 0000000..963057b
 +        });
 +    }
 +
-+    private static Bitmap decode(Context ctx, Uri uri, int max) {
++    static Bitmap decode(Context ctx, Uri uri, int max) {
 +        try {
 +            BitmapFactory.Options o = new BitmapFactory.Options();
 +            o.inJustDecodeBounds = true;
@@ -13272,7 +13750,7 @@ index 0000000..963057b
 +}
 diff --git a/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
 new file mode 100644
-index 0000000..fba38c0
+index 0000000..dd7dd3b
 --- /dev/null
 +++ b/TMessagesProj/src/main/java/uz/aloj/bozor/BozorUi.java
 @@ -0,0 +1,201 @@
@@ -13464,7 +13942,7 @@ index 0000000..fba38c0
 +    public static void openSeller(BaseFragment f, BozorApi.Listing l) {
 +        int acc = UserConfig.selectedAccount;
 +        if (l.tgName != null && l.tgName.startsWith("@") && l.tgName.length() > 1) {
-+            MessagesController.getInstance(acc).openByUserName(l.tgName.substring(1), f, 0);
++            MessagesController.getInstance(acc).openByUserName(l.tgName.substring(1), f, 1);
 +            return;
 +        }
 +        TLRPC.User u = l.tgId != 0 ? MessagesController.getInstance(acc).getUser(l.tgId) : null;
@@ -16870,6 +17348,276 @@ fL_q@^@eGu|c1m^gh%N;H003oq^$)eOmS6r46GyH0
 literal 0
 HcmV?d00001
 
+diff --git a/TMessagesProj/src/main/res/drawable-xxhdpi/aloj_wordmark.png b/TMessagesProj/src/main/res/drawable-xxhdpi/aloj_wordmark.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..8466c273fe999ee9aca4b684438cc4a033a3f213
+GIT binary patch
+literal 5595
+zcmV<16(s73P)<h;3K|Lk000e1NJLTq008~~002%11^@s609>mi000%DNkl<ZcwX(D
+z2UL{D_P}R*2bQw*4hkwZL=cpS21V2q6${25#Yhr0`rhAE(=^e<#N;J0G5*ygBF0#v
+z#**aO6%|DR3&cW^CejzSz_xd0VR5B?v+OQg=6B9__|7ur&g|ZqJ2Q7?0Ki}{7z_r3
+z!C){J2uUAhI+&2Aq5uU@KPvcF-txEYJN&;KP+P;wpN<0*fJ{;VKvn`0S)qQOyek1{
+z`HV!-yf=sIC_JDj0dM1Oy_64wu{5Z<7AR$Urb?s0Kqc2T8H3WWW`;`BFmOITfExh}
+zrUhih-!UUc-MgErvUi5~z2{XVvJ$Y~KY|+ojMYO}@qd_^r-EiWfJ$%1NIr~LTLH{>
+z{=^Lc#%duGDfxFZ3spqInG=ocV=b;s7z|Om?D03xDr+(8&AXTHjK&RP)aF0^UuSUd
+zkFhE`?eRCws<4_KQMPH6)sz*3fpn<&8xyOoP7!2ZMp|8&G1d#AF+K)^u`Jpt{wIlb
+zR@?K*zlyNhvSX}^rxgF=M3L41@D=|Fv-&!~SU!Z;@i7<_@@A~8Wm2e2K!WY43N$;1
+z!@n&Lgrowbme023WPbDRmGi4n^1$d$tKxq!TdD#Uux!WsVrOOB>JYy>)e)tN6yJub
+zD9IUkiLVDR$y6qtLSbkWpVW=wQ%Gdo2^kTKs%+lo?d_Bv!v1J~rDW|3NXl<cxUuZL
+z92i`Iw#?0~R{K$l=JO(PO+j^&sKffg^c)8^-O-27@_CYy)_2jaOX*;A*&3#U|Fu|4
+zZNKkFLfNC@+NNS6(yJB!z1cFAxx3=peEnmWKVsGgzgJ2>c#g30E4K_*kzdI)`Cgv{
+zNTltN$;ShEF8$PIGf)ANs@a5YexQ}zVp6w$rUHjcGJjoqEoCN=9|;DX_`ZTkKTZkR
+z(QNTF4{Ox*ul_<b!=ESr(+qjEheYZhU+d85$#99(X1JtDcjJFcH@tbMcnuM0En+#(
+z_M7hs^<2!ghY5u<C!(GE#Rc$O`=QD_$t`4>8_UiUH6F$?Fnh(f{q8#?WoEv66e+x^
+zv%r7sN?l~6kjRvm{UTq}B`(JNp}zf+N@eIRwhU(u@Le=W%ly<fMV~fJJDd#Cm^oUr
+zz^x{f0a0xos3I-NHd%8&kmuGvN)Q~|(O8}cv%QBe{^FmLA2rAu>xqQNSPn*++@rE-
+zz%JC)a%#;)m>)1^MNdSrrLpX$dxp;2o}czjPtw7dA7*drTPqF>p5S@Uh&eqi{}TVG
+z6=V_#{|>AS{Dqq-Gku>~N+(kpJr&=F<KQ3b96YI~>0rzYvse83wQC74(LtmiO+*TB
+ziqObZdZO<$%k(ANvcOT;W6sJjd&P&;y}Fc;GNY{Hn=%tU!e%)#Y@GEaW4MFws1Q51
+zq54V>WBM3na?cnDUtjFll@ky2+_RLC?0o-NotE&rA}L_x%2%)L?eUy}sX--^scu}h
+zhX;@C>A+$-GO1)Hlu;sANUEicRmJt9q7tFFNTJfNzq(ka5SI$2B~Lr>fQ}t_G!9m3
+z#~dh~3a}Yu4xdG}GgN(AjN(J;S1few$ZZ$;>RXD^M>qwI39|JVr0Wu1XT0DsXy&@x
+zC)Singe8Xhu^9t6Q5o(kh@9Z(IeDaq^D_gS><6ipUA+|Cu_s)kLN2{oQImD{Vfm@!
+z_e=k{T3U5ksZuF>BJciNWqaYHYZ?o~U0(hnq0f)H#_tZJD8Bfi5M(Vm0?0twa-oJ2
+zkXtU-pul&{B^>a*<w6bqx;cR2WZRwm?WliazN7jqeTw#_9LUL-Ec5)I?a>lmXHZFG
+z>H@!r<n_1zddp-B-vu^wy6vKY!LKX|30mrD!|`tC0^0>lDuo&5<`52_)gyx6EU0bB
+z-=6v4hix|=d@pR2)tO^`bcaz?LZwiGrYZ@LRf$_35s<e&4M5TQ)B{D!1C%{#a4ixq
+zjv!#P%Rs_2@FGOVoVh;XNo*>eV@{PvA(1Fa1N*;rbN-C{_aldW;>qKB_f&o#JC5&1
+zF#|u%Sr(t492U47=F!tMO%0<cK1M&x4~Sg}H{}pb?aSQb@87R4&mkJ#j?S{5;Wcy~
+z(eS;EudR*$$%Gd!Z;X!o+K$2C>suZ>CY`@AcF^WC3t}$&@j3qbPQN$7if<;^(AfMJ
+zy`$z66}L$#Z`@yW_2-nrw5>$rKo$o?E;k2<o@fvEF=rB{TpJ>A8irCnT^Q=hA9iuk
+z*o-lLf>>SRn<7~8&4dJ>=*3J5olR8S<E2^q;eLCl{IC%q8qc5W*k`PBp9w_6_Xe?E
+zUK4(sG~t*ngKn@{@3z=5Xtw)jME)^8z$Lyn%B*j&;+p~Rbefm^$0F^dODVYc11wr?
+zleqdwNhZ?l@+*NOSD9+H40dt~{UvVPeg-_<$H>qrWcu!D!}o={@xzRqwcf#sZw8Ea
+zA2!XI#rGg8>Vt;z+^bc2=QZI|3NIm<`%zAQG5u^^1`^HBSlBWccDv%nA7E0cEMw)_
+z78aGlN=+EP-<C-;nzdmFu;QBma|6a9Iqd8yNc&L*RIO(=U9HNyaJRnv4oXpz0wa;~
+zGzRM;BR6?)xn9P|t1CQgSe~E64*0CM<>(1m@lBk;_5qP0eBa?j#f0PeeMMJxwhjMF
+zLE863(|}C%9F*w9<m$~WxTg$qbQ(H4C}@GM=}6>q@wuW$r+3|Yup{Mm-cRQqmY){O
+z<YHaZn>WOJ(Ew)~le3D5ViX4+jPA?{h(&VPIbM>v502~G=6Im!+OD_zP29ku5Hpi$
+zWD0$ue|YkS+b7@CU3&eoIyCehQj0??3c|*wx^<Usto`ZMy=`KdT%;YBO`~#N8sIno
+z{pf+~Y?xFeZ!sv#>Zrgq^ABVsqR3+^;2z(Eabr9B#JYt}K@o9x!3FiCUR&y9lA0r>
+zXp?;N{KA$p;Mw@Sj4OxZKEcQLIaDzUg$?<mb{`4dawF%fwn`6ypKZNy_uCOWj}OkT
+zZFqp1{*-?1365;K6KXtD04u%;GuuD*bux)e*lX;5{iB?#RS#Mx_1cnBa2aWm&w;^l
+zO7I%o>l=5T^YfpI>OBWd`xg)X6_;OI->pIy)`<#U{OxQ!+*pJ1bD)w*)JZ|E&!faK
+z6|mx)C>$!2H^pbvA{6mbJL&B;T&pff%N0Jlg_34c;D{9{-hzf;w1?-jsOfG@&-(a&
+zjqonfc=xO8?{2=5vyo_c4KcosV^QOn0$A})lox%X7jda98=~ShDrC|F57U3{E__NM
+zTCd;7M$qpWXa8RHSQ{!35T4wGNEHg{)~uXwyQ_<~{BZr=x2W55L*4Dna!nsAz6k=&
+z`$WH3B!``2rPue?$;36?6=z>j#xGKZOwwIAZI<<o>a`Pk;I2CXi;c9paH-_c`T8cA
+z5T%TeDoJByMp^Y$lz6^;jvtLorlG_!1<YUZ6$(?RN4+xIWyoX?j*}lsqNxQJ2#w!`
+zGD+>>(kvuTKG@^;wGs43kw;%RvpLAeGvBJL$<{UhI~8?ELm@c3FW@qe8YWY~xXXEP
+zUs)$tfwhIiCgzc;YHBitdekd(1INFCk{~=ZVw%^81qogw7N{#&eT7!@)maeD-{zBE
+z0PtY(k+-fU^@&*V#<jzXQRLDGTpEpwnogBOs`I5Ou-8Y;k4vW@%h=l(P4Q{=ED*3N
+z0u*jI13=wV%c<=k+i?JyM_@mSQVCQdkq)c7rc1D$&(NU`eMb>)ApuaIIy2onauLei
+zc_`^arh5;Xv;OAEw<{Y(k4?Asnt@H9t}?>wWps^eP8h}1C(|h)a7`581~~!$4`Kn;
+zu4`9oX7m6;b*QYYQul6_#GHUQq~6|Gz@xn9`wv@cto$^H<g%`Ni4Nd18TK80P6W6I
+zpGY`uL`@2084ZC_1qh#BV|c|U0T8e}3~>CLzYC_99q{{nGT;pEc+Uwf&=qi}k0ewt
+z@`n!zg)<ifEWUf3NB9g=m3Lv_@ML|Q<&Q#zSW=D>9uj14hkS{shG0h<<hT{0M!j1>
+z3@Vw}SXT?FOerN=R|Yrry=DXh`v~`^<e}NKf#-YUfi$-qh%*X+@^KxYuqc2T>;_mP
+z`vO2A)*i|4<Pt5XSun#dHkm@AP<vph8WcwcM=;epBr!Gr#twsKq(x1mw7Oa<t+Hn_
+z9Ej#Q%EM(elR{y_Wj&&CARIcCJIu`?93{@fI!R%pLfPqg2TmNipi<mafjWe6=FweH
+z<bc#l6tzU-5YsRn5k$KK&uM)-jm->l2KKYVf#b??fWLGsU_BE|Sm}XW4rEz3b(GBX
+zfQM{M^NC3^J;|PCY2S#Iy7<iZgc}u)k(SsvG#Yn$kpFDdJZBH^oyVY{^|YB~wbwh#
+zhsU7u{#rEr^xH83$on0JxO0*3IVi1bDkWNGgDJjk5FhkiHi)Pk$TVKQ+B~smAx!cb
+zHP@ET)p=}cEP`#FLq<CL#uzI<$oZ0z)2R8q7ddnt%2=Pzq}#t4)gM_w&*WF0>PR*U
+znMBz&eekcr0&c%|#ss{dJi_~RqGfPk(;UVG+97)c=2tf65zWJ3iXXTz7?7xjNnRzE
+z0O{f5M9XOMK$qCr0dYvX@OqP1`i?N_2|b7M?(ah_uYk>R{$*m!J{FbQ?eY+tMq#JC
+zIC7s8n<+ra2QH%?$$j*DM{zdB1%Eldk5lUrW}7AjeYHNW&qnCq-(4P`PV)N<b&M}p
+zs^mG3q=XMvHH>Bg0CK+022C}Dk9s4HN(Dqa_W)(B<s5e&={zvbhwIw;n8?H!>l!#A
+zfahQ|c?*QXyt5_6CsC^*+S4WG<gAI8hPgO)I&L50Y#;h}V(f)zF9EU@^Vj{y$4i8g
+z;<j=n4fkHQEW)Rq=j9uteExNDSwwn_zkP?jxeb$Q^Uah#TjqtiAfG#sSuD<!$drUV
+zGP`YkbVXF$05adY0Q#*C1zdkUol>Mw0@2Rjfb9BBV7MmB_{<KRU~;G3bOjvaFX<b;
+z{NLA(>Fwgq?)W?-<KxjD?#Slv07w47Q?n*szV@i%%DJMlQ-#8Y0+^S#EypL?%Q+^@
+z%^`vWuddQz`Tp~Z_daba_p|;^<2J?j|GKmC40huUIq`Dne+z2F`RDR$&X&|ki|JGn
+zy^kZiPfVcQSRRwY(?ymOcj}N#V1p?>L|P#M*>9Z#9+Ulm`_v#nVd<WoqO1}$Y}*SI
+zd3nH+t~c<v@f;8#2#H1UN4O^}xi#(V`p!3pv~z9f+Sg$a-#zqj^wJC6DW5hoeFx9~
+z^ycYzs~aU%DDiaVLTSmFWBK`q;(dK|+6Ft!)iFHG)iJ#Je!3P#Z@H&V7Y^l=9!Psw
+z^;Dhp6Y%=)nm%+d9N%}Rygq!Eua7;`SDm-|dM}M!x{-RVayLp$-8GRQ@D`oYga3f4
+zzwZOVSa0AE;|rLc#4P~Xy<#9ec?C3Gz5#$r1}x<cJPj`e#v?oIq~@R90(avP{0h1y
+zy{hoy&Dzo%A$G1qx((a{lR{<9^$$(jeCNV?qH%i4s`KZQBi&r1?U?$%JOhPVsjOzz
+ziR`B)>l`_Br~QdxM{E&K^3eyU?+Q=lmP?V=whgZM8srU4p!`rSsQmpFU^%e>H^>n%
+zJ#7KafeolUMzcaU$$&~E0gB2xpeQN_^1B5<Sziy}U3et2(xS|Jh&{tb5a$_*baazc
+z(Ih@nd?iI6KNxLx6{K(7F!=c`DCsT=3`_ntH|;Z-QYk};rz>S5QAyItQ*%<|;|`Na
+zy))Q@6M74O&zMtMFKxYC6fObonI5*^htKxyuBSHyYmXHpuSOV6@wJgvGyq{m9T2JH
+zfTF%UQvoQT`CW5qX0x&@EKb?And%q2luo8GP<|{&i_`bi%OrZA+1y{0nX)!y!si@>
+zyYpOFJhv&{17`i2pWW>_0Q%z3!os7g&z(>HV)Q7aMoM3-JdyS4iF=QZYNuzzq}h7g
+zv3&HE2MRkbS8PwqYq*FK2SQ%Ai}+n^)&^-wHsO2fP@z+3%mlx2$*A#uEjZWVnR-2?
+zLEcz@pePGzoCrzk8*cPv$nCf9eE<6Cvx`v=&FBd*uh);=So&i|e!B(-y6ndPeCgRz
+z;S(#s7~CusXRq8}xLlXK47Qwy>6-B#QL~__k5W%LwGVG(*W{<8#6jVgf^<TA`n3t+
+zy9^m2@QOysM<4urCwJQmhmOWR*1?w_mB*sS^2xi;kNf}Y`JFbp_o_s9M{m0rnN=pd
+zfttQ9<d#cv<G19*H8d(3bcv4@zn4f1j7MI=+gorBSus(_swugaU0d3z3u<R12aV{J
+z6MD{<l%5XX{agQ(oVz=FvK6;8V45j63x686_3r^^3o1JF(9@=<PVx{c|9{f*zl3uE
+zD0Pp*iJaQw(VK5al?i2KDDkvWEB=QmG=rJ6<_h_hOoP=)m{b2T0XAMCD0L%IG>ZNx
+zx`J$qqw;fpI`U9roO|FTUmiaIH7|VtH}EVwd3Hhco`a!>?&t5*hxrfFIG9_!FKYYW
+zp-YZjonIv;emI9zu9W`!#GN-HzPm8wXzt@9`Y5A@GGSBMqSX5fCU4D|SS^;fyE_4e
+zUYXppc4h@mMDFd67Nw^)$R)_<$f0tuC@b}YkO`aMMi-)Sp+iqn-{C9PT>JA?qH*+1
+zc16{VxyMc=xN$iiQ~UVNi1+h+Zn&G%2pWahd3a3<Wm9@-<)x$dOAhb5^KegDgM{#g
+zmyWnuUY|WRCF42ht3N-~W6`t_=jraY48r#xYJj`?E)@vVcBYr_NX@87fenj3>h7st
+z?c+p|N;A8zJ=5O&4rkw6X5m}jsqk;R&s%2bHF4l<ed~L38tvkBIjgVKTFz^p=_gU(
+z(q8itU-QhrCd`v}KxzM3^O9go8t|Q>oyL=Q%4=5**4tx@2a`%+_IKnD4B*@J@!)Yh
+z9as!UCY8*Dzj}#WE~%C_R+R`vMgLR_bM92s-s)<5ZBHSQ0I8pV+ds;OKQhFXJILRj
+z<?m)kcei6w?PydIU8Pbg#WIDcS|Y24-h8<g;@s;+_1Dhl)t!6XAk+JPf866^EEcI;
+zA<cMHnGT=cE+p)^Z<jaRf=_SD0(ok3@15NotMBP>Z;!DC+Rf^}x!cxim7lu&velLy
+zV_o3oJPgJP=}__iz1!aEdOq69G^;B!#(L?r$6uA|WHpLFTXo)Q%8J22x}4Qtk?N{e
+zi0@_=cD<q7Okw=rDXj1qtAx-Pf7u>yi&GHBTYp<znJ^fl5MIYm+T*8IlpQm2%)0ky
+zy>|>NJjUuFtoRxh{2HuQoRsOAX4L?&KRkpL9)oE?FUoK*Ax))r-PJx+!vtJ*c^h}@
+prF<9+27|$1Fc=I5gTa^q{{vmU<`3Nk94i0-002ovPDHLkV1i+Y`!fIl
+
+literal 0
+HcmV?d00001
+
+diff --git a/TMessagesProj/src/main/res/drawable-xxxhdpi/aloj_wordmark.png b/TMessagesProj/src/main/res/drawable-xxxhdpi/aloj_wordmark.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd29810a47d955a501bd6fab3b4bf915b7080467
+GIT binary patch
+literal 7450
+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
+Y|6^5b04EIw7XSbN07*qoM6N<$g169wpa1{>
+
+literal 0
+HcmV?d00001
+
 diff --git a/TMessagesProj/src/main/res/drawable/aloj_icon_bg.xml b/TMessagesProj/src/main/res/drawable/aloj_icon_bg.xml
 new file mode 100644
 index 0000000..91f382d
@@ -16901,6 +17649,17 @@ index 0000000..c75c301
 +        <path android:pathData="M106,44 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" android:fillColor="#FFFFFFFF" />
 +    </group>
 +</vector>
+diff --git a/TMessagesProj/src/main/res/drawable/aloj_sparkle.xml b/TMessagesProj/src/main/res/drawable/aloj_sparkle.xml
+new file mode 100644
+index 0000000..f99567e
+--- /dev/null
++++ b/TMessagesProj/src/main/res/drawable/aloj_sparkle.xml
+@@ -0,0 +1,5 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
++    <path android:fillColor="#FFFFFF" android:pathData="M10,3.2 C10.55,7.4 12.6,9.45 16.8,10 C12.6,10.55 10.55,12.6 10,16.8 C9.45,12.6 7.4,10.55 3.2,10 C7.4,9.45 9.45,7.4 10,3.2 Z" />
++    <path android:fillColor="#FFFFFF" android:pathData="M17.5,13.8 C17.78,15.85 18.65,16.72 20.7,17 C18.65,17.28 17.78,18.15 17.5,20.2 C17.22,18.15 16.35,17.28 14.3,17 C16.35,16.72 17.22,15.85 17.5,13.8 Z" />
++    <path android:fillColor="#FFFFFF" android:pathData="M18,3 a1.6,1.6 0 1,0 0.01,0 Z" />
++</vector>
 diff --git a/TMessagesProj/src/main/res/drawable/aloj_splash.xml b/TMessagesProj/src/main/res/drawable/aloj_splash.xml
 new file mode 100644
 index 0000000..aad361f
@@ -16921,6 +17680,19 @@ index 0000000..aad361f
 +        <inset android:inset="30dp" android:drawable="@mipmap/aloj_icon_fg" />
 +    </item>
 +</layer-list>
+diff --git a/TMessagesProj/src/main/res/drawable/aloj_tab_bozor.xml b/TMessagesProj/src/main/res/drawable/aloj_tab_bozor.xml
+new file mode 100644
+index 0000000..d8c6b46
+--- /dev/null
++++ b/TMessagesProj/src/main/res/drawable/aloj_tab_bozor.xml
+@@ -0,0 +1,7 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="72" android:viewportHeight="72">
++    <path android:pathData="M19,25 L53,25 Q57,25 57.5,29 L60,57 Q60.4,63 54,63 L18,63 Q11.6,63 12,57 L14.5,29 Q15,25 19,25 Z"
++        android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineJoin="round" android:fillColor="#00000000" />
++    <path android:pathData="M27,32 L27,21 Q27,11 36,11 Q45,11 45,21 L45,32"
++        android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineCap="round" android:fillColor="#00000000" />
++    <path android:pathData="M28,44 Q36,52 44,44" android:strokeColor="#FFFFFF" android:strokeWidth="4.5" android:strokeLineCap="round" android:fillColor="#00000000" />
++</vector>
 diff --git a/TMessagesProj/src/main/res/drawable/icon_background.xml b/TMessagesProj/src/main/res/drawable/icon_background.xml
 index a2d4361..91f382d 100644
 --- a/TMessagesProj/src/main/res/drawable/icon_background.xml
@@ -71218,6 +71990,15 @@ z4P7o$OvGM@zNKNGu<y<jesCS*ebTAzbGV(YxB>p=%9+<rYJ1%@#~3BI_WjwCwwPNi
 z>+WZPHn-&TU}#ceB7eeW*7vs<oPXc!e=AnwK&*ckgr#;<h<`UMOkl=!Mt9=>0VO}S
 A5&!@I
 
+diff --git a/TMessagesProj/src/main/res/raw/qr_logo.svg b/TMessagesProj/src/main/res/raw/qr_logo.svg
+index 838dc03..4736d74 100644
+--- a/TMessagesProj/src/main/res/raw/qr_logo.svg
++++ b/TMessagesProj/src/main/res/raw/qr_logo.svg
+@@ -1 +1 @@
+-<?xml version="1.0" encoding="UTF-8"?><svg width="150px" height="150px" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg"><circle id="Oval" fill="#50A7EA" cx="75" cy="75" r="75" /><path d="M34.5683277,73.8430636 C56.3115551,64.3878175 70.8104456,58.1543406 78.0649991,55.1426329 C98.7782235,46.5435952 103.082254,45.0498502 105.887561,45 C106.504562,44.9896775 107.884131,45.1422996 108.777757,45.8660431 C109.532318,46.4771579 109.739928,47.3026872 109.839276,47.8820912 C109.938624,48.4614952 110.062336,49.7813922 109.963994,50.8127214 C108.841537,62.584148 103.984684,91.1502959 101.513793,104.334495 C100.468266,109.913224 98.4095915,111.783744 96.4165562,111.966799 C92.0852292,112.36462 88.796216,109.109774 84.6011139,106.365037 C78.0366073,102.070066 74.3280787,99.3964336 67.9560884,95.2053353 C60.592151,90.3617961 65.3658852,87.6997027 69.5625716,83.3490972 C70.6608644,82.210523 89.7447909,64.8850757 90.1141609,63.3133861 C90.1603568,63.1168201 90.2032288,62.3841149 89.7671159,61.9972197 C89.331003,61.6103245 88.687338,61.7426276 88.2228513,61.8478494 C87.5644556,61.9969982 77.0775713,68.9153185 56.7621985,82.6028104 C53.7855313,84.6429505 51.0893586,85.6369753 48.6736804,85.5848846 C46.010589,85.5274589 40.8878694,84.0819826 37.079654,82.8464252 C32.4087227,81.3309638 28.6963596,80.5297284 29.019623,77.956006 C29.1879986,76.6154522 31.0375668,75.2444714 34.5683277,73.8430636 Z" id="Path-3" fill="#FFFFFF" /></svg>
+\ No newline at end of file
++<?xml version="1.0" encoding="UTF-8"?><svg width="150px" height="150px" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg"><circle id="Oval" fill="#50A7EA" cx="75" cy="75" r="75" /><path d="M69.5 114.0Q61.1 114.0 54.3 111.1Q47.5 108.2 43.0 102.7L54.8 88.8Q57.8 92.7 61.1 94.7Q64.4 96.7 68.0 96.7Q77.6 96.7 77.6 85.6V52.7H51.2V36.0H99.0V84.3Q99.0 99.3 91.5 106.6Q83.9 114.0 69.5 114.0Z" fill="#FFFFFF" /><circle fill="#FFFFFF" cx="104" cy="44" r="9" /></svg>
+\ No newline at end of file
 diff --git a/TMessagesProj/src/main/res/values-ar/strings.xml b/TMessagesProj/src/main/res/values-ar/strings.xml
 index 8b87004..0698fb9 100644
 --- a/TMessagesProj/src/main/res/values-ar/strings.xml
@@ -75395,7 +76176,7 @@ index 640e841..3e67e3e 100644
    ],
    "configuration_version": "1"
 diff --git a/gradle.properties b/gradle.properties
-index 17bb1dc..96fe274 100644
+index 17bb1dc..08a7d17 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -14,13 +14,13 @@
@@ -75404,7 +76185,7 @@ index 17bb1dc..96fe274 100644
  APP_VERSION_CODE=7303
 -APP_VERSION_NAME=13.2.2
 -APP_PACKAGE=org.telegram.messenger
-+APP_VERSION_NAME=1.7.1
++APP_VERSION_NAME=1.8.0
 +APP_PACKAGE=uz.aloj.messenger
  IS_PRIVATE=false
  RELEASE_KEY_PASSWORD=android
